@@ -6,9 +6,18 @@ import z from 'zod'
 import { toast } from 'sonner';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
-
-const ManageCity = ({ isOpen, toggle, selectedCity }) => {
-   const defaultValues = { cityName: '', countryName: '', countryCode: '' }
+interface PropsType {
+   isOpen: boolean;
+   toggle: () => void;
+   selectedCity: any;
+}
+interface ValueType {
+   cityName: string;
+   countryName: string;
+   countryCode: string;
+}
+const ManageCity:React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
+   const defaultValues: Partial<ValueType> = { cityName: '', countryName: '', countryCode: '' }
    const schemaValidation = z.object({
       cityName: z.string().min(1, 'Field is required'),
       countryName: z.string().min(2, 'Field is required'),
@@ -17,7 +26,7 @@ const ManageCity = ({ isOpen, toggle, selectedCity }) => {
    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
-   const onSubmit = async (data) => {
+   const onSubmit = async (data:any) => {
       console.log('onSubmit', data)
       try {
          if (Object.keys(selectedCity).length > 0) {
@@ -36,7 +45,7 @@ const ManageCity = ({ isOpen, toggle, selectedCity }) => {
    useEffect(() => {
       if (Object.keys(selectedCity).length > 0) {
          for (const key in defaultValues) {
-            setValue(key, selectedCity[key])
+            setValue(key as keyof ValueType, selectedCity[key])
          }
       } else {
          reset()

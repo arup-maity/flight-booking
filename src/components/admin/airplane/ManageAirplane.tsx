@@ -6,17 +6,29 @@ import z from 'zod'
 import { toast } from 'sonner';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
-
-const ManageAirplane = ({ isOpen, toggle, selectedAirplane }) => {
-   const defaultValues = { modelNumber: '', capacity: 0 }
+interface PropsType {
+   isOpen: boolean;
+   toggle: () => void;
+   selectedAirplane: any;
+}
+type Inputs = {
+   modelNumber: string
+   capacity: number
+}
+interface FormValues {
+   modelNumber: string
+   capacity: number
+}
+const ManageAirplane: React.FC<PropsType> = ({ isOpen, toggle, selectedAirplane }) => {
+   const defaultValues: Partial<FormValues> = { modelNumber: '', capacity: 0 }
    const schemaValidation = z.object({
       modelNumber: z.string().min(1, 'Field is required'),
       capacity: z.number().min(3, 'Field is required'),
    })
-   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<Inputs>({
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
-   const onSubmit = async (data) => {
+   const onSubmit = async (data: any) => {
       console.log('onSubmit', data)
       try {
          if (Object.keys(selectedAirplane).length > 0) {
@@ -33,14 +45,18 @@ const ManageAirplane = ({ isOpen, toggle, selectedAirplane }) => {
       }
    }
    useEffect(() => {
+      handleOpen()
+   }, [isOpen, selectedAirplane])
+
+   function handleOpen() {
       if (Object.keys(selectedAirplane).length > 0) {
          for (const key in defaultValues) {
-            setValue(key, selectedAirplane[key])
+            setValue(key as keyof FormValues, selectedAirplane[key as keyof FormValues])
          }
       } else {
          reset()
       }
-   }, [isOpen, selectedAirplane])
+   }
 
    if (!isOpen) return null;
    return (
@@ -58,14 +74,14 @@ const ManageAirplane = ({ isOpen, toggle, selectedAirplane }) => {
                   <fieldset>
                      <label className='text-sm text-gray-500'>Airplane Mpdel Number</label>
                      <input {...register("modelNumber")} className='w-full h-10 border border-slate-300 rounded p-2' />
-                     {errors.modelNumber && <p className='text-xs text-red-500 mt-1'>{errors.modelNumber.message}</p>}
+                     {errors.modelNumber && <p className='text-xs text-red-500 mt-1'>{errors?.modelNumber?.message}</p>}
                   </fieldset>
                   <fieldset>
                      <label className='text-sm text-gray-500'>Capacity</label>
                      <input {...register("capacity", {
                         valueAsNumber: true
                      })} className='w-full h-10 border border-slate-300 rounded p-2' />
-                     {errors.capacity && <p className='text-xs text-red-500 mt-1'>{errors.capacity.message}</p>}
+                     {errors.capacity && <p className='text-xs text-red-500 mt-1'>{errors?.capacity?.message}</p>}
                   </fieldset>
                </div>
                <fieldset className='flex items-center gap-2'>

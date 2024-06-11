@@ -14,6 +14,7 @@ import { Ability } from '@/authentication/AccessControl'
 
 const AirportList = () => {
    const auth = AuthSession()
+   console.log('===>', auth)
    const [formOpen, setFormOpen] = useState(false)
    const [showDetails, setShowDetails] = useState(false)
    const [selectedAirport, setSelectedAirport] = useState({})

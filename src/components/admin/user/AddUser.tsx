@@ -90,7 +90,7 @@ const AddUser: React.FC<PropsType> = ({ isOpen, toggle }) => {
                      <Controller name='role' control={control} render={({ field: { value, onChange, ...rest } }) =>
                         <Select
                            value={roleOptions?.filter((obj) => value === obj.value)}
-                           onChange={e => onChange(e.value)}
+                           onChange={(e:any) => onChange(e.value)}
                            options={roleOptions}
                         />
                      } />

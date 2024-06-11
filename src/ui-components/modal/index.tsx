@@ -6,9 +6,16 @@ import ModalHeader from "./ModalHeader";
 import ModalBody from "./ModalBody";
 import ModalFooter from "./ModalFooter";
 
+interface PropsType {
+   isOpen: boolean;
+   toggle: () => void;
+   children: React.ReactNode;
+   onOpen?: () => void;
+   onClose?: () => void;
+   className?: string;
+}
 
-
-const Modal = (props) => {
+const Modal:React.FC<PropsType> = (props) => {
    const {
       isOpen,
       toggle,
@@ -45,14 +52,14 @@ const Modal = (props) => {
       }
    }, [isOpen]);
 
-   function handleBackdropClick(e) {
+   function handleBackdropClick(e:any) {
       if (e.currentTarget.id === backdropId) {
          if (!isOpen) return;
          toggle();
       }
    }
 
-   function handleBackdropMouseDown(e) {
+   function handleBackdropMouseDown(e:any) {
       setBackdropId(e.currentTarget.id);
    }
 

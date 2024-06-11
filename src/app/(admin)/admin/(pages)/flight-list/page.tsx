@@ -26,7 +26,7 @@ const FlightsList = () => {
          console.log('Error', error)
       }
    }
-   async function deleteAirport(id) {
+   async function deleteAirport(id: number) {
       try {
          const { data } = await adminInstance.delete(`/flight/delete-flight/${id}`)
          if (data.success) {
@@ -48,7 +48,7 @@ const FlightsList = () => {
          title: 'Departure Airport && DateTime',
          sortable: true,
          // className: 'w-[25%] min-w-[300px]',
-         render: (record) => (
+         render: (record: any) => (
             <ul>
                <li>{record.departureAirport.iataCode}</li>
                <li>{dayjs(record?.departureTime).format('DD/MM/YYYY')}</li>
@@ -59,7 +59,7 @@ const FlightsList = () => {
          title: 'Arrival Airport && DateTime',
          sortable: true,
          // className: 'w-[25%] min-w-[300px]'
-         render: (record) => (
+         render: (record: any) => (
             <ul>
                <li>{record.arrivalAirport.iataCode}</li>
                <li>{dayjs(record?.arrivalTime).format('DD/MM/YYYY')}</li>
@@ -70,7 +70,7 @@ const FlightsList = () => {
          title: 'Airplane',
          sortable: true,
          // className: 'w-[25%] min-w-[300px]'
-         render: (record) => {
+         render: (record: any) => {
             return record.airplane.modelNumber
          }
       },
@@ -83,7 +83,7 @@ const FlightsList = () => {
       {
          title: 'Options',
          className: 'w-[200px]',
-         render: (record) => (
+         render: (record: any) => (
             <div className='flex items-center justify-between gap-4'>
                <button onClick={() => { setSelectedFlight(record); setFormOpen(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
                <div className="flex items-center gap-4">
@@ -101,7 +101,7 @@ const FlightsList = () => {
             <div className="">Airplanes Lists</div>
             <button onClick={() => setFormOpen(prev => !prev)} className=' text-base border border-slate-400 rounded py-1 px-4'>Add Aieplane</button>
          </div>
-         <AirportTable columns={columns} data={flightsList} />
+         <AirportTable columns={columns} data={flightsList} sort={(e: any) => null} />
          <ManageFlight isOpen={formOpen} toggle={() => setFormOpen(prev => !prev)} selectedFlight={selectedFlight} />
       </div>
    )

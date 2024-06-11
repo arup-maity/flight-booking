@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^3.4.2",
     "@stripe/react-stripe-js": "^2.7.1",
     "@stripe/stripe-js": "^3.5.0",
+    "@types/react-flatpickr": "^3.8.11",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",

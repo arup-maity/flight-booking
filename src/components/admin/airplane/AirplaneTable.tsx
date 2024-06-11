@@ -1,38 +1,42 @@
 'use client'
 import { cn } from '@/ui-components/utils';
 import React, { useEffect, useState } from 'react'
-
-const AirportTable = ({ columns = [], data = [], sort }) => {
-   const [sortOrder, setSortOrder] = useState({})
+interface PropsType {
+   columns: any[];
+   data: any[];
+   sort?: any;
+}
+const AirportTable: React.FC<PropsType> = ({ columns = [], data = [], sort }) => {
+   const [sortOrder, setSortOrder] = useState<any>({})
    const [selectAll, setSelectAll] = useState(false);
-   const [products, setProducts] = useState([]);
+   const [products, setProducts] = useState<any>([]);
 
    useEffect(() => {
       // 2. Update selectAll state efficiently:
       if (products.length > 0) {
-         const allOnPageChecked = data.every((row) => products.includes(row?.id));
+         const allOnPageChecked = data.every((row: any) => products.includes(row?.id));
          setSelectAll(allOnPageChecked);
       }
    }, [data, products])
 
-   const handleSelectAll = (event) => {
+   const handleSelectAll = (event: any) => {
       const checked = event.target.checked;
       const newProducts = checked ? data?.map((product) => product.id) : [];
       setSelectAll(checked);
       setProducts(newProducts);
    };
 
-   const handleProductCheck = (productId, event) => {
+   const handleProductCheck = (productId: number, event: any) => {
       // 1. Update products state immutably:
-      setProducts((prevProducts) => {
+      setProducts((prevProducts: any) => {
          const newProducts = event.target.checked
             ? [...prevProducts, productId] // Add if checked
-            : prevProducts.filter((id) => id !== productId); // Remove if unchecked
+            : prevProducts.filter((id: number) => id !== productId); // Remove if unchecked
          return newProducts;
       })
    };
 
-   const sortData = (columnName, sortOrder) => {
+   const sortData = (columnName: string, sortOrder: string) => {
       setSortOrder({ [columnName]: sortOrder })
       sort?.({ column: columnName, sortOrder: sortOrder })
    };

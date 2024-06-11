@@ -15,11 +15,11 @@ const SearchForm = () => {
    const [tripType, setTripType] = useState('O')
    // from
    const [fromDetails, setFromDetails] = useState<any>({})
-   const [fromIataCode, setFromIataCode] = useState(searchParams.get('from'))
+   const [fromIataCode, setFromIataCode] = useState<string>(searchParams.get('from') || '')
    const [fromModel, setFromModel] = useState(false)
    // to
    const [toDetails, setToDetails] = useState<any>({})
-   const [toIataCode, setToIataCode] = useState(searchParams.get('to'))
+   const [toIataCode, setToIataCode] = useState<string>(searchParams.get('to') || '')
    const [toModel, setToModel] = useState(false)
    // date
    const [departDate, setDepartDate] = useState(new Date())
@@ -27,7 +27,7 @@ const SearchForm = () => {
    const [openCalendar, setOpenCalendar] = useState(false)
    // traveler & class
    const [classPassenger, setClassPassenger] = useState({
-      count: 1,
+      count: '1',
       class: 'E'
    })
    const [classModel, setClassModel] = useState(false)

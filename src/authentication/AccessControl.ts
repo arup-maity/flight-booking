@@ -1,6 +1,9 @@
 interface Auth {
    role: string;
    id?: number | string;
+   accessPurpose?: string;
+   purpose?: string;
+   exp?: string;
 }
 
 interface Rule {
@@ -34,7 +37,7 @@ interface AttributesType {
 //    return permissionGranted;
 // };
 
-export const Ability = (action: string, target: string, auth: { role: string, id: number }, id?: number | string): boolean => {
+export const Ability = (action: string, target: string, auth: any, id?: number | string): boolean => {
    const Param: Rule[] = [
       // administrator
       { role: 'administrator', action: 'manage', target: 'all' },

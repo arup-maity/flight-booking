@@ -18,11 +18,13 @@ type FormValues = {
    }[];
 };
 const ReviewDetails = () => {
-   const button1Ref = useRef(null);
-   const button2Ref = useRef(null);
+   const button1Ref = useRef<HTMLButtonElement | null>(null);
+   const button2Ref = useRef<HTMLButtonElement | null>(null);
 
-   const handleClickButton1 = () => {
-      button2Ref.current.click();
+   const handleClickButton1 = (): void => {
+      if (button2Ref.current) {
+         button2Ref.current.click();
+      }
    };
 
    const {

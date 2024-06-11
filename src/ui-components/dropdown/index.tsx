@@ -8,17 +8,18 @@ import DropdownItem from './DropdownItem';
 type PropsTypes = {
    children: React.ReactNode;
    className?: string;
-   tag?: string;
+   tag?:  any
 };
 
-const Dropdown: React.FC<PropsTypes> = ({ children, className, tag = '' }) => {
+const Dropdown: React.FC<PropsTypes> = ({ children, className, tag = 'div' }) => {
    const [open, setOpen] = React.useState<string>('');
-   const ref = useRef(null)
-   const Tag = tag || 'div'
+   const ref = useRef<HTMLDivElement | null>(null);
+   const Tag = tag
+
 
    useEffect(() => {
-      const handleClickOutside = (event) => {
-         if (ref.current && !ref.current.contains(event.target)) {
+      const handleClickOutside = (event: any) => {
+         if (ref.current && !ref.current.contains(event.target as Node)) {
             // Handle outside click logic here
             setOpen('')
             // document.body.style.overflow = "auto";
@@ -39,7 +40,7 @@ const Dropdown: React.FC<PropsTypes> = ({ children, className, tag = '' }) => {
          // document.body.style.overflow = "hidden";
       }
    }
-   const dropdownContext = useMemo(() => ({ open, toggle }), [open]);
+   const dropdownContext:any = useMemo(() => ({ open, toggle }), [open]);
 
    return (
       <DropdownContext.Provider value={dropdownContext}>

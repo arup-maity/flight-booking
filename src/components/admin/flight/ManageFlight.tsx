@@ -11,10 +11,25 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import dayjs from "dayjs";
 
-const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
+interface PropsType {
+   isOpen: boolean;
+   toggle: () => void;
+   selectedFlight: any
+}
+interface ValueType {
+   flightNumber: string;
+   departureAirportId: string;
+   arrivalAirportId: string;
+   departureTime: Date;
+   arrivalTime: Date;
+   airplaneId: string;
+   price: string;
+   boardingGate: string;
+}
+const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) => {
    const [airportList, setAirportList] = useState([])
    const [airplaneList, setAirplaneList] = useState([])
-   const defaultValues = {
+   const defaultValues: Partial<ValueType> = {
       flightNumber: '',
       departureAirportId: '',
       arrivalAirportId: '',
@@ -37,7 +52,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
    const { register, control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
       defaultValues, mode: 'onSubmit'
    })
-   const onSubmit = async (data) => {
+   const onSubmit = async (data: any) => {
       console.log('onSubmit', data)
       try {
          if (Object.keys(selectedFlight).length > 0) {
@@ -58,7 +73,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
       getAirports()
       if (Object.keys(selectedFlight).length > 0) {
          for (const key in defaultValues) {
-            setValue(key, selectedFlight[key])
+            setValue(key as keyof ValueType, selectedFlight[key])
          }
       } else {
          reset()
@@ -67,7 +82,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
 
    async function getAirports() {
       const res = await adminInstance.get('/airport/all-airports')
-      const airportsOption = res.data.airports?.map((airport) => ({
+      const airportsOption = res.data.airports?.map((airport: any) => ({
          label: airport.airportName,
          value: airport.id,
       }))
@@ -75,7 +90,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
    }
    async function getAirplanes() {
       const res = await adminInstance.get('/airplane/all-airplanes')
-      const airplanesOption = res.data.airplanes?.map((airplanes) => ({
+      const airplanesOption = res.data.airplanes?.map((airplanes: any) => ({
          label: airplanes.modelNumber,
          value: airplanes.id,
       }))
@@ -108,8 +123,8 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
                         render={({ field: { onChange, value } }) => (
                            <Select
                               options={airportList}
-                              value={airportList?.filter((obj) => value === obj.value)}
-                              onChange={(e) => onChange(e.value)}
+                              value={airportList?.filter((obj: any) => value === obj.value)}
+                              onChange={(e: any) => onChange(e.value)}
                            />
                         )}
                      />
@@ -123,8 +138,8 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
                         render={({ field: { onChange, value } }) => (
                            <Select
                               options={airportList}
-                              value={airportList?.filter((obj) => value === obj.value)}
-                              onChange={(e) => onChange(e.value)}
+                              value={airportList?.filter((obj: any) => value === obj.value)}
+                              onChange={(e: any) => onChange(e.value)}
                            />
                         )}
                      />
@@ -140,7 +155,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
                               data-enable-time
                               value={value}
                               className='w-full h-10 border border-slate-300 rounded p-2'
-                              onChange={(value) => onChange(value[0])}
+                              onChange={(value: any) => onChange(value[0])}
                            />
                         )}
                      />
@@ -156,7 +171,7 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
                               data-enable-time
                               value={value}
                               className='w-full h-10 border border-slate-300 rounded p-2'
-                              onChange={(value) => onChange(value[0])}
+                              onChange={(value: any) => onChange(value[0])}
                            />
                         )}
                      />
@@ -170,8 +185,8 @@ const ManageFlight = ({ isOpen, toggle, selectedFlight }) => {
                         render={({ field: { onChange, value } }) => (
                            <Select
                               options={airplaneList}
-                              value={airplaneList?.filter((obj) => value === obj.value)}
-                              onChange={(e) => onChange(e.value)}
+                              value={airplaneList?.filter((obj: any) => value === obj.value)}
+                              onChange={(e: any) => onChange(e.value)}
                            />
                         )}
                      />

@@ -13,7 +13,7 @@ type ContextType = {
 }
 
 const DropdownHeader: React.FC<PropsTypes> = ({ children, className, id }) => {
-   const { toggle } = React.useContext<ContextType>(DropdownContext);
+   const { toggle } = React.useContext<any>(DropdownContext);
 
    return (
       <div role='button' className={cn(`inline-block text-sm text-center select-none align-middle border border-gray-500 rounded py-[0.35rem] px-3`, className)} onClick={() => toggle(id)}>

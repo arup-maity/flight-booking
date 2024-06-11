@@ -22,8 +22,11 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 //       return hasPermission || filteredChildren.length > 0;
 //    });
 // }
-
-const Sidebar = ({ menuCollapsed, menuHover }) => {
+interface PropsType {
+   menuCollapsed?: boolean;
+   menuHover?: boolean;
+}
+const Sidebar: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
    const [groupOpen, setGroupOpen] = useState([]);
    const [groupActive, setGroupActive] = useState([]);
    const [currentActiveGroup, setCurrentActiveGroup] = useState([]);
@@ -55,9 +58,9 @@ const Sidebar = ({ menuCollapsed, menuHover }) => {
 
 export default Sidebar;
 
-const MenuItems = (props) => {
+const MenuItems = (props: any) => {
    const { items, ...rest } = props;
-   const FatchItems = items.map((item, index) => {
+   const FatchItems = items.map((item: any, index: number) => {
       if (item.children) {
          return <NavItemGroup item={item} key={index} {...rest} />;
       }
@@ -66,7 +69,7 @@ const MenuItems = (props) => {
    return <>{FatchItems}</>;
 };
 
-const NavItem = (props) => {
+const NavItem = (props: any) => {
    const { item, menuCollapsed, menuHover } = props;
    const currentURL = usePathname();
    return (
@@ -86,12 +89,12 @@ const NavItem = (props) => {
    );
 };
 
-export const NavItemGroup = (props) => {
+export const NavItemGroup = (props: any) => {
    const { item, groupOpen, activeItem, parentItem, groupActive, setGroupOpen, setGroupActive, currentActiveGroup, setCurrentActiveGroup, menuCollapsed, menuHover } = props;
 
    const currentURL = usePathname();
 
-   const toggleOpenGroup = (item, parent) => {
+   const toggleOpenGroup = (item: any, parent: any) => {
       let openGroup = groupOpen || [];
       const activeGroup = groupActive;
 
@@ -152,12 +155,12 @@ export const NavItemGroup = (props) => {
       }
    }, [currentURL]);
 
-   const onCollapseClick = (e, item) => {
+   const onCollapseClick = (e: any, item: any) => {
       toggleOpenGroup(item, parentItem);
       e.preventDefault();
    };
 
-   const openClassCondition = (id) => {
+   const openClassCondition = (id: any) => {
       if ((menuCollapsed && menuHover) || menuCollapsed === false) {
          if (groupActive?.includes(id) || groupOpen?.includes(id)) {
             return true;
@@ -226,8 +229,8 @@ export const NavItemGroup = (props) => {
  * @param openGroup
  * @param currentActiveGroup
  */
-export const removeChildren = (children, openGroup, currentActiveGroup) => {
-   children.forEach((child) => {
+export const removeChildren = (children: any, openGroup: any, currentActiveGroup: any) => {
+   children.forEach((child: any) => {
       if (!currentActiveGroup.includes(child.id)) {
          const index = openGroup.indexOf(child.id);
          if (index > -1) openGroup.splice(index, 1);
@@ -243,7 +246,7 @@ export const removeChildren = (children, openGroup, currentActiveGroup) => {
  * @param item
  * @param currentUrl
  */
-export const hasActiveChild = (item, currentUrl) => {
+export const hasActiveChild = (item: any, currentUrl: any) => {
    const { children } = item;
    if (!children) {
       return false;

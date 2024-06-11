@@ -7,10 +7,20 @@ import { toast } from 'sonner';
 import Select from 'react-select';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
-
-const ManageAirport = ({ isOpen, toggle, selectedAirport }) => {
+interface PropsType {
+   isOpen: boolean;
+   toggle: () => void;
+   selectedAirport: any
+}
+interface ValueType {
+   airportName: string;
+   iataCode: string;
+   address: string;
+   cityId: string | number;
+}
+const ManageAirport: React.FC<PropsType> = ({ isOpen, toggle, selectedAirport }) => {
    const [cityList, setCityList] = useState([])
-   const defaultValues = { airportName: '', iataCode: '', address: '', cityId: '' }
+   const defaultValues: Partial<ValueType> = { airportName: '', iataCode: '', address: '', cityId: '' }
    const schemaValidation = z.object({
       airportName: z.string().min(1, 'Field is required'),
       iataCode: z.string().min(3, 'Field is required'),
@@ -20,7 +30,7 @@ const ManageAirport = ({ isOpen, toggle, selectedAirport }) => {
    const { register, control, handleSubmit, setValue, reset, formState: { errors } } = useForm({
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
-   const onSubmit = async (data) => {
+   const onSubmit = async (data: any) => {
       console.log('onSubmit', data)
       try {
          if (Object.keys(selectedAirport).length > 0) {
@@ -39,7 +49,7 @@ const ManageAirport = ({ isOpen, toggle, selectedAirport }) => {
       getCityList()
       if (Object.keys(selectedAirport).length > 0) {
          for (const key in defaultValues) {
-            setValue(key, selectedAirport[key])
+            setValue(key as keyof ValueType, selectedAirport[key])
          }
       } else {
          reset()
@@ -49,7 +59,7 @@ const ManageAirport = ({ isOpen, toggle, selectedAirport }) => {
    async function getCityList() {
       try {
          const res = await adminInstance.get(`/city/all-cities`);
-         const cityOptions = res.data.cities?.map((city) => ({
+         const cityOptions = res.data.cities?.map((city:any) => ({
             label: city.cityName,
             value: city.id,
          }));
@@ -95,8 +105,8 @@ const ManageAirport = ({ isOpen, toggle, selectedAirport }) => {
                         render={({ field: { onChange, value } }) => (
                            <Select
                               options={cityList}
-                              value={cityList?.filter((obj) => value === obj.value)}
-                              onChange={(e) => onChange(e.value)}
+                              value={cityList?.filter((obj:any) => value === obj.value)}
+                              onChange={(e:any) => onChange(e.value)}
                            />
                         )}
                      />

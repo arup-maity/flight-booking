@@ -2,10 +2,15 @@
 import { cn } from '@/ui-components/utils';
 import React, { useEffect, useState } from 'react'
 
-const AirportTable = ({ columns = [], data = [], sort }) => {
-   const [sortOrder, setSortOrder] = useState({})
+interface PropsType {
+   columns: any[];
+   data: any[];
+   sort?: any;
+}
+const AirportTable: React.FC<PropsType> = ({ columns = [], data = [], sort }) => {
+   const [sortOrder, setSortOrder] = useState<any>({})
    const [selectAll, setSelectAll] = useState(false);
-   const [products, setProducts] = useState([]);
+   const [products, setProducts] = useState<any>([]);
 
    useEffect(() => {
       // 2. Update selectAll state efficiently:
@@ -15,24 +20,24 @@ const AirportTable = ({ columns = [], data = [], sort }) => {
       }
    }, [data, products])
 
-   const handleSelectAll = (event) => {
+   const handleSelectAll = (event: any) => {
       const checked = event.target.checked;
       const newProducts = checked ? data?.map((product) => product.id) : [];
       setSelectAll(checked);
       setProducts(newProducts);
    };
 
-   const handleProductCheck = (productId, event) => {
+   const handleProductCheck = (productId: number, event: any) => {
       // 1. Update products state immutably:
-      setProducts((prevProducts) => {
+      setProducts((prevProducts: any) => {
          const newProducts = event.target.checked
             ? [...prevProducts, productId] // Add if checked
-            : prevProducts.filter((id) => id !== productId); // Remove if unchecked
+            : prevProducts.filter((id: number) => id !== productId); // Remove if unchecked
          return newProducts;
       })
    };
 
-   const sortData = (columnName, sortOrder) => {
+   const sortData = (columnName: string, sortOrder: string) => {
       setSortOrder({ [columnName]: sortOrder })
       sort?.({ column: columnName, sortOrder: sortOrder })
    };
@@ -71,7 +76,7 @@ const AirportTable = ({ columns = [], data = [], sort }) => {
                   </td>
                   {columns.map((column) => (
                      <td key={column.title} className={cn(`border p-2`, column.className)}>
-                        {column.dataIndex ?
+                        {column?.dataIndex ?
                            (
                               <div className="line-clamp-2">
                                  {row[column.dataIndex]}

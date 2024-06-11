@@ -16,7 +16,7 @@ const FlightSearch = () => {
    const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5, })
    // flight list
    const [flightList, setFlightList] = useState([])
-   const [selectedFlight, setSelectedFlight] = useState({})
+   const [selectedFlight, setSelectedFlight] = useState<any>({})
    //
    const [notFound, setNotFound] = useState(true)
    useEffect(() => {
@@ -176,7 +176,7 @@ const FlightSearch = () => {
                   <div className="">
 
                      {
-                        flightList?.map((flight) =>
+                        flightList?.map((flight: any) =>
                            <div key={flight?.id} className="border rounded p-2 mb-4">
                               <div className="w-full flex flex-nowrap items-center">
                                  <div className="w-3/12 p-4">
