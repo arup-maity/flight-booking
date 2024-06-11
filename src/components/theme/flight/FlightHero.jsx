@@ -6,6 +6,7 @@ import TravellerClass from './TravellerClass'
 import dayjs from 'dayjs'
 import { useRouter, useSearchParams } from 'next/navigation';
 import DatePicker from '@/components/common/DatePicker'
+import { Suspense } from 'react'
 
 const FlightHero = () => {
    const searchParams = useSearchParams();
@@ -78,6 +79,7 @@ const FlightHero = () => {
    }
 
    return (
+      <Suspense>
       <div className='w-full'>
          <div style={{ backgroundImage: `url('/images/img-12.jpg')` }} className="w-full aspect-[1440/800] md:aspect-[1440/535] flex items-center  bg-cover bg-center">
             <div className="theme-container">
@@ -179,6 +181,7 @@ const FlightHero = () => {
          <TravellerClass isOpen={travellerClass} toggle={() => setTravellerClass(prev => !prev)} setClassPassenger={setClassPassenger} />
          <DatePicker isOpen={openCalendar} toggle={() => setOpenCalendar(prev => !prev)} onChange={handleDate} tripType={tripType} />
       </div >
+      </Suspense>
    )
 }
 

@@ -2,7 +2,7 @@
 import { axiosInstance } from '@/config/axios'
 import { useSearchParams } from 'next/navigation'
 import React, { useLayoutEffect } from 'react'
-
+import { Suspense } from 'react'
 const PaymentSuccess = () => {
    const query = useSearchParams()
    const payment_intent = query.get('payment_intent') || ''
@@ -16,7 +16,9 @@ const PaymentSuccess = () => {
    }
 
    return (
-      <div>PaymentSuccess</div>
+      <Suspense>
+         <div>PaymentSuccess</div>
+      </Suspense>
    )
 }
 

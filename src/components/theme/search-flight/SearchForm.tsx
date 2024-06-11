@@ -6,6 +6,7 @@ import ToFlight from '../flight/ToFlight'
 import TravellerClass from '../flight/TravellerClass'
 import DatePicker from '@/components/common/DatePicker'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 const SearchForm = () => {
    const searchParams = useSearchParams();
@@ -79,7 +80,7 @@ const SearchForm = () => {
       }
    }
    return (
-      <>
+      <Suspense>
          <div className="bg-white h-full sticky top-0 z-10 shadow-[0_0_10px_5px_#f1f1f1] rounded p-4 mb-5">
             <div className="flex justify-between mb-2">
                <ul className='flex flex-nowrap gap-4 mb-2'>
@@ -145,7 +146,7 @@ const SearchForm = () => {
          <ToFlight isOpen={toModel} toggle={() => setToModel(prev => !prev)} setToDetails={setToDetails} />
          <DatePicker isOpen={openCalendar} toggle={() => setOpenCalendar(prev => !prev)} onChange={handleDate} tripType={tripType} />
          <TravellerClass isOpen={classModel} toggle={() => setClassModel(prev => !prev)} setClassPassenger={setClassPassenger} />
-      </>
+      </Suspense>
    )
 }
 

@@ -9,7 +9,7 @@ import { convertMinutesToHoursMinutes } from '@/utils';
 import { useIntersectionObserver } from 'usehooks-ts'
 import SearchForm from '@/components/theme/search-flight/SearchForm';
 import { PiSunHorizonLight, PiSunLight, PiCloudSunLight, PiCloudMoonLight } from "react-icons/pi";
-
+import { Suspense } from 'react'
 const FlightSearch = () => {
    const searchParams = useSearchParams();
    const { push } = useRouter()
@@ -84,6 +84,7 @@ const FlightSearch = () => {
       return <></>
    }
    return (
+      <Suspense>
       <div className='theme-container w-full bg-[#FAFBFC] !py-10'>
          <SearchForm />
          <div className="w-full relative mb-4">
@@ -255,6 +256,7 @@ const FlightSearch = () => {
             }
          </div>
       </div>
+      </Suspense>
    )
 }
 
