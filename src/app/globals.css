@@ -3,31 +3,129 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+   --foreground-rgb: 0, 0, 0;
+   --background-start-rgb: 214, 219, 220;
+   --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+   :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+   width: 100%;
+   position: relative;
+   font-size: 16px;
+   background-color: white;
+   color: rgb(var(--foreground-rgb));
+}
+.no {
+   color: #f2f4f7;
+}
+@layer utilities {
+   .text-balance {
+      text-wrap: balance;
+   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.theme-container {
+   padding: 0 calc(12px + 148 * (100vw - 320px) / 1600);
+}
+
+
+/* costom */
+.webx-admin-panel {
+   --sidebar-width: 250px;
+}
+
+.webx-admin-panel .webx-admin-sidebar {
+   block-size: 100%;
+   inline-size: var(--sidebar-width);
+   /* transition: transform 0.25s ease-in-out, inline-size 0.25s ease-in-out; */
+   /* will-change: transform, inline-size; */
+}
+
+.webx-admin-panel .webx-content-wapper {
+   min-block-size: 100vh;
+   padding-inline-start: var(--sidebar-width);
+   /* transition: padding-inline-start 0.2s ease-in-out;
+   will-change: padding-inline-start; */
+
+   /* @apply max-lg: !ps-0; */
+}
+
+.webx-admin-panel .webx-admin-header {
+   inset-inline-start: 1rem;
+   padding-inline: 1rem;
+   inline-size: 100%;
+}
+
+.webx-admin-panel .layout-page-content {
+   inline-size: 100%;
+   margin-block-start: 1rem;
+   padding-inline: 1rem;
+   padding-block: 1rem;
+}
+
+.webx-admin-panel .webx-admin-footer {
+   inline-size: 100%;
+   padding-inline: 1rem;
+}
+
+.webx-admin-panel.vertical-menu-modern.menu-collapsed {
+   --sidebar-width: 80px;
+}
+
+.webx-admin-panel.vertical-menu-modern.menu-collapsed .webx-admin-sidebar:not(.hover) {
+   inline-size: 80px;
+}
+
+.webx-admin-panel.overlay-menu {
+   --sidebar-width: 0px;
+}
+
+.webx-admin-panel.overlay-menu:not(.visible) .webx-admin-sidebar {
+   transform: translate(-260px) !important;
+}
+
+.webx-admin-panel .webx-admin-sidebar {
+   z-index: 1004;
+   block-size: 100%;
+   inline-size: var(--sidebar-width);
+   inset-block-start: 0;
+   inset-inline-start: 0;
+   transition: transform 0.25s ease-in-out, inline-size 0.25s ease-in-out;
+   will-change: transform, inline-size;
+
+}
+
+.webx-admin-panel .webx-content-wapper {
+   min-block-size: 100vh;
+   padding-inline-start: var(--sidebar-width);
+   transition: padding-inline-start 0.2s ease-in-out;
+   will-change: padding-inline-start;
+}
+
+.webx-admin-panel .webx-admin-header {
+   position: sticky;
+   inset-block-start: 0.5rem;
+   padding-inline: 1rem;
+   inline-size: 100%;
+}
+
+.webx-admin-panel .layout-page-content {
+   inline-size: 100%;
+   margin-block-start: 1rem;
+   padding-inline: 1rem;
+   padding-block: 1rem;
+}
+
+.webx-admin-panel .webx-footer {
+   inline-size: 100%;
+   block-size: 45px;
+   padding-inline: 1rem;
 }
