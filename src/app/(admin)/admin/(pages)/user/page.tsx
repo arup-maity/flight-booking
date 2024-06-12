@@ -1,15 +1,22 @@
 'use client'
 import React, { useLayoutEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
-import { adminInstance } from '@/config/axios'
-import { IoIosSearch } from "react-icons/io";
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import { adminInstance } from '@/config/axios'
 import UserTable from '@/components/admin/user/UserTable';
-import { RiDeleteBinLine } from 'react-icons/ri'
 import AddUser from '@/components/admin/user/AddUser';
+import { RiDeleteBinLine } from 'react-icons/ri'
+import { IoIosSearch } from "react-icons/io";
+import { IoEyeOutline } from "react-icons/io5";
+import EditUser from '@/components/admin/user/EditUser'
+import { Ability } from '@/authentication/AccessControl'
+import { AuthSession } from '@/authentication/AuthSession'
 
 const UserList = () => {
-   const [openForm, setOpenForm] = useState(false)
+   const auth = AuthSession()
+   //
+   const [openCreateForm, setOpenCreateForm] = useState(false)
+   const [openUpdateForm, setOpenUpdateForm] = useState(false)
    const [selectedUser, setSelectedUser] = useState({})
    const [usersList, setUsersList] = useState([])
    const [debouncedValue, setValue] = useDebounceValue('', 1000)
@@ -18,10 +25,19 @@ const UserList = () => {
       getUsers()
    }, [])
 
+   function handleCreateFormToggle() {
+      getUsers()
+      setOpenCreateForm(prev => !prev)
+   }
+   function handleUpdateFormToggle() {
+      setOpenUpdateForm(prev => !prev)
+      setSelectedUser({})
+      getUsers()
+   }
+   // get users
    async function getUsers() {
       try {
          const { data } = await adminInstance.get(`/user/all-users`)
-         console.log('users', data)
          if (data.success) {
             setUsersList(data?.adminUsers)
          }
@@ -29,12 +45,7 @@ const UserList = () => {
          console.log('Error', error)
       }
    }
-
-   function handleToggle() {
-      getUsers()
-      setOpenForm(prev => !prev)
-   }
-
+   // delete user
    async function deleteUser(id: number) {
       try {
          const { data } = await adminInstance.delete(`/user/delete-user/${id}`)
@@ -45,10 +56,10 @@ const UserList = () => {
          console.log('Error', error)
       }
    }
-
+   // assign users table
    const columns = [
       {
-         title: 'User Name',
+         title: 'Name',
          dataIndex: 'firstName',
          sortable: true,
          className: 'w-[20%] min-w-[300px]'
@@ -68,11 +79,17 @@ const UserList = () => {
          title: 'Options',
          className: 'w-[200px]',
          render: (record: any) => (
-            <div className='flex items-center justify-between gap-4'>
-               {/* <button onClick={() => { setSelectedUser(record); setOpenForm(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button> */}
+            <div className='flex items-center justify-between gap-5'>
+               {
+                  Ability('update', 'user', auth) &&
+                  <button onClick={() => { setSelectedUser(record); setOpenUpdateForm(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
+               }
                <div className="flex items-center gap-4">
-                  {/* <button onClick={() => { setSelectedCity(record); setShowDetails(prev => !prev) }} className=''><IoEyeOutline size={20} /></button> */}
-                  <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
+                  <button onClick={() => { }} className=''><IoEyeOutline size={20} /></button>
+                  {
+                     Ability('delete', 'user', auth) &&
+                     <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
+                  }
                </div>
             </div>
          ),
@@ -82,21 +99,31 @@ const UserList = () => {
    return (
       <>
          <div className='w-full bg-white rounded p-4'>
-            <div className="flex items-center justify-between gap-5 mb-5">
-               <div className="w-full flex items-center border-b-2 border-slate-200">
-                  <IoIosSearch size={25} />
-                  <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => setValue(event.target.value)} />
-               </div>
-               <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
+            <div className="mb-4">
+               <div className="text-xl font-medium">User List</div>
             </div>
-
-            <div className="overflow-hidden">
+            <div className="flex items-center justify-between gap-5 mb-5">
+               <div className="w-10/12">
+                  <div className="w-full flex items-center border-b-2 border-slate-200">
+                     <IoIosSearch size={25} />
+                     <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => setValue(event.target.value)} />
+                  </div>
+               </div>
+               <div className="w-2/12">
+                  {
+                     Ability('create', 'user', auth) &&
+                     <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
+                  }
+               </div>
+            </div>
+            <div className="">
                <PerfectScrollbar className='pb-3'>
                   <UserTable columns={columns} data={usersList} />
                </PerfectScrollbar>
             </div>
          </div>
-         <AddUser isOpen={openForm} toggle={handleToggle} />
+         <AddUser isOpen={openCreateForm} toggle={handleCreateFormToggle} />
+         <EditUser isOpen={openUpdateForm} toggle={handleUpdateFormToggle} selectedUser={selectedUser} />
       </>
    )
 }

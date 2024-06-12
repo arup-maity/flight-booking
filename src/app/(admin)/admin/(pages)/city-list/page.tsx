@@ -36,7 +36,18 @@ const CityList = () => {
          order: sort.sortOrder
       })
    }, [currentPage, itemsPerPage, debouncedValue, sort])
-
+   //
+   function handleToggle() {
+      getCityList({
+         page: currentPage,
+         limit: itemsPerPage,
+         search: debouncedValue,
+         orderColumn: sort.column,
+         order: sort.sortOrder
+      })
+      setFormOpen(prev => !prev)
+   }
+   // get city list
    async function getCityList(params: any) {
       try {
          const { data } = await adminInstance.get(`/city/all-cities`, {
@@ -50,6 +61,7 @@ const CityList = () => {
          console.log('Error', error)
       }
    }
+   // delete city
    async function deleteCity(id: number) {
       try {
          const { data } = await adminInstance.delete(`/city/delete-city/${id}`)
@@ -92,13 +104,13 @@ const CityList = () => {
          render: (record: any) => (
             <div className='flex items-center justify-between gap-4'>
                {
-                  Ability('city', 'update', auth) &&
+                  Ability('update', 'city', auth) &&
                   <button onClick={() => { setSelectedCity(record); setFormOpen(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
                }
                <div className="flex items-center gap-4">
                   <button onClick={() => { setSelectedCity(record); setShowDetails(prev => !prev) }} className=''><IoEyeOutline size={20} /></button>
                   {
-                     Ability('city', 'delete', auth) && <button className='' onClick={() => deleteCity(record?.id)}><RiDeleteBinLine size={17} /></button>
+                     Ability('detele', 'city', auth) && <button className='' onClick={() => deleteCity(record?.id)}><RiDeleteBinLine size={17} /></button>
                   }
                </div>
             </div>
@@ -108,15 +120,22 @@ const CityList = () => {
 
    return (
       <div className='bg-white rounded p-4'>
+         <div className="mb-4">
+            <div className="text-xl font-medium">City List</div>
+         </div>
          <div className="flex items-center justify-between gap-5 mb-5">
-            <div className="w-full flex items-center border-b-2 border-slate-200">
-               <IoIosSearch size={25} />
-               <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => setValue(event.target.value)} />
+            <div className="w-10/12">
+               <div className="w-full flex items-center border-b-2 border-slate-200">
+                  <IoIosSearch size={25} />
+                  <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => setValue(event.target.value)} />
+               </div>
             </div>
-            {
-               Ability('city', 'create', auth) &&
-               <button onClick={() => setFormOpen(prev => !prev)} className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4'>Add new city</button>
-            }
+            <div className="w-2/12">
+               {
+                  Ability('create', 'city', auth) &&
+                  <button onClick={() => setFormOpen(prev => !prev)} className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4'>Add new city</button>
+               }
+            </div>
          </div>
          <PerfectScrollbar className='pb-3'>
             <CityTable columns={columns} data={cityList} sort={(sort: any) => setSort(sort)} />
@@ -136,7 +155,7 @@ const CityList = () => {
             }
             <Pagination totalItems={totalItems} perPage={itemsPerPage} currentPage={currentPage} onChange={(e) => setCurrentPage(e)} />
          </div>
-         <ManageCity isOpen={formOpen} toggle={() => setFormOpen(prev => !prev)} selectedCity={selectedCity} />
+         <ManageCity isOpen={formOpen} toggle={handleToggle} selectedCity={selectedCity} />
          <CityDetails isOpen={showDetails} toggle={() => setShowDetails(prev => !prev)} selectedCity={selectedCity} />
       </div>
    )

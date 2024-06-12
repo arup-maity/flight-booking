@@ -15,7 +15,6 @@ const CityDetails: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
       if (selectedCity?.id) {
          try {
             const { data } = await adminInstance.get(`/city/read-city/${selectedCity.id}`)
-            console.log('read-city', data)
             if (data.success) {
                setCityDetails(data.city)
             }
@@ -32,16 +31,21 @@ const CityDetails: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
          <Offcanvas.Body>
             <div className="space-y-4">
                <div className="">
-                  <p className='text-sm font-medium'>City Name</p>
-                  <p>{cityDetails?.cityName}</p>
+                  <p className='text-sm font-medium opacity-50'>City Name</p>
+                  <p className='text-base'>{cityDetails?.cityName}</p>
                </div>
                <div className="">
-                  <p className='text-sm font-medium'>Country Name</p>
-                  <p>{cityDetails?.countryName}, {cityDetails?.countryCode}</p>
+                  <p className='text-sm font-medium opacity-50'>Country Name</p>
+                  <p className='text-base'>{cityDetails?.countryName}, {cityDetails?.countryCode}</p>
                </div>
                <div className="">
-                  <p className='text-sm font-medium'>Airport Name</p>
-                  <p>{cityDetails?.airports?.airportName} ({cityDetails?.airports?.iataCode})</p>
+                  <p className='text-sm font-medium opacity-50'>Airport Name</p>
+                  {
+                     cityDetails?.airports?.airportName ?
+                     <p className='text-base'>{cityDetails?.airports?.airportName} ({cityDetails?.airports?.iataCode})</p>
+                     :
+                     'Not avaliable airport'
+                  }
                </div>
             </div>
          </Offcanvas.Body>

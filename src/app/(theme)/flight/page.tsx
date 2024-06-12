@@ -102,7 +102,7 @@ const Flight = () => {
                         {
                            flightOffers?.map((offer, index) =>
                               <div key={index} className="w-full md:w-6/12 p-2">
-                                 <div style={{ backgroundImage: `url('${offer?.image}')` }} className="w-full relative aspect-[318/200] bg-cover bg-center border-2 border-[#8DD3BB] rounded-xl">
+                                 <div style={{ backgroundImage: `url('${offer?.image}')` }} className="w-full relative aspect-[318/200] bg-cover bg-center rounded-xl">
                                  </div>
                               </div>
                            )

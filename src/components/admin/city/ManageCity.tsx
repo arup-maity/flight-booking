@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
@@ -16,7 +16,7 @@ interface ValueType {
    countryName: string;
    countryCode: string;
 }
-const ManageCity:React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
+const ManageCity: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
    const defaultValues: Partial<ValueType> = { cityName: '', countryName: '', countryCode: '' }
    const schemaValidation = z.object({
       cityName: z.string().min(1, 'Field is required'),
@@ -26,7 +26,7 @@ const ManageCity:React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
-   const onSubmit = async (data:any) => {
+   const onSubmit = async (data: any) => {
       console.log('onSubmit', data)
       try {
          if (Object.keys(selectedCity).length > 0) {
@@ -42,7 +42,8 @@ const ManageCity:React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
          console.log('error', error)
       }
    }
-   useEffect(() => {
+
+   function handleOpen() {
       if (Object.keys(selectedCity).length > 0) {
          for (const key in defaultValues) {
             setValue(key as keyof ValueType, selectedCity[key])
@@ -50,11 +51,11 @@ const ManageCity:React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
       } else {
          reset()
       }
-   }, [isOpen, selectedCity])
+   }
 
    if (!isOpen) return null;
    return (
-      <Offcanvas isOpen={isOpen} direction='left' toggle={toggle}>
+      <Offcanvas isOpen={isOpen} onOpen={handleOpen} onClose={reset} direction='left' toggle={toggle}>
          <Offcanvas.Header toggle={toggle}>
             <h5 className='text-lg text-gray-600 font-medium mb-2'>
                {

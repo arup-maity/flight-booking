@@ -6,21 +6,21 @@ interface Auth {
 export async function middleware(request: NextRequest) {
    const token = request.cookies.get('token')?.value
 
-   var auth: Auth = { login: true, role: 'admin' };
+   var auth: Auth = { login: false, role: 'user' };
    if (token) {
       const options = {
          headers: {
             'Authorization': `Bearer ${token}`
          }
       };
-      const url = process.env.NEXT_PUBLIC_API_URL + `/auth/check-login`
+      const url = process.env.NEXT_PUBLIC_API_URL + `/auth/check-auth`
 
       const response = await fetch(url, options)
       const json = await response.json()
       // console.log('auth middleware => ', json)
       if (response.status === 200) {
-         auth.login = true
-         auth.role = json.payload.accessPurpose
+         auth.login = json?.login
+         auth.role = json?.payload?.accessPurpose
       }
    }
 
@@ -71,5 +71,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-   matcher: ['/seller/:path*', '/admin/:path*']
+   matcher: ['/admin/:path*']
 }

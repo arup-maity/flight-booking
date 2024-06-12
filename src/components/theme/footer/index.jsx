@@ -7,8 +7,8 @@ const Footer = () => {
       <footer className='theme-container bg-[#8DD3BB]'>
          <div className="p-4"></div>
          <div className="flex flex-wrap -m-2">
-            <div className="w-full lg:w-4/12 p-2">
-               <div className="">
+            <div className="w-full lg:w-4/12 flex justify-center p-2">
+               <div className="mb-5">
                   <Image src='/images/img-logo-02.png' width={120} height={40} alt='footer logo' className='w-auto h-12' />
                   <ul className='flex flex-nowrap items-center gap-3 mt-5'>
                      <li><FaFacebook size={20}/></li>

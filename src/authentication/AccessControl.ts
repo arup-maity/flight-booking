@@ -63,7 +63,6 @@ export const Ability = (action: string, target: string, auth: any, id?: number |
 
       // salesAgent
       { role: 'salesAgent', action: 'read', target: 'booking' },
-
    ];
 
    const Access = Param

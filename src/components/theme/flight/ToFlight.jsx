@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import { Model } from '@/ui-components'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { adminInstance } from '@/config/axios'
+import { axiosInstance } from '@/config/axios'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const ToFlight = ({ isOpen, toggle, setToDetails }) => {
@@ -18,7 +18,7 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
 
    async function handleSearch(value) {
       try {
-         const res = await adminInstance.get(`/airport/search-airport`, { params: { search: value } })
+         const res = await axiosInstance.get(`/airport/search-airport`, { params: { search: value } })
          if (res.data.success) {
             setSuggestList(res.data.airport)
          }
@@ -33,16 +33,16 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
    return (
       <div>
          <Model isOpen={isOpen} toggle={toggle} className="h-screen flex items-center">
-            <Model.Body className="min-h-60">
+            <Model.Body className="">
                <Model.Header toggle={toggle}>
                   <div className="text-lg font-medium mb-2">To</div>
                </Model.Header>
                <div className="flex flex-nowrap gap-2">
                   <input className='w-full h-10 text-base border border-slate-300 focus:border-slate-400 focus:outline-none rounded p-3' placeholder='Search city' onChange={event => setValue(event.target.value)} />
                </div>
-               {
-                  suggestList.length > 0 ?
-                     <div className="border rounded mt-1 h-60">
+               <div className="border rounded mt-1 h-[300px]">
+                  {
+                     suggestList.length > 0 ?
                         <PerfectScrollbar className='pe-2'>
                            {suggestList.map((item, index) => {
                               return (
@@ -56,10 +56,10 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
                               )
                            })}
                         </PerfectScrollbar>
-                     </div>
-                     :
-                     <div className="text-sm text-gray-500 mt-1">No result found</div>
-               }
+                        :
+                        <div className="text-sm text-gray-500 mt-1">No result found</div>
+                  }
+               </div>
             </Model.Body>
          </Model>
       </div>

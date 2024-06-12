@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Model } from '@/ui-components'
-import { adminInstance } from '@/config/axios'
+import { axiosInstance } from '@/config/axios'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
    const [suggestList, setSuggestList] = useState([])
-   const [debouncedValue, setValue] = useDebounceValue('', 500)
+   const [debouncedValue, setValue] = useDebounceValue('', 1000)
 
    useEffect(() => {
       if (debouncedValue) {
@@ -18,7 +18,7 @@ const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
 
    async function handleSearch(value) {
       try {
-         const res = await adminInstance.get(`/airport/search-airport`, { params: { search: value } })
+         const res = await axiosInstance.get(`/airport/search-airport`, { params: { search: value } })
          console.log('Search', res)
          if (res.data.success) {
             setSuggestList(res.data.airport)
@@ -36,16 +36,16 @@ const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
    return (
       <div>
          <Model isOpen={isOpen} toggle={toggle} className="h-screen flex items-center">
-            <Model.Body className="min-h-64">
+            <Model.Body className="">
                <Model.Header toggle={toggle}>
                   <div className="text-lg font-medium mb-2">From</div>
                </Model.Header>
                <div className="flex flex-nowrap gap-2">
                   <input className='w-full h-10 text-base border border-slate-300 focus:border-slate-400 focus:outline-none rounded p-3' placeholder='Search city' onChange={event => setValue(event.target.value)} />
                </div>
-               {
-                  suggestList.length > 0 ?
-                     <div className="border rounded mt-1 h-60">
+               <div className="border rounded mt-1 h-[300px]">
+                  {
+                     suggestList.length > 0 ?
                         <PerfectScrollbar className='pe-2'>
                            {suggestList.map((item, index) => {
                               return (
@@ -59,10 +59,10 @@ const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
                               )
                            })}
                         </PerfectScrollbar>
-                     </div>
-                     :
-                     <div className="text-sm text-gray-500 mt-1">No result found</div>
-               }
+                        :
+                        <div className="text-sm text-gray-500 mt-1">No result found</div>
+                  }
+               </div>
             </Model.Body>
          </Model>
       </div>
