@@ -57,7 +57,7 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
                            })}
                         </PerfectScrollbar>
                         :
-                        <div className="text-sm text-gray-500 mt-1">No result found</div>
+                        <div className="w-full text-center text-sm text-gray-500 p-4">No result found</div>
                   }
                </div>
             </Model.Body>

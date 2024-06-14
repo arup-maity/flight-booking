@@ -91,7 +91,7 @@ const FlightHero = () => {
             </div>
             <div className="theme-container">
                <div className="bg-white h-full shadow-[0_0_5px_5px_#1122110D] rounded-xl -mt-5 md:-mt-14 p-4">
-                  <div className="flex flex-wrap justify-between gap-4 mb-5">
+                  <div className="flex flex-wrap justify-between gap-2 lg:gap-4 mb-5">
                      <ul className='flex flex-nowrap gap-5'>
                         <li>
                            <label htmlFor='oneWay' className='flex flex-nowrap items-center gap-2 cursor-pointer'>
