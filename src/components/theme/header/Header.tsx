@@ -6,34 +6,45 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { IoBed, IoAirplane, IoMenuOutline, IoCloseOutline } from "react-icons/io5";
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import clsx from 'clsx';
+import { useLoginModel } from '../auth/zustand';
+
 
 const Header = () => {
+   const { toggleModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
    return (
       <>
          <div className='w-full bg-white shadow-[0_0_10px_5px_#f1f1f1] py-4'>
             <div className="theme-container">
                <div className="flex justify-between items-center">
-                  <ul className='hidden lg:flex items-center gap-6'>
-                     <li>
-                        <Link href='/' className='flex flex-nowrap items-center gap-1 text-sm text-[#112211] font-semibold font-montserrat'><IoAirplane size={18} />Find Flight</Link>
-                     </li>
-                     <li>
-                        <Link href='/' className='flex flex-nowrap items-center gap-1 text-sm text-[#112211] font-semibold font-montserrat'><IoBed size={18} />Find Stays</Link>
-                     </li>
-                  </ul>
-                  <div className="flex items-center gap-2">
-                     <button className="block lg:hidden" onClick={() => setOpenMobileMenu(prev => !prev)}>
-                        <IoMenuOutline size={35} />
-                     </button>
-                     <div className="">
-                        <Link href={`/`}><Image src={`/images/img-logo.png`} width={120} height={45} alt='' className='w-suto h-10' /></Link>
+                  <div className="flex flex-nowrap items-center">
+                     <div className="flex items-center gap-2">
+                        <button className="block lg:hidden" onClick={() => setOpenMobileMenu(prev => !prev)}>
+                           <IoMenuOutline size={35} />
+                        </button>
+                        <div className="">
+                           <Link href={`/`}><Image src={`/images/img-logo.png`} width={120} height={45} alt='' className='w-suto h-10' /></Link>
+                        </div>
                      </div>
+                     <ul className='hidden lg:flex items-center gap-6 ms-28'>
+                        <li>
+                           <Link href='/' className='text-sm text-[#112211] font-semibold font-montserrat'>Home</Link>
+                        </li>
+                        <li>
+                           <Link href='/' className='text-sm text-[#112211] font-semibold font-montserrat'>Offers</Link>
+                        </li>
+                        <li>
+                           <Link href='/' className='text-sm text-[#112211] font-semibold font-montserrat'>Contact Us</Link>
+                        </li>
+                        <li>
+                           <Link href='/' className='text-sm text-[#112211] font-semibold font-montserrat'>About Us</Link>
+                        </li>
+                     </ul>
                   </div>
                   <ul className='flex items-center justify-center gap-5'>
-                     <li className='text-sm text-[#112211] font-semibold font-montserrat'>Login</li>
+                     <li role='button' className='text-sm text-[#112211] font-semibold font-montserrat' onClick={toggleModel}>Login</li>
                      <li className='hidden lg:block'>
-                        <button className='bg-[#112211] text-sm text-white font-semibold font-montserrat rounded py-2 px-4'>Register</button>
+                        <button className='bg-[#112211] text-sm text-white font-semibold font-montserrat rounded py-2 px-4' onClick={toggleModel}>Register</button>
                      </li>
                   </ul>
                </div>

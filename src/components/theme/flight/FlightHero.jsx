@@ -109,7 +109,7 @@ const FlightHero = () => {
                      <p className='text-sm  opacity-50'>Book International and Domestic Flights</p>
                   </div>
                   <div className="flex flex-wrap -m-3">
-                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-lg:mb-3" onClick={() => setFromFlight(prev => !prev)}>
+                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-lg:mb-2" onClick={() => setFromFlight(prev => !prev)}>
                         <div className="relative border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">From</div>
                            <ul>
@@ -118,7 +118,7 @@ const FlightHero = () => {
                            </ul>
                         </div>
                      </div>
-                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-lg:mb-3" onClick={() => setToFlight(prev => !prev)}>
+                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-lg:mb-2" onClick={() => setToFlight(prev => !prev)}>
                         <div className="relative border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">To</div>
                            <ul>
@@ -127,7 +127,7 @@ const FlightHero = () => {
                            </ul>
                         </div>
                      </div>
-                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-md:mb-3">
+                     <div className="w-full md:w-6/12 lg:w-3/12 p-3 max-md:mb-2">
                         <div className="relative h-full min-h-16 border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">
                               {
