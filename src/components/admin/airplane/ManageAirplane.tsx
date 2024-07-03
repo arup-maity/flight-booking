@@ -1,11 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from "react-hook-form"
+import React from 'react'
+import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
 import { toast } from 'sonner';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
+import { handleApiError } from '@/utils'
 interface PropsType {
    isOpen: boolean;
    toggle: () => void;
@@ -13,41 +14,42 @@ interface PropsType {
 }
 type Inputs = {
    modelNumber: string
+   manufacturer: string
    capacity: number
 }
 interface FormValues {
    modelNumber: string
+   manufacturer: string
    capacity: number
 }
 const ManageAirplane: React.FC<PropsType> = ({ isOpen, toggle, selectedAirplane }) => {
-   const defaultValues: Partial<FormValues> = { modelNumber: '', capacity: 0 }
+   const defaultValues: Partial<FormValues> = { modelNumber: '', manufacturer: '', capacity: 100 }
    const schemaValidation = z.object({
       modelNumber: z.string().min(1, 'Field is required'),
+      manufacturer: z.string().min(1, 'Field is required'),
       capacity: z.number().min(3, 'Field is required'),
    })
    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<Inputs>({
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
    const onSubmit = async (data: any) => {
-      console.log('onSubmit', data)
       try {
          if (Object.keys(selectedAirplane).length > 0) {
-            await adminInstance.put(`/airplane/update-airplane/${selectedAirplane.id}`, data);
-            toast('Update category successfully')
+            const res = await adminInstance.put(`/airplane/update-airplane/${selectedAirplane.id}`, data);
+            if (res.data?.success) {
+               toast.success('Update airplane successfully')
+            }
          } else {
             const res = await adminInstance.post(`/airplane/create-airplane`, data);
-            console.log('Airplane created successfully', res)
-            toast('Add category successfully')
+            if (res.data?.success) {
+               toast.success('Add airplane successfully')
+            }
          }
          toggle()
       } catch (error) {
-         console.log('error', error)
+         toast.error(handleApiError(error))
       }
    }
-   useEffect(() => {
-      handleOpen()
-   }, [isOpen, selectedAirplane])
-
    function handleOpen() {
       if (Object.keys(selectedAirplane).length > 0) {
          for (const key in defaultValues) {
@@ -57,10 +59,9 @@ const ManageAirplane: React.FC<PropsType> = ({ isOpen, toggle, selectedAirplane 
          reset()
       }
    }
-
    if (!isOpen) return null;
    return (
-      <Offcanvas isOpen={isOpen} direction='left' toggle={toggle}>
+      <Offcanvas isOpen={isOpen} onOpen={handleOpen} direction='left' toggle={toggle}>
          <Offcanvas.Header toggle={toggle}>
             <h5 className='text-lg text-gray-600 font-medium mb-2'>
                {
@@ -77,12 +78,17 @@ const ManageAirplane: React.FC<PropsType> = ({ isOpen, toggle, selectedAirplane 
                      {errors.modelNumber && <p className='text-xs text-red-500 mt-1'>{errors?.modelNumber?.message}</p>}
                   </fieldset>
                   <fieldset>
+                     <label className='text-sm text-gray-500'>Airplane Mpdel Number</label>
+                     <input {...register("manufacturer")} className='w-full h-10 border border-slate-300 rounded p-2' />
+                     {errors.manufacturer && <p className='text-xs text-red-500 mt-1'>{errors?.manufacturer?.message}</p>}
+                  </fieldset>
+                  {/* <fieldset>
                      <label className='text-sm text-gray-500'>Capacity</label>
                      <input {...register("capacity", {
                         valueAsNumber: true
                      })} className='w-full h-10 border border-slate-300 rounded p-2' />
                      {errors.capacity && <p className='text-xs text-red-500 mt-1'>{errors?.capacity?.message}</p>}
-                  </fieldset>
+                  </fieldset> */}
                </div>
                <fieldset className='flex items-center gap-2'>
                   <button type="submit" className='basis-[50%] text-base border border-slate-500 rounded py-1 px-4'>

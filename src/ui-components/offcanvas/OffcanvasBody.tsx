@@ -7,7 +7,7 @@ type BodyProps = {
 };
 
 const OffcanvasBody: FC<BodyProps> = ({ children, className }) => {
-  return <div className={cn(`w-full h-full p-4`, className)}>{children}</div>;
+  return <div className={cn(`w-full h-full`, className)}>{children}</div>;
 };
 
 export default OffcanvasBody;

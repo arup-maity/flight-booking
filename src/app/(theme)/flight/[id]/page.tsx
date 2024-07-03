@@ -3,6 +3,7 @@ import { flightInstance } from '@/config/axios';
 import { convertMinutesToHoursMinutes } from '@/utils';
 import dayjs from 'dayjs';
 import Image from 'next/image'
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useLayoutEffect, useState } from 'react'
 import { IoIosAirplane, IoIosWifi } from "react-icons/io";
@@ -75,7 +76,7 @@ const FlightDetails = ({ params }: { params: { id: string } }) => {
             <div className="">
                <div className="text-3xl font-bold mb-4">&#8377; {flightDetails?.price}</div>
                <div className="">
-                  <button type="button" className='text-sm text-[#112211] font-medium border border-[#8DD3BB] rounded py-2 px-4'>Book Now</button>
+                  <Link href={`/flight/review-details/${id}`} className='text-sm text-[#112211] font-medium border border-[#8DD3BB] rounded py-2 px-4'>Book Now</Link>
                </div>
             </div>
          </div>

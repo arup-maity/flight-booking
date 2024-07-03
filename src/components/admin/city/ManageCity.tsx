@@ -6,6 +6,7 @@ import z from 'zod'
 import { toast } from 'sonner';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
+import { handleApiError } from '@/utils'
 interface PropsType {
    isOpen: boolean;
    toggle: () => void;
@@ -27,22 +28,23 @@ const ManageCity: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
    const onSubmit = async (data: any) => {
-      console.log('onSubmit', data)
       try {
          if (Object.keys(selectedCity).length > 0) {
             const res = await adminInstance.put(`/city/update-city/${selectedCity.id}`, data);
-            console.log(res)
-            toast('Update category successfully')
+            if (res.data?.success) {
+               toast.success('Update city successfully')
+            }
          } else {
-            await adminInstance.post(`/city/create-city`, data);
-            toast('Add category successfully')
+            const res = await adminInstance.post(`/city/create-city`, data);
+            if (res.data?.success) {
+               toast.success('Add city successfully')
+            }
          }
          toggle()
       } catch (error) {
-         console.log('error', error)
+         toast.error(handleApiError(error))
       }
    }
-
    function handleOpen() {
       if (Object.keys(selectedCity).length > 0) {
          for (const key in defaultValues) {

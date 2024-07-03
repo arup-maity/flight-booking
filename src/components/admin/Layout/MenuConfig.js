@@ -1,8 +1,16 @@
 import { LuUsers2 } from "react-icons/lu";
 import { IoTicketOutline } from "react-icons/io5";
-import { MdFlightLand, MdFlight, MdConnectingAirports, MdOutlineLocationCity } from "react-icons/md";
+import { MdFlightLand, MdFlight, MdConnectingAirports, MdOutlineLocationCity,MdOutlineDashboardCustomize  } from "react-icons/md";
 
 const AdminMenu = [
+   {
+      id: "admin",
+      title: "Dashboard",
+      icon: <MdOutlineDashboardCustomize  size={20} />,
+      permissions: ["administrator", "admin"],
+      Link: "/admin",
+      navLink: "/admin",
+   },
    {
       id: "city-list",
       title: "City List",

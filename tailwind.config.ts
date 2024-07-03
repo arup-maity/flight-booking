@@ -9,6 +9,10 @@ const config: Config = {
    ],
    theme: {
       extend: {
+         colors: {
+            'theme-blue': '#8DD3BB',
+            'theme-black': '#112211',
+         },
          fontFamily: {
             montserrat: ["var(--font-montserrat)"]
          },

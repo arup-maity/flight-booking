@@ -1,41 +1,114 @@
 'use client'
-import Link from 'next/link'
-import React from 'react'
+import React from 'react';
+import { useForm, SubmitHandler } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from 'zod'
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { authInstance } from '@/config/axios';
 
 interface PropsType {
    setOpenForm: (value: string) => void;
 }
-
+type Inputs = {
+   email: string
+   password: string
+   confirmPassword: string
+   condition: boolean
+}
 const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
+   const schemaValidation = z
+      .object({
+         email: z.string().email(),
+         password: z
+            .string()
+            .min(8, { message: "Password is too short" })
+            .max(20, { message: "Password is too long" })
+            .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, { message: "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character." }),
+         confirmPassword: z.string(),
+         condition: z.boolean(),
+      })
+      .refine(
+         (data) => data.password === data.confirmPassword, {
+         message: "Passwords do not match",
+         path: ["confirmPassword"]
+      })
+      .refine(
+         (data) => data.condition === true, {
+         message: "Accepted Terms and Privacy Policies",
+         path: ["condition"]
+      })
+   const { register, handleSubmit, watch, formState: { errors }, } = useForm<Inputs>({
+      mode: 'onChange',
+      resolver: zodResolver(schemaValidation),
+   })
+   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+      try {
+         const res = await authInstance.post('/user/register', data)
+         console.log('======>', res)
+      } catch (error) {
+
+      }
+   }
    return (
       <div className="w-full">
          <div className="mb-4">
             <div className="text-2xl font-medium mb-1">Sign Up</div>
             <p className='text-sm'>Login to access your Golobe account</p>
          </div>
-         <form className='space-y-3'>
-            <div className="relative">
-               <input type="text" id="floating_outlined" className="block px-1.5 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-               <label htmlFor="floating_outlined" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Email</label>
-            </div>
-            <div className="relative">
-               <input type="text" id="floating_outlined" className="block px-1.5 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-               <label htmlFor="floating_outlined" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password</label>
-            </div>
-            <div className="relative">
-               <input type="text" id="floating_outlined" className="block px-1.5 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-               <label htmlFor="floating_outlined" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Confirm Password</label>
-            </div>
-
-
+         <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
+            <fieldset>
+               <div className="relative">
+                  <input type="text" id="email"  {...register("email")} className="block px-2 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" />
+                  <label htmlFor="email" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Email</label>
+               </div>
+               {
+                  errors.email && (
+                     <div className="text-xs text-red-500 dark:text-red-400">
+                        {errors.email.message}
+                     </div>
+                  )
+               }
+            </fieldset>
+            <fieldset>
+               <div className="relative">
+                  <input type="text" id="password" {...register("password")} className="block px-1.5 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                  <label htmlFor="password" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password</label>
+               </div>
+               {
+                  errors.password && (
+                     <div className="text-xs text-red-500 dark:text-red-400">
+                        {errors.password.message}
+                     </div>
+                  )
+               }
+            </fieldset>
+            <fieldset>
+               <div className="relative">
+                  <input type="text" id="confirmPassword" {...register("confirmPassword")} className="block px-1.5 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                  <label htmlFor="confirmPassword" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Confirm Password</label>
+               </div>
+               {
+                  errors.confirmPassword && (
+                     <div className="text-xs text-red-500 dark:text-red-400">
+                        {errors.confirmPassword.message}
+                     </div>
+                  )
+               }
+            </fieldset>
             <div className="">
-               <label htmlFor="loginRemember" className='text-sm flex items-center gap-1 cursor-pointer'>
-                  <input type="checkbox" name="" id="loginRemember" className='w-[14px] h-[14px]' />
+               <label htmlFor="condition" className='text-sm flex items-center gap-1 cursor-pointer'>
+                  <input type="checkbox" id="condition" {...register("condition")} className='w-[14px] h-[14px]' />
                   <span>I agree to all the <span className='text-[#FF8682]'>Terms</span> and <span className='text-[#FF8682]'>Privacy Policies</span></span>
                </label>
             </div>
+            {
+               errors.condition && (
+                  <div className="text-xs text-red-500 dark:text-red-400">
+                     {errors.condition.message}
+                  </div>
+               )
+            }
             <div className="">
                <button type="submit" className='w-full h-10 bg-[#8DD3BB] text-base font-medium rounded'>Create Account</button>
             </div>

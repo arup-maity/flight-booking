@@ -78,9 +78,11 @@ const Flight = () => {
                            </div>
                         </div>
                         <div className="min-h-36 lg:grow mb-5">
-                           <p className='text-sm font-normal text-[#112211]'>Traveling is a unique experience as it&apos;s the best way to unplug from the pushes and pulls of daily life. It helps us to forget about our problems, frustrations, and fears at home. During our journey, we experience life in different ways. We explore new places, cultures, cuisines, traditions, and ways of living.</p>
+                           <p className='text-sm font-medium text-[#112211] opacity-85'>Traveling is a unique experience as it&apos;s the best way to unplug from the pushes and pulls of daily life. It helps us to forget about our problems, frustrations, and fears at home. During our journey, we experience life in different ways. We explore new places, cultures, cuisines, traditions, and ways of living.</p>
                         </div>
-                        <Link href='/' className='w-full inline-flex justify-center text-sm text-[#112211] font-medium bg-white rounded py-2 px-4'>Book Flight</Link>
+                        <Link href='/' className='w-full inline-flex justify-center text-sm text-[#112211] font-medium bg-white rounded py-2 px-4'>
+                           Book Flight
+                        </Link>
                      </div>
                   </div>
                   <div className="w-full lg:w-6/12 p-3">

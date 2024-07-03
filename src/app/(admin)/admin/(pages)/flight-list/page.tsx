@@ -5,6 +5,7 @@ import { adminInstance } from '@/config/axios'
 import dayjs from 'dayjs'
 import React, { useLayoutEffect, useState } from 'react'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { toast } from 'sonner'
 
 const FlightsList = () => {
    const [formOpen, setFormOpen] = useState(false)
@@ -13,12 +14,12 @@ const FlightsList = () => {
 
    useLayoutEffect(() => {
       getFlightsList()
-   }, [])
+   }, [formOpen])
 
    async function getFlightsList() {
       try {
          const { data } = await adminInstance.get(`/flight/all-flights`)
-         console.log(data)
+         // console.log(data)
          if (data.success) {
             setFlightsList(data.flights)
          }
@@ -31,6 +32,7 @@ const FlightsList = () => {
          const { data } = await adminInstance.delete(`/flight/delete-flight/${id}`)
          if (data.success) {
             getFlightsList()
+            toast.success('Flight deleted successfully')
          }
       } catch (error) {
          console.log('Error', error)

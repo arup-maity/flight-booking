@@ -15,7 +15,7 @@ interface PropsType {
    className?: string;
 }
 
-const Modal:React.FC<PropsType> = (props) => {
+const Modal: React.FC<PropsType> = (props) => {
    const {
       isOpen,
       toggle,
@@ -52,14 +52,14 @@ const Modal:React.FC<PropsType> = (props) => {
       }
    }, [isOpen]);
 
-   function handleBackdropClick(e:any) {
+   function handleBackdropClick(e: any) {
       if (e.currentTarget.id === backdropId) {
          if (!isOpen) return;
          toggle();
       }
    }
 
-   function handleBackdropMouseDown(e:any) {
+   function handleBackdropMouseDown(e: any) {
       setBackdropId(e.currentTarget.id);
    }
 
@@ -67,9 +67,11 @@ const Modal:React.FC<PropsType> = (props) => {
       if (isOpen) {
          onOpen();
          // Disable body scrolling
-         document.body.style.overflow = "hidden";
+         document.body.style.position = "fixed"
+         document.body.style.overflow = "scroll";
       } else {
          onClose();
+         document.body.style.position = "static"
          document.body.style.overflow = "auto";
       }
    }

@@ -1,15 +1,19 @@
 'use client'
-import React, { useRef } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import dayjs from 'dayjs';
 import { convertMinutesToHoursMinutes } from '@/utils';
 import { AiOutlineUser } from "react-icons/ai";
 import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod'
+import { axiosInstance, flightInstance } from '@/config/axios';
+import { DropdownContext } from '@/authentication/auth';
+import { useRouter } from 'next/navigation';
 
 type FormValues = {
-
-   passenger: {
+   passengers: {
       firstName: string;
       lastName: string;
       gender: string;
@@ -17,7 +21,24 @@ type FormValues = {
       email: string;
    }[];
 };
-const ReviewDetails = () => {
+const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
+   const flightId = params.flightId
+   //
+   const { open } = React.useContext<any>(DropdownContext);
+   const { push } = useRouter()
+
+   //
+   const [flightDetails, setFlightDetails] = React.useState<any>(null)
+   const [loading, setLoading] = React.useState<boolean>(true)
+   const [notFound, setNotFound] = React.useState<boolean>(false)
+   const [flightPrice, setFlightPrice] = useState({
+      basePrice: 0,
+      tax: 0,
+      servicesCharge: 0,
+      total: 0,
+      discount: 0
+   })
+   //
    const button1Ref = useRef<HTMLButtonElement | null>(null);
    const button2Ref = useRef<HTMLButtonElement | null>(null);
 
@@ -26,29 +47,100 @@ const ReviewDetails = () => {
          button2Ref.current.click();
       }
    };
+   const passengerSchema = z.object({
+      firstName: z.string().min(2, "First name is required"),
+      lastName: z.string().min(2, "Last name is required"),
+      gender: z.string(),
+      mobileNumber: z.string().min(10, "Mobile number is required").regex(/^\d+$/, "Mobile number must be numeric"),
+      email: z.string().min(5, "Email is required").email("Invalid email address"),
+   });
 
-   const {
-      register,
-      control,
-      handleSubmit,
-      formState: { errors }
-   } = useForm<FormValues>({
+   const schemaValidation = z.object({
+      passengers: z.array(passengerSchema)
+   });
+   const { register, control, handleSubmit, formState: { errors } } = useForm<FormValues>({
       defaultValues: {
-         passenger: [{ firstName: "", lastName: '', gender: '', mobileNumber: '', email: '' }]
+         passengers: [{ firstName: "", lastName: '', gender: '', mobileNumber: '', email: '' }]
       },
-      mode: "onBlur"
+      mode: "onChange",
+      resolver: zodResolver(schemaValidation)
    });
-   const { fields, append, remove } = useFieldArray({
-      name: "passenger",
-      control
-   });
-   const onSubmit = (data: FormValues) => console.log(data);
+   const { fields, append, remove } = useFieldArray({ name: "passengers", control });
 
+   useLayoutEffect(() => {
+      getFlightDetails(flightId)
+   }, [flightId])
 
-   function timeDifferent(departDateTime: string, returnDateTime: string) {
-      const diff = dayjs(returnDateTime).diff(departDateTime, 'minute')
+   async function getFlightDetails(id: string) {
+      try {
+         const res = await flightInstance.get(`/flight-details/${id}`)
+         console.log(res)
+         if (res.data.success) {
+            setFlightDetails(res.data.flight)
+            calculatePrice(res.data.flight)
+         }
+      } catch (error) {
+         console.log(error)
+         setNotFound(true)
+      }
+      finally {
+         setLoading(false)
+      }
+   }
+
+   const onSubmit = async (data: FormValues) => {
+      try {
+         console.log('=====', data);
+         if (open?.login && open?.user?.id) {
+            const res = await axiosInstance.post(`/bookings/create-booking`, { ...data, flightDetails, flightPrice, user: open?.user })
+            console.log('===========update==============>', res)
+            if (res.data.success) {
+               push(`/checkout?bid=${res.data.booking.id}`)
+            }
+         } else {
+
+         }
+      } catch (error) {
+         console.log(error)
+      }
+
+   }
+
+   function calculatePrice(flight: any) {
+      const taxRate = 0.18;
+      const servicesChargeRate = 0.05;
+      const basePrice = flight?.price
+      const tax = (basePrice * taxRate).toFixed(2)
+      const servicesCharge = (basePrice * servicesChargeRate).toFixed(2)
+      const total = (parseFloat(basePrice) + parseFloat(tax) + parseFloat(servicesCharge)).toFixed(2);
+      setFlightPrice({
+         basePrice: basePrice,
+         tax: parseFloat(tax),
+         servicesCharge: parseFloat(servicesCharge),
+         total: parseFloat(total),
+         discount: 0
+      });
+   }
+   function timeDifferent(departDateTime: string, arrivalDateTime: string) {
+      const diff = dayjs(arrivalDateTime).diff(departDateTime, 'minute')
       const time = convertMinutesToHoursMinutes(diff)
-      return `${time.hours}h ${time.minutes}m`
+      if (time.minutes === 0) {
+         return `${time.hours}h`;
+      } else {
+         return `${time.hours}h ${time.minutes}m`;
+      }
+   }
+   if (loading) {
+      return (
+         <div className='flex justify-center items-center w-full min-h-screen'>
+            <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-200'></div>
+         </div>
+      )
+   }
+   if (notFound || flightDetails === null || Object.keys(flightDetails).length === 0) {
+      return (
+         <div className="">Not Founded</div>
+      )
    }
    return (
       <div className='w-full theme-container !py-5'>
@@ -57,23 +149,22 @@ const ReviewDetails = () => {
             <li>/</li>
             <li>Details</li>
          </ul>
-         <div className="flex flex-warp -m-2">
+         <div className="flex flex-wrap -m-2">
             <div className="w-full lg:w-8/12 p-2">
-               <div className="bg-white shadow-[0_0_5px_5px_#efefef] rounded p-4 mb-6">
+               <div className="bg-white shadow-[0_0_20px_5px_#efefef] rounded p-4 mb-6">
                   <div className="flex items-center gap-3 mb-2">
-                     <div className="text-xl text-[#112211] font-semibold font-montserrat">Indore</div>
+                     <div className="text-xl text-[#112211] font-semibold font-montserrat">{flightDetails?.departureAirport?.city?.cityName}</div>
                      <div className=""><HiOutlineArrowLongRight size={25} /></div>
-                     <div className="text-xl text-[#112211] font-semibold font-montserrat">Tokyo</div>
+                     <div className="text-xl text-[#112211] font-semibold font-montserrat">{flightDetails?.arrivalAirport?.city?.cityName}</div>
                   </div>
                   <div className="flex items-center gap-3 mb-2">
                      <div className="inline-block font-medium bg-[#8DD3BB] bg-opacity-50 rounded-sm py-0.5 px-4">
-                        {dayjs('07/06/2024').format('dddd, MMMM DD')}
+                        {dayjs(flightDetails?.departureTime).format('dddd, MMMM DD')}
                      </div>
                      <div className="flex items-center gap-1 *:text-base *:font-montserrat">
                         <p>Non Stop</p>
                         <p>&bull;</p>
-                        <p>12h 20m</p>
-                        {/* <p>{timeDifferent('07/06/24', '28/06/24')}</p> */}
+                        <p>{timeDifferent(flightDetails?.departureTime, flightDetails?.arrivalTime)}</p>
                      </div>
                   </div>
                   <div className="flex items-center gap-4 mb-2">
@@ -81,35 +172,35 @@ const ReviewDetails = () => {
                      <div className="flex items-center gap-2">
                         <p className='text-base text-[#112211] font-medium'>Emirates</p>
                         <p>&bull;</p>
-                        <p className='text-sm text-[#112211] font-medium'>Airbus A320</p>
+                        <p className='text-sm text-[#112211] font-medium'>{flightDetails?.airplane?.manufacturer}</p>
                      </div>
                   </div>
                   <div className="bg-gray-100 p-4">
                      <div className="flex items-center gap-4">
-                        <div className='w-14 text-lg text-[#112211] font-medium'>12:00</div>
+                        <div className='w-14 text-lg text-[#112211] font-medium'>{dayjs(flightDetails?.departureTime).format('HH:mm')}</div>
                         <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl"></div>
                         <div className="flex items-center gap-1">
-                           <div className='text-base text-[#112211] font-medium'>Newark</div>
+                           <div className='text-base text-[#112211] font-medium'>{flightDetails?.departureAirport?.city?.cityName}</div>
                            <div>&bull;</div>
-                           <div className="text-base text-[#112211]">Devi Ahilyabai Holkar International Airport</div>
+                           <div className="text-base text-[#112211]">{flightDetails?.departureAirport?.airportName}</div>
                         </div>
                      </div>
                      <div className="flex items-center">
                         <div className="w-[76px]"></div>
                         <div className="h-10 border-l-2 border-dashed border-slate-400"></div>
-                        <div className="text-sm ms-5">12h 10m</div>
+                        <div className="text-sm ms-5">{timeDifferent(flightDetails?.departureTime, flightDetails?.arrivalTime)}</div>
                      </div>
                      <div className="flex items-center gap-4">
-                        <div className='w-14 text-lg text-[#112211] font-medium'>12:00</div>
+                        <div className='w-14 text-lg text-[#112211] font-medium'>{dayjs(flightDetails?.arrivalTime).format('HH:mm')}</div>
                         <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl"></div>
                         <div className="flex items-center gap-1">
-                           <div className='text-base text-[#112211] font-medium'>Newark</div>
+                           <div className='text-base text-[#112211] font-medium'>{flightDetails?.arrivalAirport?.city?.cityName}</div>
                            <div>&bull;</div>
-                           <div className="text-base text-[#112211]">Devi Ahilyabai Holkar International Airport</div>
+                           <div className="text-base text-[#112211]">{flightDetails?.arrivalAirport?.airportName}</div>
                         </div>
                      </div>
                   </div>
-                  <div className="p-4">
+                  {/* <div className="p-4">
                      <div className="flex items-center">
                         <div className="w-[76px]"></div>
                         <div className="h-10 border-l-2 border-dashed border-slate-400"></div>
@@ -151,9 +242,9 @@ const ReviewDetails = () => {
                            <div className="text-base text-[#112211]">Devi Ahilyabai Holkar International Airport</div>
                         </div>
                      </div>
-                  </div>
+                  </div> */}
                </div>
-               <div className="bg-white shadow-[0_0_5px_5px_#efefef] rounded p-4 mb-6">
+               <div className="bg-white shadow-[0_0_20px_5px_#efefef] rounded p-4 mb-6">
                   <div className="text-xl font-bold font-montserrat mb-2">Important Information</div>
                   <div className="mb-4">
                      <div className="text-base font-medium mb-2">Travellers arriving in India must follow these guidelines:</div>
@@ -200,37 +291,43 @@ const ReviewDetails = () => {
                                     <div className="flex flex-nowrap items-center justify-between mb-4">
                                        <div className='text-base font-medium'>Passanger {index + 1}</div>
                                        <div className="">
-                                          <button type="button" className='text-sm text-red-500' onClick={() => remove(index)}>
-                                             REMOVE
-                                          </button>
+                                          {
+                                             index !== 0 &&
+                                             <button type="button" className='text-sm text-red-500' onClick={() => remove(index)}>
+                                                REMOVE
+                                             </button>
+                                          }
                                        </div>
                                     </div>
                                     <div className="flex flex-wrap -m-2">
                                        <div className="w-full md:w-4/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>First Name</label>
-                                          <input type="text" {...register(`passenger.${index}.firstName` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          <input type="text" {...register(`passengers.${index}.firstName` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          {errors.passengers?.[index]?.firstName && <span className='text-sm text-red-500'>{errors.passengers?.[index]?.firstName?.message}</span>}
                                        </div>
                                        <div className="w-full md:w-4/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>Last Name</label>
-                                          <input type="text" {...register(`passenger.${index}.lastName` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          <input type="text" {...register(`passengers.${index}.lastName` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          {errors.passengers?.[index]?.lastName && <span className='text-sm text-red-500'>{errors.passengers?.[index]?.lastName?.message}</span>}
                                        </div>
                                        <div className="w-full md:w-4/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>Gender</label>
-                                          <select    {...register(`passenger.${index}.gender` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2'>
+                                          <select    {...register(`passengers.${index}.gender` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2'>
                                              <option value="Male">Male</option>
                                              <option value="">Female</option>
                                           </select>
                                        </div>
                                        <div className="w-full md:w-6/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>Mobile No.</label>
-                                          <input type="text" {...register(`passenger.${index}.mobileNumber` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          <input type="text" {...register(`passengers.${index}.mobileNumber` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          {errors.passengers?.[index]?.mobileNumber && <span className='text-sm text-red-500'>{errors.passengers?.[index]?.mobileNumber?.message}</span>}
                                        </div>
                                        <div className="w-full md:w-6/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>Email</label>
-                                          <input type="text" {...register(`passenger.${index}.email` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          <input type="text" {...register(`passengers.${index}.email` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2' />
+                                          {errors.passengers?.[index]?.email && <span className='text-sm text-red-500'>{errors.passengers?.[index]?.email?.message}</span>}
                                        </div>
                                     </div>
-
                                  </section>
                               </div>
                            );
@@ -261,18 +358,24 @@ const ReviewDetails = () => {
                      <div className="border-b pb-2 mb-2">
                         <div className="flex items-center justify-between">
                            <p className='text-base font-medium font-montserrat'>Base Fare</p>
-                           <p className='text-base'>$45,235</p>
+                           <p className='text-base'>&#8377; {flightPrice?.basePrice}</p>
+                        </div>
+                     </div>
+                     <div className="border-b pb-2 mb-2">
+                        <div className="flex items-center justify-between">
+                           <p className='text-base font-medium font-montserrat'>Taxes</p>
+                           <p className='text-base'>&#8377; {flightPrice?.tax}</p>
                         </div>
                      </div>
                      <div className="border-b border-black pb-2 mb-2">
                         <div className="flex items-center justify-between">
-                           <p className='text-base font-medium font-montserrat'>Base Fare</p>
-                           <p className='text-base'>$45,235</p>
+                           <p className='text-base font-medium font-montserrat'>Other Services</p>
+                           <p className='text-base'>&#8377; {flightPrice?.servicesCharge}</p>
                         </div>
                      </div>
                      <div className="flex items-center justify-between">
                         <p className='text-base font-medium font-montserrat'>Total Amount</p>
-                        <p className='text-base'>$45,235</p>
+                        <p className='text-base'>&#8377; {flightPrice?.total}</p>
                      </div>
                   </div>
                </div>

@@ -5,6 +5,7 @@ import SignIn from './SignIn'
 import SignUp from './SignUp'
 import { IoCloseOutline } from "react-icons/io5";
 import { useLoginModel } from './zustand'
+import VerifyCode from './VerifyCode'
 
 const Login = () => {
    const { open, toggleModel } = useLoginModel(state => state)
@@ -27,8 +28,9 @@ const Login = () => {
             <div role='button' className="absolute top-3 right-3" onClick={toggleModel}><IoCloseOutline size={25} /></div>
             <div className="flex flex-wrap items-center -m-4">
                <div className="w-full h-full lg:w-6/12 p-4">
-                  {
-                     openForm === 'signin' ? <SignIn setOpenForm={setOpenForm} /> : <SignUp setOpenForm={setOpenForm} />
+                  {openForm === 'signin' ? <SignIn setOpenForm={setOpenForm} toggleModel={toggleModel} /> :
+                     openForm === 'signup' ? <SignUp setOpenForm={setOpenForm} /> :
+                        <VerifyCode setOpenForm={setOpenForm} />
                   }
                </div>
                <div className="w-full lg:w-6/12 hidden lg:block p-4">

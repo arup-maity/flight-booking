@@ -36,7 +36,7 @@ const Sidebar: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
    // const filteredMenu = filterSidebarMenu([`${auth?.role}`], SidebarMenu);
 
    return (
-      <div className="sidebar-menu-content w-full h-[calc(100%-70px)] p-1">
+      <div className="sidebar-menu-content w-full h-[calc(100%-70px)] border-r p-1">
          <PerfectScrollbar component="ul" className="" >
             <MenuItems
                items={AdminMenu}
@@ -82,7 +82,7 @@ const NavItem = (props: any) => {
                   "bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-white": item.navLink === currentURL
                }
             )}>
-            <span className="flex items-center">{item.icon}</span>
+            <span className="menu-icon flex items-center transition-all duration-300 ease-in-out">{item.icon}</span>
             <span className="flex-grow font-medium line-clamp-1">{item.title}</span>
          </Link>
       </li>
@@ -188,7 +188,7 @@ export const NavItemGroup = (props: any) => {
                }
             )}
             onClick={(e) => onCollapseClick(e, item)}>
-            <span className="flex items-center">{item.icon}</span>
+            <span className="menu-icon flex items-center">{item.icon}</span>
             <span className="flex-grow font-medium line-clamp-1">{item.title}</span>
             <span
                className={clsx(`flex items-center text-gray-400 transition-transform delay-150 ease-in-out`, {

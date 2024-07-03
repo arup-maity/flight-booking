@@ -82,7 +82,7 @@ const SearchForm = () => {
    return (
       <Suspense>
          <div className="bg-white h-full sticky top-0 z-10 shadow-[0_0_10px_5px_#f1f1f1] rounded p-4 mb-5">
-            <div className="flex justify-between mb-2">
+            <div className="flex flex-wrap justify-between mb-5">
                <ul className='flex flex-nowrap gap-4 mb-2'>
                   <li>
                      <label htmlFor='oneWay' className='flex flex-nowrap items-center gap-2'>
@@ -99,46 +99,63 @@ const SearchForm = () => {
                </ul>
                <p className='text-sm opacity-50'>Book International and Domestic Flights</p>
             </div>
-            <div className="flex flex-wrap">
-               <div className="relative w-3/12 border p-2" >
-                  <div className="absolute -top-3 bg-white text-sm px-2">From</div>
-                  <div role='button' onClick={() => setFromModel(prev => !prev)}>
-                     {
-                        fromDetails?.iataCode &&
-                        <div className='text-base font-medium'>{fromDetails?.city?.cityName}, {fromDetails?.city?.countryName}</div>
-                     }
+            <div className="flex flex-wrap -m-2">
+               <div className="w-full md:w-6/12 lg:w-3/12 p-2" >
+                  <div className="relative w-full h-12 border rounded p-2 py-3">
+                     <div className="absolute -top-3 bg-white text-sm px-2">From</div>
+                     <div role='button' onClick={() => setFromModel(prev => !prev)}>
+                        {
+                           fromDetails?.iataCode &&
+                           <div className='text-base font-medium'>{fromDetails?.city?.cityName}, {fromDetails?.city?.countryName}</div>
+                        }
+                     </div>
                   </div>
                </div>
-               <div className="relative w-3/12 border p-2" >
-                  <div className="absolute -top-3 bg-white text-sm px-2">To</div>
-                  <div role='button' onClick={() => setToModel(prev => !prev)}>
-                     {
-                        toDetails?.iataCode &&
-                        <div className='text-base font-medium'>{toDetails?.city?.cityName}, {toDetails?.city?.countryName}</div>
-                     }
+               <div className="w-full md:w-6/12 lg:w-3/12 p-2" >
+                  <div className="relative w-full h-12 border rounded p-2 py-3">
+                     <div className="absolute -top-3 bg-white text-sm px-2">To</div>
+                     <div role='button' onClick={() => setToModel(prev => !prev)}>
+                        {
+                           toDetails?.iataCode &&
+                           <div className='text-base font-medium'>{toDetails?.city?.cityName}, {toDetails?.city?.countryName}</div>
+                        }
+                     </div>
                   </div>
                </div>
-               <div className="relative w-2/12 border p-2" >
-                  <div className="absolute -top-3 bg-white text-sm px-2">Depart- Return</div>
-                  <div role='button' onClick={() => setOpenCalendar(prev => !prev)}>
-                     <ul className='flex flex-wrap gap-2'>
-                        <li>{dayjs(departDate).format("DD/MM/YY")}</li>
-                        <li>-</li>
-                        <li>{dayjs(returnDate).format("DD/MM/YY")}</li>
-                     </ul>
+               <div className="w-full md:w-6/12 lg:w-3/12 p-2" >
+                  <div className="relative w-full h-12 border rounded p-2 py-3">
+                     <div className="absolute -top-3 bg-white text-sm px-2">
+                        {
+                           tripType === 'O' ? 'Depart' : 'Depart- Return'
+                        }
+                     </div>
+                     <div role='button' onClick={() => setOpenCalendar(prev => !prev)}>
+                        <ul className='flex flex-wrap gap-2'>
+                           <li>{dayjs(departDate).format("DD/MM/YY")}</li>
+                           {
+                              tripType === 'R' &&
+                              <>
+                                 <li>-</li>
+                                 <li>{dayjs(returnDate).format("DD/MM/YY")}</li>
+                              </>
+                           }
+                        </ul>
+                     </div>
                   </div>
                </div>
-               <div className="relative w-3/12 border p-2">
-                  <div className="absolute -top-3 bg-white text-sm px-2">Passenger - Class</div>
-                  <div role='button' onClick={() => setClassModel(prev => !prev)}>
-                     <ul className='flex flex-warp gap-2'>
-                        <li className='text-base whitespace-nowrap'>{classPassenger?.count} passenger,</li>
-                        <li className='text-base'>{classPassenger?.class === 'E' ? 'Economy' : classPassenger.class === 'P' ? 'Premium Economy' : 'Business'}</li>
-                     </ul>
+               <div className="w-full md:w-6/12 lg:w-3/12 p-2">
+                  <div className="relative w-full h-12 border rounded p-2 py-3">
+                     <div className="absolute -top-3 bg-white text-sm px-2">Passenger - Class</div>
+                     <div role='button' onClick={() => setClassModel(prev => !prev)}>
+                        <ul className='flex flex-warp gap-2'>
+                           <li className='text-base whitespace-nowrap'>{classPassenger?.count} passenger,</li>
+                           <li className='text-base'>{classPassenger?.class === 'E' ? 'Economy' : classPassenger.class === 'P' ? 'Premium Economy' : 'Business'}</li>
+                        </ul>
+                     </div>
                   </div>
                </div>
-               <div className="w-1/12 ps-2">
-                  <button className="w-full bg-[#8DD3BB] text-[#0c0c0c] text-base font-medium py-3 px-4 rounded-lg" onClick={handleSearch}>Search</button>
+               <div className="w-full flex justify-end p-2">
+                  <button className="inline-block bg-[#8DD3BB] text-[#0c0c0c] text-base font-medium py-2 px-6 rounded-lg" onClick={handleSearch}>Search</button>
                </div>
             </div>
          </div>

@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
             'Authorization': `Bearer ${token}`
          }
       };
-      const url = process.env.NEXT_PUBLIC_API_URL + `/auth/check-auth`
+      const url = process.env.NEXT_PUBLIC_API_URL + `/api/auth/check-auth`
 
       const response = await fetch(url, options)
       const json = await response.json()
@@ -24,52 +24,30 @@ export async function middleware(request: NextRequest) {
       }
    }
 
-   // seller protect route
    if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
       return
    }
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/seller/login')) {
-   //    return
-   // }
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/seller/register')) {
-   //    return
-   // }
 
    if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
       return
    }
-   // if (auth.login && auth.role !== "seller" && request.nextUrl.pathname.startsWith('/seller/login')) {
-   //    return
-   // }
-   // if (auth.login && auth.role !== "seller" && request.nextUrl.pathname.startsWith('/seller/register')) {
-   //    return
-   // }
 
    if (auth.login && auth.role === "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
       return Response.redirect(new URL('/admin', request.url));
    }
-   // if (auth.login && auth.role === "seller" && request.nextUrl.pathname.startsWith('/seller/login')) {
-   //    return Response.redirect(new URL('/seller/dashboard', request.url));
-   // }
-   // if (auth.login && auth.role === "seller" && request.nextUrl.pathname.startsWith('/seller/register')) {
-   //    return Response.redirect(new URL('/seller/dashboard', request.url));
-   // }
 
    if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin')) {
       return Response.redirect(new URL('/admin/login', request.url));
    }
-   // if (auth.login && auth.role !== "seller" && request.nextUrl.pathname.startsWith('/seller')) {
-   //    return Response.redirect(new URL('/seller/login', request.url));
-   // }
+   if (!auth.login && request.nextUrl.pathname.startsWith('/account')) {
+      return Response.redirect(new URL('/', request.url));
+   }
 
    if (!auth.login && request.nextUrl.pathname.startsWith('/admin')) {
       return Response.redirect(new URL('/admin/login', request.url));
    }
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/seller')) {
-   //    return Response.redirect(new URL('/seller/login', request.url));
-   // }
 }
 
 export const config = {
-   matcher: ['/admin/:path*']
+   matcher: ['/admin/:path*', '/account/:path*']
 }

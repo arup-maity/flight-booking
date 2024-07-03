@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
    PaymentElement,
    useStripe,
@@ -16,7 +16,7 @@ const PaymentForm = () => {
    const [message, setMessage] = useState<string | null>(null);
    const [isLoading, setIsLoading] = useState(false);
 
-   const handleSubmit = async (e:any) => {
+   const handleSubmit = async (e: any) => {
       e.preventDefault();
       if (!stripe || !elements) return;
 
@@ -36,27 +36,20 @@ const PaymentForm = () => {
    };
 
    return (
-      <div className="container mx-auto">
-         <form onSubmit={handleSubmit}>
-            <div className="card w-100 bg-base-100 bg-gray-200 shadow-2xl rounded-lg">
-               <div className="card-body p-6">
-                  <h1 className="card-title font-bold text-2xl mb-4 justify-center">
-                     Complete your payment here!
-                  </h1>
-                  <PaymentElement />
-                  <div className="card-actions justify-center">
-                     <button
-                        className="btn btn-primary rounded-xl text-white px-4 py-2 mt-6"
-                        disabled={isLoading || !stripe || !elements}
-                     >
-                        {isLoading ? "Loading..." : "Pay now"}
-                     </button>
-                  </div>
-                  {message && <div>{message}</div>}
-               </div>
+      <form onSubmit={handleSubmit}>
+         <div className="">
+            <PaymentElement />
+            <div className="flex justify-end my-4">
+               <button
+                  className="text-base bg-[#8DD3BB]  rounded py-1 px-4"
+                  disabled={isLoading || !stripe || !elements}
+               >
+                  {isLoading ? "Loading..." : "Pay now"}
+               </button>
             </div>
-         </form>
-      </div>
+            {message && <div className="text-sm text-red-500">{message}</div>}
+         </div>
+      </form>
    )
 }
 

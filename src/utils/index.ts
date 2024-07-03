@@ -8,3 +8,14 @@ export function convertMinutesToHoursMinutes(totalMinutes: number) {
    // Return an object with hours and minutes
    return { hours, minutes };
 }
+
+export function handleApiError(error: any) {
+   if (error.response && error.response.status === 409) {
+      if (!error.response.data?.success) {
+         return error.response.data?.message
+      }
+   } else {
+      console.error('API request failed:', error);
+      return 'Something went wrong'
+   }
+}

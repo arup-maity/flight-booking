@@ -145,17 +145,22 @@ const FlightHero = () => {
                                        {dayjs(departDate).format("dddd")}
                                     </div>
                                  </div>
-                                 <div>-</div>
-                                 <div className={`${tripType === 'R' ? 'opacity-100' : 'opacity-20'}`}>
-                                    <div className="">
-                                       <span className='text-base md:text-2xl font-bold me-2'>{dayjs(returnDate).format("DD")}</span>
-                                       <span className='text-base font-medium'>{dayjs(returnDate).format("MMM'YY")}</span>
+                                 {
+                                    tripType === 'R' &&
+                                    <div>-</div>
+                                 }
+                                 {
+                                    tripType === 'R' &&
+                                    <div>
+                                       <div className="">
+                                          <span className='text-base md:text-2xl font-bold me-2'>{dayjs(returnDate).format("DD")}</span>
+                                          <span className='text-base font-medium'>{dayjs(returnDate).format("MMM'YY")}</span>
+                                       </div>
+                                       <div className="text-sm">
+                                          {dayjs(returnDate).format("dddd")}
+                                       </div>
                                     </div>
-                                    <div className="text-sm">
-                                       {dayjs(returnDate).format("dddd")}
-                                    </div>
-                                 </div>
-
+                                 }
                               </div>
                            </div>
                         </div>

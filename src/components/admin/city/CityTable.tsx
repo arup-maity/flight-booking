@@ -6,9 +6,10 @@ interface PropsType {
    columns: any[];
    data: any[];
    sort?: any;
+   loading?: boolean;
 }
 
-const CityTable: React.FC<PropsType> = ({ columns = [], data = [], sort }) => {
+const CityTable: React.FC<PropsType> = ({ columns = [], data = [], sort, loading }) => {
    const [sortOrder, setSortOrder] = useState<any>({})
    const [selectAll, setSelectAll] = useState(false);
    const [products, setProducts] = useState<number[]>([]);
@@ -68,6 +69,31 @@ const CityTable: React.FC<PropsType> = ({ columns = [], data = [], sort }) => {
             </tr>
          </thead>
          <tbody>
+            {
+               loading ?
+                  new Array(9).fill(9)?.map((index) => (
+                     <tr key={index}>
+                        <td className='border p-4'></td>
+                        <td className='border p-4'>
+                           <div className="h-3 w-20 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </td>
+                        <td className='border p-4'>
+                           <div className="h-3 w-20 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </td>
+                        <td className='border p-4'>
+                           <div className="h-3 w-20 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </td>
+                        <td className='border p-4'>
+                           <div className="h-3 w-20 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                        </td>
+                     </tr>
+                  ))
+                  :
+                  data?.length === 0 &&
+                  <tr>
+                     <td colSpan={columns.length + 1} className='text-center text-gray-400'>No data</td>
+                  </tr>
+            }
             {data.map((row, index) => (
                <tr key={index}>
                   <td className='border py-2 px-4'>

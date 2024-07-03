@@ -56,7 +56,7 @@ const FlightSearch = () => {
       }
    }
    function handleBook() {
-      push(`/flight/review-details?d=${selectedFlight.id}`)
+      push(`/flight/review-details/${selectedFlight.id}`)
    }
    function hasAllRequiredParams(): boolean {
       const url: string = typeof window !== 'undefined' ? window.location.href : '';

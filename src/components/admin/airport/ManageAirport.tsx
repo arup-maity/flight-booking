@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import Select from 'react-select';
 import { Offcanvas } from '@/ui-components'
 import { adminInstance } from '@/config/axios'
+import { handleApiError } from '@/utils'
 interface PropsType {
    isOpen: boolean;
    toggle: () => void;
@@ -31,22 +32,42 @@ const ManageAirport: React.FC<PropsType> = ({ isOpen, toggle, selectedAirport })
       defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
    const onSubmit = async (data: any) => {
-      console.log('onSubmit', data)
       try {
          if (Object.keys(selectedAirport).length > 0) {
-            await adminInstance.put(`/airport/update-airport/${selectedAirport.id}`, data);
-            toast('Update category successfully')
+            const res = await adminInstance.put(`/airport/update-airport/${selectedAirport.id}`, data);
+            if (res.data?.success) {
+               toast.success('Update airport successfully')
+            }
          } else {
-            await adminInstance.post(`/airport/create-airport`, data);
-            toast('Add category successfully')
+            const res = await adminInstance.post(`/airport/create-airport`, data);
+            if (res.data?.success) {
+               toast.success('Add airport successfully')
+            }
          }
          toggle()
       } catch (error) {
-         console.log('error', error)
+         toast.error(handleApiError(error))
       }
    }
    useEffect(() => {
       getCityList()
+   }, [isOpen, selectedAirport])
+
+   async function getCityList() {
+      try {
+         const res = await adminInstance.get(`/city/all-cities`);
+         if (res.data?.success) {
+            const cityOptions = res.data.cities?.map((city: any) => ({
+               label: `${city.cityName + ', ' + city.countryCode}`,
+               value: city.id,
+            }));
+            setCityList(cityOptions);
+         }
+      } catch (error) {
+         console.error("Error fetching city list:", error);
+      }
+   }
+   function handleOpen() {
       if (Object.keys(selectedAirport).length > 0) {
          for (const key in defaultValues) {
             setValue(key as keyof ValueType, selectedAirport[key])
@@ -54,24 +75,11 @@ const ManageAirport: React.FC<PropsType> = ({ isOpen, toggle, selectedAirport })
       } else {
          reset()
       }
-   }, [isOpen, selectedAirport])
-
-   async function getCityList() {
-      try {
-         const res = await adminInstance.get(`/city/all-cities`);
-         const cityOptions = res.data.cities?.map((city:any) => ({
-            label: city.cityName,
-            value: city.id,
-         }));
-         setCityList(cityOptions);
-      } catch (error) {
-         console.error("Error fetching city list:", error);
-      }
    }
 
    if (!isOpen) return null;
    return (
-      <Offcanvas isOpen={isOpen} direction='left' toggle={toggle}>
+      <Offcanvas isOpen={isOpen} onOpen={handleOpen} direction='left' toggle={toggle}>
          <Offcanvas.Header toggle={toggle}>
             <h5 className='text-lg text-gray-600 font-medium mb-2'>
                {
@@ -105,8 +113,8 @@ const ManageAirport: React.FC<PropsType> = ({ isOpen, toggle, selectedAirport })
                         render={({ field: { onChange, value } }) => (
                            <Select
                               options={cityList}
-                              value={cityList?.filter((obj:any) => value === obj.value)}
-                              onChange={(e:any) => onChange(e.value)}
+                              value={cityList?.filter((obj: any) => value === obj.value)}
+                              onChange={(e: any) => onChange(e.value)}
                            />
                         )}
                      />

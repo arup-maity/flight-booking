@@ -1,28 +1,57 @@
 'use client'
-import Link from 'next/link'
 import React from 'react'
+import Link from 'next/link'
+import { useForm, SubmitHandler } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from 'zod'
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { DropdownContext } from '@/authentication/auth';
+import { authInstance } from '@/config/axios'
 
 interface PropsType {
    setOpenForm: (value: string) => void;
+   toggleModel: () => void;
 }
+interface IFormInput {
+   email: string
+   password: string
+}
+const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
+   const { toggle } = React.useContext<any>(DropdownContext);
+   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
+   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+      try {
+         const res = await authInstance.post('/user/login', data)
+         console.log('======>', res)
+         if (res.data.success && res.data.login) {
+            toggle(res.data)
+            toggleModel()
+         }
+      } catch (error) {
 
-const SignIn: React.FC<PropsType> = ({ setOpenForm }) => {
+      }
+   }
    return (
       <div className="w-full">
          <div className="mb-4">
             <div className="text-2xl font-medium mb-1">Login</div>
             <p className='text-sm'>Login to access your Golobe account</p>
          </div>
-         <form className='space-y-3'>
+         <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
             <fieldset>
                <label htmlFor="" className='text-sm'>Email</label>
-               <input type="text" className='w-full h-10 border border-slate-400 rounded' />
+               <input type="text" {...register("email")} className='w-full h-10 border border-slate-400 rounded' />
+               {
+                  errors.email && <p className='text-xs text-red-500 mt-1'>{errors.email.message}</p>
+               }
             </fieldset>
             <fieldset>
                <label htmlFor="" className='text-sm'>Password</label>
-               <input type="text" className='w-full h-10 border border-slate-400 rounded' />
+               <input type="text" {...register("password")} className='w-full h-10 border border-slate-400 rounded' />
+               {
+                  errors.password && <p className='text-xs text-red-500 mt-1'>{errors.password.message}</p>
+               }
             </fieldset>
             <div className="flex flex-nowrap justify-between">
                <div className="">
