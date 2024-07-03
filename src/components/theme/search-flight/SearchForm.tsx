@@ -81,7 +81,7 @@ const SearchForm = () => {
    }
    return (
       <Suspense>
-         <div className="bg-white h-full sticky top-0 z-10 shadow-[0_0_10px_5px_#f1f1f1] rounded p-4 mb-5">
+         <div className="bg-white h-full lg:sticky lg:top-0 lg:z-10 shadow-[0_0_10px_5px_#f1f1f1] rounded p-4 mb-5">
             <div className="flex flex-wrap justify-between mb-5">
                <ul className='flex flex-nowrap gap-4 mb-2'>
                   <li>

@@ -27,9 +27,18 @@ const Header = () => {
       }
    }, [openMobileMenu])
 
+   function processText(text: string) {
+      const words = text.split(' ');
+      const firstWord = words[0];
+      if (firstWord.length > 8) {
+         return firstWord.substring(0, 8) + '...';
+      }
+      return firstWord;
+   }
+
    return (
       <>
-         <div className='w-full bg-white shadow-[0_0_10px_5px_#f1f1f1] py-3'>
+         <div className='w-full bg-white shadow-[0_0_10px_5px_#f1f1f1] py-4'>
             <div className="theme-container">
                <div className="flex justify-between items-center">
                   <div className="flex flex-nowrap items-center">
@@ -62,7 +71,7 @@ const Header = () => {
                            <DropDown>
                               <DropDown.Header id='header-user' className='border-0'>
                                  <div className="text-sm font-medium font-montserrat">
-                                    {open?.user ? open?.user?.name : 'Hi Traveller'}
+                                    {open?.user ? <div className="flex items-center gap-2"><AiOutlineUser size={20} /><span>Hi</span>{processText(open?.user?.name)}</div> : 'Hi Traveller'}
                                  </div>
                               </DropDown.Header>
                               <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-9 border-0 shadow-[0_1px_10px_0_#00000033] space-y-2 p-2'>
