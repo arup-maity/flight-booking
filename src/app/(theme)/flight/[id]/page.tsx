@@ -59,24 +59,28 @@ const FlightDetails = ({ params }: { params: { id: string } }) => {
             <li>/</li>
             <li>{flightDetails?.departureAirport?.city?.cityName} - {flightDetails?.arrivalAirport?.city?.cityName}</li>
          </ul>
-         <div className="flex justify-between mb-8">
-            <div className="">
-               <h2 className='text-2xl text-[#112211] font-bold mb-4'>Emirates {flightDetails?.airplane?.modelNumber} {flightDetails?.airplane?.manufacturer
-               }</h2>
-               <div className='flex items-center gap-1  mb-1'>
-                  <IoLocationSharp size={18} />
-                  <span className='text-sm text-[#112211] font-medium mb-1'>Gumussuyu Mah. Inonu Cad. No:8, Istanbul 34437</span>
+         <div className="mb-5">
+            <div className="flex flex-wrap -m-2">
+               <div className="w-full md:w-9/12 lg:w-10/12 p-2">
+                  <h2 className='text-2xl text-[#112211] font-bold mb-4'>Emirates {flightDetails?.airplane?.modelNumber} {flightDetails?.airplane?.manufacturer
+                  }</h2>
+                  <div className='flex items-center gap-1  mb-1'>
+                     <IoLocationSharp size={18} />
+                     <span className='text-sm text-[#112211] font-medium mb-1'>Gumussuyu Mah. Inonu Cad. No:8, Istanbul 34437</span>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                     <span className='inline-block border border-[#8DD3BB] rounded px-2'>4.2</span>
+                     <span className='text-sm text-[#112211] font-bold'>Very Good</span>
+                     <span className='text-sm text-[#112211] font-medium'>54 reviews</span>
+                  </div>
                </div>
-               <div className='flex items-center gap-2'>
-                  <span className='inline-block border border-[#8DD3BB] rounded px-2'>4.2</span>
-                  <span className='text-sm text-[#112211] font-bold'>Very Good</span>
-                  <span className='text-sm text-[#112211] font-medium'>54 reviews</span>
-               </div>
-            </div>
-            <div className="">
-               <div className="text-3xl font-bold mb-4">&#8377; {flightDetails?.price}</div>
-               <div className="">
-                  <Link href={`/flight/review-details/${id}`} className='text-sm text-[#112211] font-medium border border-[#8DD3BB] rounded py-2 px-4'>Book Now</Link>
+               <div className="w-full md:w-3/12 lg:w-2/12 flex md:justify-end p-2">
+                  <div className="">
+                     <div className="text-3xl font-bold mb-4">&#8377; {flightDetails?.price}</div>
+                     <div className="">
+                        <Link href={`/flight/review-details/${id}`} className='text-sm text-[#112211] font-medium border border-[#8DD3BB] rounded py-2 px-4'>Book Now</Link>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>
@@ -85,27 +89,27 @@ const FlightDetails = ({ params }: { params: { id: string } }) => {
          <div className="mb-6">
             <h5 className='text-2xl font-bold mb-4'>Basic Economy Features</h5>
             <div className="flex flex-wrap -m-2">
-               <div className="w-1/12 p-2">
+               <div className="w-2/12 lg:w-1/12 p-2">
                   <Image src={`/images/img-27.jpg`} width={120} height={120} alt='' className='w-full aspect-square' />
                </div>
-               <div className="w-1/12 p-2">
+               <div className="w-2/12 lg:w-1/12 p-2">
                   <Image src={`/images/img-27.jpg`} width={120} height={120} alt='' className='w-full aspect-square' />
                </div>
-               <div className="w-1/12 p-2">
+               <div className="w-2/12 lg:w-1/12 p-2">
                   <Image src={`/images/img-27.jpg`} width={120} height={120} alt='' className='w-full aspect-square' />
                </div>
-               <div className="w-1/12 p-2">
+               <div className="w-2/12 lg:w-1/12 p-2">
                   <Image src={`/images/img-27.jpg`} width={120} height={120} alt='' className='w-full aspect-square' />
                </div>
             </div>
          </div>
          <div className="bg-[#8DD3BB] bg-opacity-60 rounded p-4 mb-6">
             <div className='text-2xl text-[#112211] font-bold mb-4'>Emirates Airlines Policies</div>
-            <div className="flex flex-wrap">
-               <div className="w-6/12">
+            <div className="flex flex-wrap max-md:space-y-2">
+               <div className="w-full md:w-6/12">
                   <p className='text-sm text-[#112211] font-medium'>Pre-flight cleaning, installation of cabin HEPA filters.</p>
                </div>
-               <div className="w-6/12">
+               <div className="w-full md:w-6/12">
                   <p className='text-sm text-[#112211] font-medium'>Pre-flight cleaning, installation of cabin HEPA filters.</p>
                </div>
             </div>
@@ -115,28 +119,32 @@ const FlightDetails = ({ params }: { params: { id: string } }) => {
                <div className="text-xl text-[#112211] font-semibold">{dayjs(flightDetails.departureTime).format('dddd, DD MMMM')}</div>
                <p className="text-xl text-[#112211] font-medium">{timeDifferent(flightDetails.departureTime, flightDetails.arrivalTime)}</p>
             </div>
-            <div className="flex items-center justify-between mb-4">
-               <div className="flex items-center gap-2 border border-[#8DD3BB] rounded-md p-2">
-                  <Image src={`/images/img-24.jpg`} width={65} height={50} alt='' className='w-auto h-12' />
-                  <div className="">
-                     <p className='text-2xl text-[#112211] font-medium'>Emirates</p>
-                     <p className='text-sm text-[#112211] font-medium'>{flightDetails?.airplane?.manufacturer
-                     } {flightDetails?.airplane?.modelNumber}</p>
+            <div className="flex flex-wrap items-center justify-between -m-2">
+               <div className="w-full md:w-6/12 flex p-2">
+                  <div className="flex items-center gap-2 border border-[#8DD3BB] rounded-md p-2">
+                     <Image src={`/images/img-24.jpg`} width={65} height={50} alt='' className='w-auto h-12' />
+                     <div className="">
+                        <p className='text-2xl text-[#112211] font-medium'>Emirates</p>
+                        <p className='text-sm text-[#112211] font-medium'>{flightDetails?.airplane?.manufacturer
+                        } {flightDetails?.airplane?.modelNumber}</p>
+                     </div>
                   </div>
                </div>
-               <ul className='flex items-center gap-4'>
-                  <li><IoIosAirplane /></li>
-                  <li className='text-[#D7E2EE] text-2xl'>|</li>
-                  <li><IoIosWifi /></li>
-                  <li className='text-[#D7E2EE] text-2xl'>|</li>
-                  <li><IoStopwatch /></li>
-                  <li className='text-[#D7E2EE] text-2xl'>|</li>
-                  <li><IoFastFood /></li>
-                  <li className='text-[#D7E2EE] text-2xl'>|</li>
-                  <li><MdOutlineAirlineSeatReclineExtra /></li>
-               </ul>
+               <div className="w-full md:w-6/12 flex justify-center lg:justify-end p-2">
+                  <ul className='flex items-center gap-4'>
+                     <li><IoIosAirplane /></li>
+                     <li className='text-[#D7E2EE] text-2xl'>|</li>
+                     <li><IoIosWifi /></li>
+                     <li className='text-[#D7E2EE] text-2xl'>|</li>
+                     <li><IoStopwatch /></li>
+                     <li className='text-[#D7E2EE] text-2xl'>|</li>
+                     <li><IoFastFood /></li>
+                     <li className='text-[#D7E2EE] text-2xl'>|</li>
+                     <li><MdOutlineAirlineSeatReclineExtra /></li>
+                  </ul>
+               </div>
             </div>
-            <div className="flex items-center justify-center flex-nowrap gap-10">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-10 mt-5">
                <div className="flex flex-wrap items-center">
                   <span className='text-2xl text-[#112211] font-semibold me-2'>{dayjs(flightDetails?.departureTime).format('HH:mm')}</span>
                   <span className='text-base text-[#112211] font-medium'>{flightDetails?.departureAirport?.city?.cityName} ({flightDetails?.departureAirport?.iataCode})</span>

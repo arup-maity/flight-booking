@@ -158,7 +158,7 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
                      <div className="text-xl text-[#112211] font-semibold font-montserrat">{flightDetails?.arrivalAirport?.city?.cityName}</div>
                   </div>
                   <div className="flex items-center gap-3 mb-2">
-                     <div className="inline-block font-medium bg-[#8DD3BB] bg-opacity-50 rounded-sm py-0.5 px-4">
+                     <div className="inline-block text-sm md:text-base font-medium bg-[#8DD3BB] bg-opacity-50 rounded-sm py-1 px-4">
                         {dayjs(flightDetails?.departureTime).format('dddd, MMMM DD')}
                      </div>
                      <div className="flex items-center gap-1 *:text-base *:font-montserrat">
@@ -178,25 +178,25 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
                   <div className="bg-gray-100 p-4">
                      <div className="flex items-center gap-4">
                         <div className='w-14 text-lg text-[#112211] font-medium'>{dayjs(flightDetails?.departureTime).format('HH:mm')}</div>
-                        <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl"></div>
-                        <div className="flex items-center gap-1">
+                        <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl flex-[0_0_auto]"></div>
+                        <div className="flex flex-wrap items-center gap-1">
                            <div className='text-base text-[#112211] font-medium'>{flightDetails?.departureAirport?.city?.cityName}</div>
-                           <div>&bull;</div>
-                           <div className="text-base text-[#112211]">{flightDetails?.departureAirport?.airportName}</div>
+                           <div className='hidden md:block'>&bull;</div>
+                           <div className="text-base text-[#112211] line-clamp-1">{flightDetails?.departureAirport?.airportName}</div>
                         </div>
                      </div>
                      <div className="flex items-center">
-                        <div className="w-[76px]"></div>
-                        <div className="h-10 border-l-2 border-dashed border-slate-400"></div>
+                        <div className="w-[67px] lg:w-[76px]"></div>
+                        <div className="h-20 lg:h-10 border-l-2 border-dashed border-slate-400"></div>
                         <div className="text-sm ms-5">{timeDifferent(flightDetails?.departureTime, flightDetails?.arrivalTime)}</div>
                      </div>
                      <div className="flex items-center gap-4">
                         <div className='w-14 text-lg text-[#112211] font-medium'>{dayjs(flightDetails?.arrivalTime).format('HH:mm')}</div>
-                        <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl"></div>
-                        <div className="flex items-center gap-1">
+                        <div className="border-2 border-slate-400 w-3 h-3 rounded-3xl flex-[0_0_auto]"></div>
+                        <div className="flex max-md:flex-wrap items-center gap-1">
                            <div className='text-base text-[#112211] font-medium'>{flightDetails?.arrivalAirport?.city?.cityName}</div>
-                           <div>&bull;</div>
-                           <div className="text-base text-[#112211]">{flightDetails?.arrivalAirport?.airportName}</div>
+                           <div className='hidden md:block'>&bull;</div>
+                           <div className="text-base text-[#112211] line-clamp-1">{flightDetails?.arrivalAirport?.airportName}</div>
                         </div>
                      </div>
                   </div>
