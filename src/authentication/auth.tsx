@@ -25,7 +25,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
          return setOpen({
             login: false,
             user: {}
-         }) // Token is still valid
+         })
       }
       const decodedToken: any = jwtDecode(token) || {}
       const currentTime = Date.now() / 1000;
@@ -34,7 +34,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
          return setOpen({
             login: true,
             user: decodedToken
-         }) // Token is still valid
+         })
       }
    }
 
