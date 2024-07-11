@@ -1,10 +1,10 @@
-import { Inter, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { Toaster } from 'sonner';
-import "./globals.css";
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { ThemeProvider } from "@/ui-components/sidebar";
 import AuthProvider from "@/authentication/auth";
-const inter = Inter({ subsets: ["latin"] });
+import "./globals.css";
+import 'react-perfect-scrollbar/dist/css/styles.css';
+
 const montserrat = Montserrat({
    weight: ["400", "500", "600", "700"],
    display: "swap",
