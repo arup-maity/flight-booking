@@ -1,3 +1,4 @@
+'use client'
 import { axiosInstance } from '@/config/axios'
 import dayjs from 'dayjs'
 import React, { useLayoutEffect, useState } from 'react'
