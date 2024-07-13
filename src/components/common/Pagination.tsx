@@ -76,7 +76,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalItems, perPage, currentPag
             <button
                disabled={currentPage === 1}
                onClick={() => handlePageChange(currentPage - 1)}
-               className={` w-7 h-7 hover:bg-slate-200 border-0 hover:border border-slate-400 flex justify-center items-center rounded`}>
+               className={` w-8 h-8 hover:bg-slate-200 border-0 hover:border border-slate-400 flex justify-center items-center rounded`}>
                <HiOutlineChevronLeft size={20} />
             </button>
          )}
@@ -86,7 +86,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalItems, perPage, currentPag
                   return <li
                      role="button"
                      key={index}
-                     className={`min-w-[28px] h-7 flex items-center justify-center rounded`}>
+                     className={`min-w-[32px] h-8 flex items-center justify-center rounded`}>
                      {page}
                   </li>
                } else {
@@ -94,14 +94,14 @@ const Pagination: React.FC<PaginationProps> = ({ totalItems, perPage, currentPag
                      role="button"
                      key={index}
                      onClick={() => handlePageChange(page as number)}
-                     className={`min-w-[28px] h-7 flex items-center justify-center border border-slate-400 rounded ${currentPage === page ? "bg-slate-200" : ""} `}>
+                     className={`min-w-[32px] h-8 flex items-center justify-center border border-slate-400 rounded ${currentPage === page ? "bg-slate-200" : ""} `}>
                      {page}
                   </li>
                }
             })}
          </ul>
          {currentPage < totalPages && (
-            <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} className="w-7 h-7 hover:bg-slate-200 border-0 hover:border border-slate-400 flex justify-center items-center rounded">
+            <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} className="w-8 h-8 hover:bg-slate-200 border-0 hover:border border-slate-400 flex justify-center items-center rounded">
                <HiOutlineChevronRight size={20} />
             </button>
          )}

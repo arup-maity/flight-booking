@@ -38,7 +38,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ onChange, mode }) => {
 
    return (
       <div className="w-full">
-         <input ref={datePickerRef} type="text" placeholder="Select date..." className="hidden" />
+         <div className="w-full popup-calendar">
+            <input ref={datePickerRef} type="text" placeholder="Select date..." className="hidden" />
+         </div>
       </div>
    )
 }

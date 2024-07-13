@@ -34,7 +34,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                      <Image src="/images/logo-1.png" alt="" width={30} height={25} className="w-full h-auto" />
                   </Link>
                   <Link href="/webx-admin" className="w-full flex items-center flex-grow">
-                     <Image src="/images/logo.png" alt="" width={150} height={25} className="w-full h-auto" />
+                     <Image src="/images/logo01.png" alt="" width={186} height={38} className="!w-full !h-auto" />
                   </Link>
                   <div className="collapese-icon block lg:hidden">
                      <button className="flex items-center justify-center">
@@ -46,7 +46,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
          </div>
 
-         <div className="webx-content-wapper relative flex flex-col transition-all duration-400 ease-in-out">
+         <div className="webx-content-wapper relative flex flex-col transition-all duration-400 ease-in-out ps-0 lg:ps-[250px]">
             <div className="webx-admin-header sticky top-0 z-50">
                <Header />
             </div>

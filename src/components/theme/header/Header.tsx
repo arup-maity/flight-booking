@@ -1,21 +1,23 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { IoBed, IoAirplane, IoMenuOutline, IoCloseOutline } from "react-icons/io5";
-import 'react-perfect-scrollbar/dist/css/styles.css';
+import { IoMenuOutline, IoCloseOutline } from "react-icons/io5";
 import clsx from 'clsx';
 import { useLoginModel } from '../auth/zustand';
 import { DropdownContext } from '@/authentication/auth';
 import { AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
 import { DropDown } from '@/ui-components';
-
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const Header = () => {
+   const currentURL = usePathname();
    const { toggleModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
    const { open } = React.useContext<any>(DropdownContext);
+   const [current, setCurrent] = useState('/')
 
    useEffect(() => {
       if (openMobileMenu) {
@@ -26,6 +28,10 @@ const Header = () => {
          document.body.style.overflow = "auto";
       }
    }, [openMobileMenu])
+
+   useEffect(() => {
+      setCurrent(currentURL);
+   }, [currentURL])
 
    function processText(text: string) {
       if (!text) return ''
@@ -48,21 +54,21 @@ const Header = () => {
                            <IoMenuOutline size={35} />
                         </button>
                         <div className="">
-                           <Link href='/'><Image src='/images/logo01.png' width={150} height={32} alt='' className='!w-auto h-8' /></Link>
+                           <Link href='/'><Image src='/images/logo01.png' width={158} height={32} alt='' className='!w-auto h-8' /></Link>
                         </div>
                      </div>
                      <ul className='hidden lg:flex items-center gap-10 ms-28'>
                         <li>
-                           <Link href='/' className='text-sm text-[#112211] font-medium font-montserrat'>Home</Link>
+                           <Link href='/' className={`text-base ${current === '/' ? 'text-theme-blue' : 'text-theme-black'} font-medium font-montserrat`}>Home</Link>
                         </li>
                         <li>
-                           <Link href='/offers' className='text-sm text-[#112211] font-medium font-montserrat'>Offers</Link>
+                           <Link href='/offers' className={`text-base ${current === '/offers' ? 'text-theme-blue' : 'text-theme-black'} font-medium font-montserrat`}>Offers</Link>
                         </li>
                         <li>
-                           <Link href='/contact-us' className='text-sm text-[#112211] font-medium font-montserrat'>Contact Us</Link>
+                           <Link href='/contact-us' className={`text-base ${current === '/contact-us' ? 'text-theme-blue' : 'text-theme-black'} font-medium font-montserrat`}>Contact Us</Link>
                         </li>
                         <li>
-                           <Link href='/about-us' className='text-sm text-[#112211] font-medium font-montserrat'>About Us</Link>
+                           <Link href='/about-us' className={`text-base ${current === '/about-us' ? 'text-theme-blue' : 'text-theme-black'} font-medium font-montserrat`}>About Us</Link>
                         </li>
                      </ul>
                   </div>

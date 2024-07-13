@@ -546,7 +546,7 @@ span.flatpickr-weekday {
    -ms-flex-align: start;
    align-items: flex-start;
    // width: 307.875px;
-   width: 100%;
+   width: 100% !important;
 }
 
 .flatpickr-days:focus {
@@ -557,10 +557,8 @@ span.flatpickr-weekday {
    padding: 0;
    outline: 0;
    text-align: left;
-   width: 100%;
-   // width: 307.875px;
-   // min-width: 307.875px;
-   // max-width: 307.875px;
+   width: 100% !important;
+   max-width: 100% !important;
    -webkit-box-sizing: border-box;
    box-sizing: border-box;
    display: inline-block;
@@ -594,6 +592,7 @@ span.flatpickr-weekday {
    cursor: pointer;
    font-weight: 400;
    width: 14.2857143%;
+   max-width: 15% !important;
    -webkit-flex-basis: 14.2857143%;
    -ms-flex-preferred-size: 14.2857143%;
    flex-basis: 14.2857143%;

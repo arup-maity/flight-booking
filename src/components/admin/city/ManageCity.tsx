@@ -59,15 +59,15 @@ const ManageCity: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
    return (
       <Offcanvas isOpen={isOpen} onOpen={handleOpen} onClose={reset} direction='left' toggle={toggle}>
          <Offcanvas.Header toggle={toggle}>
-            <h5 className='text-lg text-gray-600 font-medium mb-2'>
+            <h5 className='text-lg text-gray-600 font-medium'>
                {
                   Object.keys(selectedCity).length > 0 ? 'Edit City' : 'Add City'
                }
             </h5>
          </Offcanvas.Header>
-         <Offcanvas.Body>
+         <Offcanvas.Body className='p-4'>
             <form onSubmit={handleSubmit(onSubmit)} className='h-full flex flex-col'>
-               <div className="flex-grow  space-y-4">
+               <div className="flex-grow space-y-4 mb-4">
                   <fieldset>
                      <label className='text-sm text-gray-500'>City Name</label>
                      <input {...register("cityName")} className='w-full h-10 border border-slate-300 rounded p-2' />
@@ -85,12 +85,12 @@ const ManageCity: React.FC<PropsType> = ({ isOpen, toggle, selectedCity }) => {
                   </fieldset>
                </div>
                <fieldset className='flex items-center gap-2'>
-                  <button type="submit" className='basis-[50%] text-base border border-slate-500 rounded py-1 px-4'>
+                  <button type="submit" className='basis-[50%] bg-theme-blue text-base font-medium font-montserrat border border-theme-blue rounded py-1 px-4'>
                      {
-                        Object.keys(selectedCity).length > 0 ? 'Update' : 'Add'
+                        Object.keys(selectedCity).length > 0 ? 'Update' : 'Add City'
                      }
                   </button>
-                  <button type="submit" className='basis-[50%] text-base bg-gray-200 border border-gray-200 rounded py-1 px-4'>Cancel</button>
+                  <button type="button" className='basis-[50%] text-base bg-gray-200 border border-gray-200 rounded py-1 px-4' onClick={toggle}>Cancel</button>
                </fieldset>
             </form>
          </Offcanvas.Body>

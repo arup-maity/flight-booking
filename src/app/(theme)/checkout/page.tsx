@@ -180,8 +180,8 @@ const Checkout = () => {
                      Cradit / Debit / ATM Card
                   </div>
                   {/* <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: bookingDetails?.payments?.clientSecret }}> */}
-                     {/* <PaymentForm /> */}
-                     {/* <EmbeddedCheckout /> */}
+                  {/* <PaymentForm /> */}
+                  {/* <EmbeddedCheckout /> */}
                   {/* </EmbeddedCheckoutProvider> */}
                </div>
                <div className="">
