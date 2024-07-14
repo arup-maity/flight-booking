@@ -34,7 +34,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                      <Image src="/images/logo-1.png" alt="" width={30} height={25} className="w-full h-auto" />
                   </Link>
                   <Link href="/webx-admin" className="w-full flex items-center flex-grow">
-                     <Image src="/images/logo01.png" alt="" width={186} height={38} className="!w-full !h-auto" />
+                     <div className="text-xl font-montserrat font-semibold">Cloud Wings</div>
+                     {/* <Image src="/images/logo01.png" alt="" width={186} height={38} className="!w-auto h-8" /> */}
                   </Link>
                   <div className="collapese-icon block lg:hidden">
                      <button className="flex items-center justify-center">

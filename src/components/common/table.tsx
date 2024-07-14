@@ -1,6 +1,6 @@
 'use client'
-import { cn } from '@/ui-components/utils';
 import React, { useEffect, useState } from 'react'
+import { cn } from '@/ui-components/utils';
 
 interface PropsType {
    columns: any[];
@@ -10,7 +10,7 @@ interface PropsType {
    deleteRows?: (rowId: number[]) => void;
 }
 
-const UserTable: React.FC<PropsType> = ({ columns = [], data = [], sort, loading = false, deleteRows }) => {
+const Table: React.FC<PropsType> = ({ columns = [], data = [], sort, loading = false, deleteRows }) => {
    const [sortOrder, setSortOrder] = useState<any>({})
    const [selectAll, setSelectAll] = useState(false);
    const [selectedRow, setSelectedRow] = useState<number[]>([]);
@@ -112,4 +112,4 @@ const UserTable: React.FC<PropsType> = ({ columns = [], data = [], sort, loading
    )
 }
 
-export default UserTable
+export default Table

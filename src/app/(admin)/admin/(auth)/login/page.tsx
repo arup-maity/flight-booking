@@ -18,6 +18,7 @@ interface ValueType {
 const Login = () => {
    const router = useRouter()
    const [showPassword, setShowPassword] = useState<boolean>(false)
+   const [loading, setLoading] = useState<boolean>(false)
    const defaultValues: Partial<ValueType> = { email: '', password: '' }
    const schemaValidation = z.object({
       email: z.string().email().min(5, 'Field is required'),
@@ -58,6 +59,7 @@ const Login = () => {
                   <fieldset className="relative z-0 mb-6">
                      <input type="text" id="email" {...register("email")} className="block py-1.5 px-0 w-full text-base text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 peer" placeholder="" autoComplete='off' />
                      <label htmlFor="email" className="absolute text-sm text-white dark:text-gray-400 duration-300 transform -translate-y-5 top-2 -z-10 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-sm peer-focus:-translate-y-5 ">Email</label>
+                     {errors?.email && <p className='text-sm text-red-500 mt-1'>{errors?.email?.message}</p>}
                   </fieldset>
                   <fieldset className="relative z-0 mb-4">
                      <input type={showPassword ? 'text' : 'password'} id="password" {...register("password")} className="block py-1.5 px-0 w-full text-base text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600  focus:outline-none focus:ring-0 peer" placeholder="" autoComplete='off' />
@@ -67,8 +69,9 @@ const Login = () => {
                            showPassword ? <IoEyeOutline size={20} className='cursor-pointer text-white' onClick={() => setShowPassword(false)} /> : <IoEyeOffOutline size={20} className='cursor-pointer text-white' onClick={() => setShowPassword(true)} />
                         }
                      </div>
+                     {errors?.password && <p className='text-sm text-red-500 mt-1'>{errors?.password?.message}</p>}
                   </fieldset>
-                  <button type="submit" className='w-full bg-[#8DD3BB] text-base font-medium rounded py-2 px-4 '>
+                  <button type="submit" disabled={loading} className='w-full bg-[#8DD3BB] text-base font-medium rounded py-2 px-4 '>
                      Login
                   </button>
                </form>

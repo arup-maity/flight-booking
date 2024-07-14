@@ -14,6 +14,7 @@ import { Ability } from '@/authentication/AccessControl'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { toast } from 'sonner'
 import { handleApiError } from '@/utils'
+import Table from '@/components/common/table'
 
 const AirportList = () => {
    const auth = AuthSession()
@@ -77,22 +78,22 @@ const AirportList = () => {
          title: 'Airport Name',
          dataIndex: 'airportName',
          sortable: true,
-         className: 'w-[20%] min-w-[300px]'
+         className: 'w-auto min-w-[300px]'
       },
       {
          title: 'iata Code',
          dataIndex: 'iataCode',
          sortable: true,
-         className: 'w-[25%] min-w-[300px]'
+         className: 'w-[15%] min-w-[200px]'
       },
       {
          title: 'City',
          className: 'w-[25%] min-w-[300px]',
-         render: (record: any) => record.city.cityName + ', ' + record.city.countryCode,
+         render: (record: any) => record?.city?.cityName + ', ' + record?.city?.countryName + ' ' + record?.city?.countryCode,
       },
       {
          title: 'Options',
-         className: 'w-[100px]',
+         className: 'w-[200px]',
          render: (record: any) => (
             <div className='flex items-center justify-between gap-4'>
                {
@@ -126,7 +127,7 @@ const AirportList = () => {
                }
             </div>
             <PerfectScrollbar className='pb-3'>
-               <AirportTable columns={columns} data={airportList} sort={(sort: any) => setSort(sort)} loading={loading} />
+               <Table columns={columns} data={airportList} sort={(sort: any) => setSort(sort)} loading={loading} />
             </PerfectScrollbar>
             <div className="flex items-center justify-between mt-4">
                {

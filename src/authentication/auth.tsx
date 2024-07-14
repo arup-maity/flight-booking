@@ -8,12 +8,11 @@ type ContextType = {
    toggle?: (value: string) => void;
 }
 
-export const DropdownContext = React.createContext<ContextType>({});
-
+export const sessionContext = React.createContext<ContextType>({});
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-   const [open, setOpen] = useState({ login: false, user: {} });
-   const dropdownContext: any = useMemo(() => ({ open, toggle }), [open]);
+   const [session, setSession] = useState({ login: false, user: {} });
+   const dropdownContext: any = useMemo(() => ({ session, toggle }), [session]);
 
    useLayoutEffect(() => {
       authByToken()
@@ -22,7 +21,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    function authByToken() {
       const token = Cookies.get('token') || ''
       if (!token) {
-         return setOpen({
+         return setSession({
             login: false,
             user: {}
          })
@@ -31,7 +30,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const currentTime = Date.now() / 1000;
       // Check if the token has expired
       if (decodedToken?.exp > currentTime) {
-         return setOpen({
+         return setSession({
             login: true,
             user: decodedToken
          })
@@ -39,13 +38,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    }
 
    function toggle(value: any) {
-      setOpen(value);
+      setSession(value);
    }
 
    return (
-      <DropdownContext.Provider value={dropdownContext}>
+      <sessionContext.Provider value={dropdownContext}>
          {children}
-      </DropdownContext.Provider>
+      </sessionContext.Provider>
    )
 }
 

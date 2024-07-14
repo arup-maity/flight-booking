@@ -1,20 +1,20 @@
 'use client'
 import React, { useLayoutEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
+import { toast } from 'sonner'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 import { adminInstance } from '@/config/axios'
-import CityTable from '@/components/admin/city/CityTable'
 import ManageCity from '@/components/admin/city/ManageCity'
 import CityDetails from '@/components/admin/city/CityDetails'
-import { RiDeleteBinLine } from 'react-icons/ri'
-import { IoEyeOutline } from 'react-icons/io5'
-import { IoIosSearch } from "react-icons/io";
 import Pagination from '@/components/common/Pagination'
-import PerfectScrollbar from 'react-perfect-scrollbar'
 import { AuthSession } from '@/authentication/AuthSession'
 import { Ability } from '@/authentication/AccessControl'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
-import { toast } from 'sonner'
+import Table from '@/components/common/table'
 import { handleApiError } from '@/utils'
+import { IoIosSearch } from "react-icons/io";
+import { IoEyeOutline } from 'react-icons/io5'
+import { RiDeleteBinLine } from 'react-icons/ri'
 import { MdOutlineModeEditOutline, MdClose } from "react-icons/md";
 
 const CityList = () => {
@@ -23,51 +23,42 @@ const CityList = () => {
    // sate
    const [formOpen, setFormOpen] = useState(false)
    const [showDetails, setShowDetails] = useState(false)
+   const [cityList, setCityList] = useState([])
    const [selectedCity, setSelectedCity] = useState({})
-   const [cityList, setCityList] = useState(cityLists)
-   const [totalItems, setTotalItems] = useState(100)
+   // pagination
+   const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
    const [itemsPerPage, setItemsPerPage] = useState(5)
-   const [sort, setSort] = useState<{ column?: string, sortOrder?: string }>({})
+   // filter
+   const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')
    const [debouncedValue, setValue] = useDebounceValue('', 1000)
-   const [clearSearch, setClearSearch] = useState(false)
+   const [sort, setSort] = useState<{ column?: string, sortOrder?: string }>({})
+   // delete rows
+   const [deleteRows, setDeleteRows] = useState<number[]>([])
+   // 
    const [loading, setLoading] = useState(true)
 
+
    useLayoutEffect(() => {
-      getCityList({
-         page: currentPage,
-         limit: itemsPerPage,
-         search: debouncedValue,
-         orderColumn: sort.column,
-         order: sort.sortOrder
-      })
+      getCityList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
    }, [currentPage, itemsPerPage, debouncedValue, sort])
    //
    function handleToggle() {
-      getCityList({
-         page: currentPage,
-         limit: itemsPerPage,
-         search: debouncedValue,
-         orderColumn: sort.column,
-         order: sort.sortOrder
-      })
+      getCityList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
       setFormOpen(prev => !prev)
       setSelectedCity({})
    }
    // get city list
    async function getCityList(params: any) {
       try {
-         const { data } = await adminInstance.get(`/city/all-cities`, {
-            params
-         })
+         const { data } = await adminInstance.get(`/city/all-cities`, { params })
          if (data.success) {
-            // setCityList(data.cities)
-            // setTotalItems(data.count)
+            setCityList(data.cities)
+            setTotalItems(data.count)
          }
       } catch (error) {
          console.log('Error', error)
-
       } finally {
          setLoading(false)
       }
@@ -77,17 +68,23 @@ const CityList = () => {
       try {
          const { data } = await adminInstance.delete(`/city/delete-city/${id}`)
          if (data.success) {
-            getCityList({
-               page: currentPage,
-               limit: itemsPerPage,
-               search: debouncedValue,
-               orderColumn: sort.column,
-               order: sort.sortOrder
-            })
+            getCityList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
             toast.success('Delete city successfully')
          }
       } catch (error) {
          toast.error(handleApiError(error))
+      }
+   }
+   // delete multiple cities
+   async function multipleDelete(rows: number[]) {
+      try {
+         const { data } = await adminInstance.post(`/city/delete-cities/multiple`, { rows })
+         if (data?.success) {
+            toast('Delete successfully')
+            getCityList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
+         }
+      } catch (error) {
+         console.log('Error', error)
       }
    }
 
@@ -104,12 +101,14 @@ const CityList = () => {
 
    const columns = [
       {
+         index: 'cityName',
          title: 'City Name',
          dataIndex: 'cityName',
          sortable: true,
          className: 'w-[20%] min-w-[250px]'
       },
       {
+         index: 'countryName',
          title: 'Country Name',
          dataIndex: '',
          sortable: true,
@@ -132,17 +131,21 @@ const CityList = () => {
          dataIndex: '',
          render: (record: any) => (
             <div className='flex items-center justify-center gap-4'>
+               <button >
+                  <IoEyeOutline size={20} />
+               </button>
                {
                   Ability('update', 'city', auth) &&
-                  <button onClick={() => { setSelectedCity(record); setFormOpen(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
+                  <button onClick={() => { setSelectedCity(record); setFormOpen(prev => !prev) }} >
+                     <MdOutlineModeEditOutline size={20} />
+                  </button>
                }
-               <div className="flex items-center gap-4">
-                  <button onClick={() => { setSelectedCity(record); setShowDetails(prev => !prev) }} className=''><MdOutlineModeEditOutline size={20} /></button>
-                  <button className='' onClick={() => deleteCity(record?.id)}><RiDeleteBinLine size={17} /></button>
-                  {
-                     Ability('detele', 'city', auth) && <button className='' onClick={() => deleteCity(record?.id)}><RiDeleteBinLine size={17} /></button>
-                  }
-               </div>
+               {
+                  Ability('detele', 'city', auth) &&
+                  <button className='' onClick={() => deleteCity(record?.id)}>
+                     <RiDeleteBinLine size={17} />
+                  </button>
+               }
             </div>
          ),
       },
@@ -151,11 +154,11 @@ const CityList = () => {
    return (
       <div className=''>
          <BreadCrumbs title='City List' data={[{ title: 'City List' }]} />
-         <div className="bg-white min-h-[70dvh] rounded p-4">
+         <div className="bg-white rounded p-4">
             <div className="mb-5">
-               <div className="flex flex-wrap items-center -m-2">
-                  <div className="w-full md:w-9/12 lg:w-10/12 p-2">
-                     <div className="relative w-full flex items-center border-b-2 border-slate-200">
+               <div className="flex flex-wrap md:flex-nowrap items-center justify-between -m-2">
+                  <div className="w-full md:w-full p-2">
+                     <div className="w-full flex items-center border-b-2 border-slate-200">
                         <IoIosSearch size={25} />
                         <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => handleSearch(event.target.value)} value={searchValue} />
                         {
@@ -163,17 +166,20 @@ const CityList = () => {
                         }
                      </div>
                   </div>
-                  <div className="w-full md:w-3/12 lg:w-2/12 flex justify-end p-2">
-                     <button onClick={() => setFormOpen(prev => !prev)} className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4'>Add new city</button>
-                     {/* {
+                  <div className="w-full md:w-auto flex justify-end gap-2 p-2">
+                     {
+                        Ability('delete', 'city', auth) &&
+                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
+                     }
+                     {
                         Ability('create', 'city', auth) &&
-                        <button onClick={() => setFormOpen(prev => !prev)} className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4'>Add new city</button>
-                     } */}
+                        <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedCity({}) }}>Add new City</button>
+                     }
                   </div>
                </div>
             </div>
             <PerfectScrollbar className='pb-3'>
-               <CityTable columns={columns} data={cityList} sort={(sort: any) => setSort(sort)} loading={loading} />
+               <Table columns={columns} data={cityList} sort={(sort: any) => setSort(sort)} loading={loading} deleteRows={(data) => setDeleteRows(data)} />
             </PerfectScrollbar>
             <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
                {
@@ -200,172 +206,3 @@ const CityList = () => {
 }
 
 export default CityList
-
-
-const cityLists = [
-   {
-      "id": 10,
-      "cityName": "Mumbai",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-06-30T11:00:59.827Z",
-      "updatedAt": "2024-06-30T11:00:59.827Z",
-      "airports": [
-         {
-            "id": 8,
-            "airportName": "Chhatrapati Shivaji Maharaj International Airport",
-            "iataCode": "BOM",
-            "address": null,
-            "cityId": 10,
-            "createdAt": "2024-06-30T12:17:30.970Z",
-            "updatedAt": "2024-06-30T12:17:30.970Z"
-         }
-      ]
-   },
-   {
-      "id": 11,
-      "cityName": "Sapporo",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.841Z",
-      "updatedAt": "2024-06-30T11:00:59.841Z",
-      "airports": []
-   },
-   {
-      "id": 12,
-      "cityName": "Hiroshima",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.842Z",
-      "updatedAt": "2024-06-30T11:00:59.842Z",
-      "airports": []
-   },
-   {
-      "id": 14,
-      "cityName": "Tokyo",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.839Z",
-      "updatedAt": "2024-06-30T11:00:59.839Z",
-      "airports": [
-         {
-            "id": 4,
-            "airportName": "Narita International Airport",
-            "iataCode": "NRT",
-            "address": null,
-            "cityId": 14,
-            "createdAt": "2024-06-30T12:16:48.641Z",
-            "updatedAt": "2024-06-30T12:16:48.641Z"
-         }
-      ]
-   },
-   {
-      "id": 15,
-      "cityName": "Osaka",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.840Z",
-      "updatedAt": "2024-06-30T11:00:59.840Z",
-      "airports": []
-   },
-   {
-      "id": 16,
-      "cityName": "Sendai",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.842Z",
-      "updatedAt": "2024-06-30T11:00:59.842Z",
-      "airports": []
-   },
-   {
-      "id": 17,
-      "cityName": "Fukuoka",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.840Z",
-      "updatedAt": "2024-06-30T11:00:59.840Z",
-      "airports": []
-   },
-   {
-      "id": 18,
-      "cityName": "Chennai",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-06-30T11:00:59.828Z",
-      "updatedAt": "2024-06-30T11:00:59.828Z",
-      "airports": [
-         {
-            "id": 7,
-            "airportName": "Chennai International Airport",
-            "iataCode": "MAA",
-            "address": null,
-            "cityId": 18,
-            "createdAt": "2024-06-30T12:17:30.970Z",
-            "updatedAt": "2024-06-30T12:17:30.970Z"
-         }
-      ]
-   },
-   {
-      "id": 21,
-      "cityName": "Kagoshima",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.839Z",
-      "updatedAt": "2024-06-30T11:00:59.839Z",
-      "airports": []
-   },
-   {
-      "id": 22,
-      "cityName": "Nagoya",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-06-30T11:00:59.840Z",
-      "updatedAt": "2024-06-30T11:00:59.840Z",
-      "airports": []
-   },
-   {
-      "id": 25,
-      "cityName": "Goa",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-07-12T10:42:06.230Z",
-      "updatedAt": "2024-07-12T10:42:06.230Z",
-      "airports": []
-   },
-   {
-      "id": 26,
-      "cityName": "Okinawa",
-      "countryName": "Japan",
-      "countryCode": "JP",
-      "createdAt": "2024-07-12T10:42:06.230Z",
-      "updatedAt": "2024-07-12T10:42:06.230Z",
-      "airports": []
-   },
-   {
-      "id": 30,
-      "cityName": "Hyderabad",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-07-12T10:42:49.485Z",
-      "updatedAt": "2024-07-12T10:42:49.485Z",
-      "airports": []
-   },
-   {
-      "id": 32,
-      "cityName": "Kochi",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-07-12T10:42:49.485Z",
-      "updatedAt": "2024-07-12T10:42:49.485Z",
-      "airports": []
-   },
-   {
-      "id": 35,
-      "cityName": "Delhi",
-      "countryName": "India",
-      "countryCode": "IN",
-      "createdAt": "2024-07-12T10:42:49.485Z",
-      "updatedAt": "2024-07-12T10:42:49.485Z",
-      "airports": []
-   }
-]

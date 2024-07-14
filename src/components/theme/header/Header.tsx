@@ -7,7 +7,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { IoMenuOutline, IoCloseOutline } from "react-icons/io5";
 import clsx from 'clsx';
 import { useLoginModel } from '../auth/zustand';
-import { DropdownContext } from '@/authentication/auth';
+import { sessionContext } from '@/authentication/auth';
 import { AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
 import { DropDown } from '@/ui-components';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -16,7 +16,7 @@ const Header = () => {
    const currentURL = usePathname();
    const { toggleModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
-   const { open } = React.useContext<any>(DropdownContext);
+   const { session } = React.useContext<any>(sessionContext);
    const [current, setCurrent] = useState('/')
 
    useEffect(() => {
@@ -73,7 +73,7 @@ const Header = () => {
                      </ul>
                   </div>
                   {
-                     open?.login ?
+                     session?.login ?
                         <div className="relative">
                            <DropDown>
                               <DropDown.Header id='header-user' className='border-0'>
@@ -81,7 +81,7 @@ const Header = () => {
                                     <div className="flex items-center gap-2">
                                        <AiOutlineUser size={20} />
                                        <span>Hi</span>
-                                       {open?.user?.name ? processText(open?.user?.name) : 'Traveller'}
+                                       {session?.user?.name ? processText(session?.user?.name) : 'Traveller'}
                                     </div>
                                  </div>
                               </DropDown.Header>
@@ -133,7 +133,7 @@ const Header = () => {
                   </ul>
                </PerfectScrollbar>
                {
-                  open.login ?
+                  session.login ?
                      <div className="p-2">
                         <div className="border border-theme-blue flex flex-nowrap items-center gap-4 rounded py-2 px-4 mb-3"><AiOutlineLogout size={20} />Logout </div>
                         <div className="bg-theme-blue flex flex-nowrap items-center gap-4 rounded py-2 px-4"><AiOutlineLogout size={20} />Logout </div>

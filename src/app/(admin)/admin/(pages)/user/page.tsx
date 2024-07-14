@@ -15,7 +15,7 @@ import Pagination from '@/components/common/Pagination'
 import Image from 'next/image'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { MdClose } from "react-icons/md";
-
+import { toast } from 'sonner';
 
 const UserList = () => {
    const auth = AuthSession()
@@ -72,6 +72,7 @@ const UserList = () => {
          if (data.success) {
             setUsersList(data?.users)
             setTotalItems(data?.count)
+            setLoading(false)
          }
       } catch (error) {
          console.log('Error', error)
@@ -82,6 +83,19 @@ const UserList = () => {
       try {
          const { data } = await adminInstance.delete(`/user/delete-user/${id}`)
          if (data.success) {
+            getUsers({ ...filter, ...sort, search: debouncedValue, page: currentPage, limit: itemsPerPage })
+            toast('Delete successfully')
+         }
+      } catch (error) {
+         console.log('Error', error)
+      }
+   }
+   // delete all users
+   async function multipleDelete(rows: number[]) {
+      try {
+         const { data } = await adminInstance.post(`/user/delete-users/multiple`, { rows })
+         if (data?.success) {
+            toast('Delete successfully')
             getUsers({ ...filter, ...sort, search: debouncedValue, page: currentPage, limit: itemsPerPage })
          }
       } catch (error) {
@@ -138,19 +152,14 @@ const UserList = () => {
          render: (record: any) => (
             <div className='flex items-center justify-center gap-5'>
                <button onClick={() => { }} className=''><IoEyeOutline size={20} /></button>
-               <button onClick={() => { setSelectedUser(record); setOpenUpdateForm(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
-               <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
-               {/* {
+               {
                   Ability('update', 'user', auth) &&
                   <button onClick={() => { setSelectedUser(record); setOpenUpdateForm(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
                }
-               <div className="flex items-center gap-4">
-                  <button onClick={() => { }} className=''><IoEyeOutline size={20} /></button>
-                  {
-                     Ability('delete', 'user', auth) &&
-                     <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
-                  }
-               </div> */}
+               {
+                  Ability('delete', 'user', auth) &&
+                  <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
+               }
             </div>
          ),
       },
@@ -173,13 +182,12 @@ const UserList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Delete Users</button>
+                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
                      }
-                     <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
-                     {/* {
-                     Ability('create', 'user', auth) &&
-                     <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
-                  } */}
+                     {
+                        Ability('create', 'user', auth) &&
+                        <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
+                     }
                   </div>
                </div>
             </div>
