@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { DropdownContext } from '@/authentication/auth';
+import { sessionContext } from '@/authentication/auth';
 import { authInstance } from '@/config/axios'
 
 interface PropsType {
@@ -18,7 +18,7 @@ interface IFormInput {
    password: string
 }
 const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
-   const { toggle } = React.useContext<any>(DropdownContext);
+   const { toggle } = React.useContext<any>(sessionContext);
    const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>()
    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
       try {

@@ -33,27 +33,32 @@ const FlightsList = () => {
    const [sort, setSort] = useState<{ column?: string, sortOrder?: string }>({})
    // delete rows
    const [deleteRows, setDeleteRows] = useState<number[]>([])
+   //
+   const [loading, setLoading] = useState(true)
 
    useLayoutEffect(() => {
-      getFlightsList()
-   }, [formOpen])
+      getFlightsList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
+   }, [currentPage, itemsPerPage, debouncedValue, sort])
 
-   async function getFlightsList() {
+   async function getFlightsList(params: any) {
       try {
-         const { data } = await adminInstance.get(`/flight/all-flights`)
+         const { data } = await adminInstance.get(`/flight/all-flights`, { params })
          // console.log(data)
          if (data.success) {
-            setFlightsList(data.flights)
+            setFlightsList(data?.flights)
+            setTotalItems(data?.count)
          }
       } catch (error) {
          console.log('Error', error)
+      } finally {
+         setLoading(false)
       }
    }
    async function deleteAirport(id: number) {
       try {
          const { data } = await adminInstance.delete(`/flight/delete-flight/${id}`)
          if (data.success) {
-            getFlightsList()
+            getFlightsList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
             toast.success('Flight deleted successfully')
          }
       } catch (error) {
@@ -71,19 +76,20 @@ const FlightsList = () => {
       setClearSearch(false)
    }
    async function multipleDelete(rows: number[]) {
-      // try {
-      //    const { data } = await adminInstance.post(`/user/delete-users/multiple`, { rows })
-      //    if (data?.success) {
-      //       toast('Delete successfully')
-      //       getUsers({ ...filter, ...sort, search: debouncedValue, page: currentPage, limit: itemsPerPage })
-      //    }
-      // } catch (error) {
-      //    console.log('Error', error)
-      // }
+      try {
+         const { data } = await adminInstance.post(`/flight/delete-flight/multiple`, { rows })
+         if (data?.success) {
+            toast('Delete successfully')
+            getFlightsList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
+         }
+      } catch (error) {
+         console.log('Error', error)
+      }
    }
 
    const columns = [
       {
+         index: 'flightNumber',
          title: 'Flight Number',
          dataIndex: 'flightNumber',
          sortable: true,
@@ -143,17 +149,18 @@ const FlightsList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
+                        Ability('delete', 'flight', auth) &&
+                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Flights</button>
                      }
                      {
-                        Ability('create', 'city', auth) &&
-                        <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedFlight({}) }}>Add new City</button>
+                        Ability('create', 'flight', auth) &&
+                        <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedFlight({}) }}>Add new Flight</button>
                      }
                   </div>
                </div>
             </div>
             <PerfectScrollbar className='pb-3'>
-               <Table columns={columns} data={flightsList} sort={(e: any) => null} />
+               <Table columns={columns} data={flightsList} sort={(sort: any) => setSort(sort)} loading={loading} deleteRows={(data) => setDeleteRows(data)} />
             </PerfectScrollbar>
             <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
                {

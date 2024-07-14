@@ -11,12 +11,18 @@ import Table from '@/components/common/table'
 import Pagination from '@/components/common/Pagination'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { useDebounceValue } from 'usehooks-ts'
+import { Ability } from '@/authentication/AccessControl'
+import { AuthSession } from '@/authentication/AuthSession'
+import { MdClose } from 'react-icons/md'
 
 
 const AirplanesList = () => {
+   // auth
+   const auth = AuthSession()
+   //
    const [formOpen, setFormOpen] = useState(false)
-   const [selectedAirplane, setSelectedAirplane] = useState({})
    const [airplanesList, setAirplanesList] = useState([])
+   const [selectedAirplane, setSelectedAirplane] = useState({})
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
@@ -38,16 +44,19 @@ const AirplanesList = () => {
          search: debouncedValue,
          ...sort
       })
-   }, [formOpen])
+   }, [currentPage, itemsPerPage, debouncedValue, sort])
 
    async function getAirplanesList(params: any) {
       try {
-         const { data } = await adminInstance.get(`/airplane/all-airplanes`, params)
+         const { data } = await adminInstance.get(`/airplane/all-airplanes`, { params })
          if (data.success) {
             setAirplanesList(data.airplanes)
+            setTotalItems(data?.count)
          }
       } catch (error) {
          console.log('Error', error)
+      } finally {
+         setLoading(false)
       }
    }
    async function deleteAirport(id: number) {
@@ -65,6 +74,28 @@ const AirplanesList = () => {
       } catch (error) {
          toast.error(handleApiError(error))
       }
+   }
+   // delete multiple cities
+   async function multipleDelete(rows: number[]) {
+      try {
+         const { data } = await adminInstance.post(`/airplane/delete-airplanes/multiple`, { rows })
+         if (data?.success) {
+            toast('Delete successfully')
+            getAirplanesList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
+         }
+      } catch (error) {
+         console.log('Error', error)
+      }
+   }
+   function handleSearch(data: string) {
+      setValue(data)
+      setSearchValue(data)
+      data === '' ? setClearSearch(false) : setClearSearch(true)
+   }
+   function handleClearSearch() {
+      setValue('')
+      setSearchValue('')
+      setClearSearch(false)
    }
 
    const columns = [
@@ -106,19 +137,31 @@ const AirplanesList = () => {
       <div className=''>
          <BreadCrumbs title='Airplanes List' data={[{ title: 'Airplanes List' }]} />
          <div className="bg-white rounded p-4">
-            <div className="flex flex-wrap items-center mb-4">
-               <div className="w-full lg:w-10/12 p-2">
-                  <div className="flex items-center border-b-2 border-slate-200">
-                     <IoIosSearch size={25} />
-                     <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' />
+            <div className="mb-5">
+               <div className="flex flex-wrap md:flex-nowrap items-center justify-between -m-2">
+                  <div className="w-full md:w-full p-2">
+                     <div className="w-full flex items-center border-b-2 border-slate-200">
+                        <IoIosSearch size={25} />
+                        <input type="text" className='w-full h-9 focus:outline-none px-4' placeholder='Search ...' onChange={event => handleSearch(event.target.value)} value={searchValue} />
+                        {
+                           clearSearch ? <div className='cursor-pointer' onClick={handleClearSearch}><MdClose color='#9a9b9c' /></div> : ''
+                        }
+                     </div>
                   </div>
-               </div>
-               <div className="w-full lg:w-2/12 p-2">
-                  <button onClick={() => setFormOpen(prev => !prev)} className='text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4'>Add Aieplane</button>
+                  <div className="w-full md:w-auto flex justify-end gap-2 p-2">
+                     {
+                        Ability('delete', 'airplane', auth) &&
+                        deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Airplane</button>
+                     }
+                     {
+                        Ability('create', 'city', auth) &&
+                        <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedAirplane({}) }}>Add new Airplane</button>
+                     }
+                  </div>
                </div>
             </div>
             <PerfectScrollbar className='pb-3'>
-               <Table columns={columns} data={airplanesList} sort={(e: any) => null} />
+               <Table columns={columns} data={airplanesList} sort={(sort: any) => setSort(sort)} loading={loading} deleteRows={(data) => setDeleteRows(data)} />
             </PerfectScrollbar>
             <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
                {
