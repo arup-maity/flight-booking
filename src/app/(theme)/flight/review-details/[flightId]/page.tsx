@@ -9,7 +9,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod'
 import { axiosInstance, flightInstance } from '@/config/axios';
-import { DropdownContext } from '@/authentication/auth';
+import { sessionContext } from '@/authentication/auth';
 import { useRouter } from 'next/navigation';
 
 type FormValues = {
@@ -24,7 +24,7 @@ type FormValues = {
 const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    const flightId = params.flightId
    //
-   const { open } = React.useContext<any>(DropdownContext);
+   const { open } = React.useContext<any>(sessionContext);
    const { push } = useRouter()
 
    //
