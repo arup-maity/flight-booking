@@ -6,6 +6,11 @@ import { z } from 'zod'
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { authInstance } from '@/config/axios';
+import Link from 'next/link';
+import { toast } from 'sonner';
+import { handleApiError } from '@/utils';
+import { useLoginModel } from './zustand';
+import { useRouter } from 'next/navigation';
 
 interface PropsType {
    setOpenForm: (value: string) => void;
@@ -17,6 +22,8 @@ type Inputs = {
    condition: boolean
 }
 const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
+   const router = useRouter()
+   const { toggleLoginModel } = useLoginModel(state => state)
    const schemaValidation = z
       .object({
          email: z.string().email(),
@@ -38,16 +45,20 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
          message: "Accepted Terms and Privacy Policies",
          path: ["condition"]
       })
-   const { register, handleSubmit, watch, formState: { errors }, } = useForm<Inputs>({
+   const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>({
       mode: 'onChange',
       resolver: zodResolver(schemaValidation),
    })
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
       try {
          const res = await authInstance.post('/user/register', data)
-         console.log('======>', res)
+         if (res.data.success) {
+            router.push('/account')
+            toggleLoginModel()
+            toast.success('Account created successfully')
+         }
       } catch (error) {
-
+         toast.error(handleApiError(error))
       }
    }
    return (
@@ -64,9 +75,7 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
                </div>
                {
                   errors.email && (
-                     <div className="text-xs text-red-500 dark:text-red-400">
-                        {errors.email.message}
-                     </div>
+                     <div className="text-xs text-red-500 dark:text-red-400">{errors.email.message}</div>
                   )
                }
             </fieldset>
@@ -77,9 +86,7 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
                </div>
                {
                   errors.password && (
-                     <div className="text-xs text-red-500 dark:text-red-400">
-                        {errors.password.message}
-                     </div>
+                     <div className="text-xs text-red-500 dark:text-red-400">{errors.password.message}</div>
                   )
                }
             </fieldset>
@@ -99,14 +106,12 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
             <div className="">
                <label htmlFor="condition" className='text-sm flex items-center gap-1 cursor-pointer'>
                   <input type="checkbox" id="condition" {...register("condition")} className='w-[14px] h-[14px]' />
-                  <span>I agree to all the <span className='text-[#FF8682]'>Terms</span> and <span className='text-[#FF8682]'>Privacy Policies</span></span>
+                  <span>I agree to all the <Link href='page/terms' className='text-[#FF8682]'>Terms</Link> and <span className='text-[#FF8682]'>Privacy Policies</span></span>
                </label>
             </div>
             {
                errors.condition && (
-                  <div className="text-xs text-red-500 dark:text-red-400">
-                     {errors.condition.message}
-                  </div>
+                  <div className="text-xs text-red-500 dark:text-red-400">{errors.condition.message}</div>
                )
             }
             <div className="">
@@ -119,19 +124,17 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
          <div className="my-4">
             <div className="text-center text-xs opacity-60 relative after:w-full after:border-t-2 after:border-slate-200 after:absolute after:left-0 after:top-2 after:-z-10"><span className='bg-white px-4'>Or Sign up with</span></div>
          </div>
-         <div className="">
-            <div className="flex gap-3">
-               <div className="basis-[50%] flex items-center justify-center gap-3 border rounded py-2 px-4">
-                  <FaFacebookF size={18} color='#1877F2' />
-                  <span>Facebook</span>
-               </div>
-               <div className="basis-[50%] flex items-center justify-center gap-3 border rounded py-2 px-4">
-                  <FcGoogle size={18} />
-                  <span>Google</span>
-               </div>
+         <div className="flex gap-3">
+            <div className="basis-[50%] flex items-center justify-center gap-3 border rounded py-2 px-4">
+               <FaFacebookF size={18} color='#1877F2' />
+               <span>Facebook</span>
+            </div>
+            <div className="basis-[50%] flex items-center justify-center gap-3 border rounded py-2 px-4">
+               <FcGoogle size={18} />
+               <span>Google</span>
             </div>
          </div>
-         <div className="mt-10">
+         <div className="mt-8">
             <p className='text-xs text-center'>By creating an account you agree with our Terms of Service, Privacy Policy, and our default Notification Settings.</p>
          </div>
       </div>

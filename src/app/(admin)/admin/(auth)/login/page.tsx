@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { authInstance } from '@/config/axios';
 import { toast } from 'sonner';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { handleApiError } from '@/utils'
 
 interface ValueType {
    email: string;
@@ -37,6 +38,7 @@ const Login = () => {
    })
    const onSubmit = async (data: any) => {
       try {
+         setLoading(true)
          const res = await authInstance.post(`/admin/login`, data);
          if (res.data?.success && res.data?.login) {
             toast('Login successfully')
@@ -44,6 +46,9 @@ const Login = () => {
          }
       } catch (error) {
          console.log('error', error)
+         toast.error(handleApiError(error))
+      } finally {
+         setLoading(false)
       }
    }
 

@@ -1,3 +1,20 @@
+import { SignJWT, jwtVerify } from "jose";
+
+const key = new TextEncoder().encode('uzpd4naVxw31hptHmpUaaPlBE1aFcWrrQTP18Gmk');
+export async function encrypt(payload: any) {
+   return await new SignJWT(payload)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("24 hrs")
+      .sign(key);
+}
+
+export async function decrypt(data: string) {
+   const { payload } = await jwtVerify(data, key, {
+      algorithms: ["HS256"],
+   });
+   return payload;
+}
 export function convertMinutesToHoursMinutes(totalMinutes: number) {
    // Calculate the number of hours (discarding decimals)
    const hours = Math.floor(totalMinutes / 60);

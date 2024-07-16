@@ -14,7 +14,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const Header = () => {
    const currentURL = usePathname();
-   const { toggleModel } = useLoginModel(state => state)
+   const { toggleLoginModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
    const { session } = React.useContext<any>(sessionContext);
    const [current, setCurrent] = useState('/')
@@ -95,9 +95,9 @@ const Header = () => {
                         </div>
                         :
                         <ul className='flex items-center justify-center gap-5'>
-                           <li role='button' className='text-sm text-[#112211] font-semibold font-montserrat' onClick={toggleModel}>Login</li>
+                           <li role='button' className='text-sm text-[#112211] font-semibold font-montserrat' onClick={toggleLoginModel}>Login</li>
                            <li className='hidden lg:block'>
-                              <button className='bg-[#112211] text-sm text-white font-semibold font-montserrat rounded py-2 px-4' onClick={toggleModel}>Register</button>
+                              <button className='bg-[#112211] text-sm text-white font-semibold font-montserrat rounded py-2 px-4' onClick={toggleLoginModel}>Register</button>
                            </li>
                         </ul>
                   }

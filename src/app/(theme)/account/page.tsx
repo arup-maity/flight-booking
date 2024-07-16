@@ -6,6 +6,7 @@ import OrderDetails from '@/components/theme/account/OrderDetails';
 import Settings from '@/components/theme/account/Settings';
 import { axiosInstance } from '@/config/axios';
 import { IoCameraOutline } from "react-icons/io5";
+import { CiEdit } from "react-icons/ci";
 
 const Account = () => {
    const [currentTab, setCurrentTab] = useState('profile-details')
@@ -56,7 +57,10 @@ const Account = () => {
                      </div>
                   </div>
                   <p className='text-2xl text-theme-black font-semibold font-montserrat mb-2'>{profileDetails?.fullName}</p>
-                  <p className='text-base text-theme-black font-montserrat text-opacity-75 mb-2'>{profileDetails?.email}</p>
+                  <div className="flex items-center flex-nowrap justify-center gap-4">
+                     <p className='text-base text-theme-black font-montserrat text-opacity-75'>{profileDetails?.email}</p>
+                     <div className="text-sm flex items-center text-theme-blue flex-nowrap gap-2" onClick={() => setCurrentTab('settings')} ><CiEdit />Edit</div>
+                  </div>
                </div>
             </div>
          </div>
@@ -76,7 +80,7 @@ const Account = () => {
                }
             </div>
          </div>
-      </div>
+      </div >
    )
 }
 
