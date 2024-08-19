@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -10,13 +10,15 @@ import { useLoginModel } from '../auth/zustand';
 import { sessionContext } from '@/authentication/auth';
 import { AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
 import { DropDown } from '@/ui-components';
+import Cookies from "js-cookie"
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const Header = () => {
    const currentURL = usePathname();
+   const router = useRouter()
    const { toggleLoginModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
-   const { session } = React.useContext<any>(sessionContext);
+   const { session, toggle } = React.useContext<any>(sessionContext);
    const [current, setCurrent] = useState('/')
 
    useEffect(() => {
@@ -41,6 +43,12 @@ const Header = () => {
          return firstWord.substring(0, 8) + '...';
       }
       return firstWord;
+   }
+
+   function handleLogout() {
+      Cookies.remove('token')
+      toggle({ login: false, user: {} })
+      router.push('/')
    }
 
    return (
@@ -89,7 +97,7 @@ const Header = () => {
                                  <li>
                                     <Link href='/account' className='flex items-center gap-2'><AiOutlineUser size={20} /><span className='text-base font-medium'>My Profile</span></Link>
                                  </li>
-                                 <li className='flex items-center gap-2'><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
+                                 <li role='button' className='flex items-center gap-2' onClick={handleLogout}><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
                               </DropDown.Menu>
                            </DropDown>
                         </div>

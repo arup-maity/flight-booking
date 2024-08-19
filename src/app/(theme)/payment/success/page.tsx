@@ -1,10 +1,10 @@
 'use client'
 import { axiosInstance } from '@/config/axios'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { Suspense } from 'react'
 const PaymentSuccess = () => {
    const query = useSearchParams()
+   const router = useRouter()
    const payment_intent = query.get('payment_intent') || ''
    const payment_intent_client_secret = query.get('payment_intent_client_secret') || ''
    const redirect_status = query.get('redirect_status') || ''
@@ -25,18 +25,21 @@ const PaymentSuccess = () => {
    async function getPayment(payment_intent: string) {
       try {
          const res = await axiosInstance.get(`/checkout/success/${payment_intent}`)
+         console.log('Payment ==>', res)
          if (res.data.intent?.status === 'succeeded') {
             setPaymentDetails(res.data.intent)
          }
-         console.log('success', res)
       } catch (error) {
          console.log(error)
       }
    }
    async function updatePaymentStatus(id: string | number) {
       try {
-         const res = await axiosInstance.put(`/checkout/update-payment-status/${id}`)
-         console.log(res)
+         const { data } = await axiosInstance.put(`/checkout/update-payment-status/${id}`)
+         console.log('update payment status', data)
+         if (data.success) {
+            router.push(`/order/${data?.booking?.id}`)
+         }
       } catch (error) {
          console.log(error)
       }
@@ -44,9 +47,9 @@ const PaymentSuccess = () => {
 
    return (
       <div className="theme-container">
-         <Suspense>
-            <div className='w-full min-h-96 flex items-center justify-center'>PaymentSuccess</div>
-         </Suspense>
+         <div className="success-animation">
+            <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle className="checkmark__circle" cx="26" cy="26" r="25" fill="none" /><path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>
+         </div>
       </div>
    )
 }

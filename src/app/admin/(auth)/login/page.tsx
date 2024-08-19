@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from "react-hook-form"
@@ -10,6 +10,7 @@ import { authInstance } from '@/config/axios';
 import { toast } from 'sonner';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { handleApiError } from '@/utils'
+import { sessionContext } from '@/authentication/auth'
 
 interface ValueType {
    email: string;
@@ -18,6 +19,7 @@ interface ValueType {
 
 const Login = () => {
    const router = useRouter()
+   const { updateSession } = useContext(sessionContext)
    const [showPassword, setShowPassword] = useState<boolean>(false)
    const [loading, setLoading] = useState<boolean>(false)
    const defaultValues: Partial<ValueType> = { email: '', password: '' }
@@ -34,13 +36,17 @@ const Login = () => {
          .regex(/^[a-zA-Z0-9@#$&]*$/, { message: 'Password can only contain letters, numbers, and special characters: @, #, $, &' }),
    })
    const { register, handleSubmit, formState: { errors } } = useForm({
-      defaultValues, mode: 'onChange', resolver: zodResolver(schemaValidation)
+      defaultValues, mode: 'onSubmit', resolver: zodResolver(schemaValidation)
    })
    const onSubmit = async (data: any) => {
       try {
          setLoading(true)
          const res = await authInstance.post(`/admin/login`, data);
          if (res.data?.success && res.data?.login) {
+            updateSession({
+               login: true,
+               user: res.data.payload
+            })
             toast('Login successfully')
             router.push('/admin')
          }

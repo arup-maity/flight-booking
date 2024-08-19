@@ -1,4 +1,3 @@
-'use client'
 import React from 'react'
 import { DropdownContext } from './Context';
 import { cn } from '../utils';

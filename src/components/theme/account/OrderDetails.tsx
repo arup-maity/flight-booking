@@ -3,18 +3,31 @@ import { axiosInstance } from '@/config/axios';
 import dayjs from 'dayjs';
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useLayoutEffect, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useCallback, useLayoutEffect, useState } from 'react'
 import { AiOutlineRight } from "react-icons/ai";
 const OrderDetails = () => {
+   const router = useRouter()
+   const pathname = usePathname()
+   const searchParams = useSearchParams()
+   const currentStatus = searchParams.get('status') || 'all'
    const [bookingsDetails, setBookingsDetails] = useState<any>([])
-   useLayoutEffect(() => {
-      getOrderDetails()
-   }, [])
+   const createQueryString = useCallback(
+      (name: string, value: string) => {
+         const params = new URLSearchParams(searchParams.toString())
+         params.set(name, value)
+         return params.toString()
+      },
+      [searchParams]
+   )
 
-   async function getOrderDetails() {
+   useLayoutEffect(() => {
+      getOrderDetails(currentStatus)
+   }, [currentStatus])
+
+   async function getOrderDetails(status: string) {
       try {
-         const response = await axiosInstance.get('/user/bookings-list')
-         console.log(response.data)
+         const response = await axiosInstance.get('/user/bookings-list', { params: { status: status } })
          if (response.data?.success) {
             setBookingsDetails(response.data.bookings)
          }
@@ -22,13 +35,34 @@ const OrderDetails = () => {
          console.error(error)
       }
    }
+   function handleOrderStatus(id: string) {
+      router.push(pathname + '?' + createQueryString('status', id))
+   }
 
    return (
       <div className="">
          <div className="text-3xl text-[#000] font-semibold mb-3">Tickets/Bookings</div>
+         <ul className='flex flex-wrap items-center gap-2 mb-4'>
+            <li className={`${currentStatus === 'all' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+               onClick={() => handleOrderStatus('all')}>
+               All
+            </li>
+            {/* <li className={`${currentStatus === 'complete' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+               onClick={() => handleOrderStatus('complete')}>
+               Complete
+            </li> */}
+            <li className={`${currentStatus === 'cancelled' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+               onClick={() => handleOrderStatus('cancelled')}>
+               Cancelled
+            </li>
+            <li className={`${currentStatus === 'failed' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+               onClick={() => handleOrderStatus('failed')}>
+               Failed
+            </li>
+         </ul>
          <div className="space-y-4">
             {
-               bookingsDetails.length === 0 ?
+               bookingsDetails?.length === 0 ?
                   <div className="text-center">
                      <Image src='/images/search-svg.svg' width={300} height={300} alt='' className='mx-auto' />
                      <p className='text-xl text-[#666] font-medium mt-5'>No tickets/bookings found.</p>
@@ -36,7 +70,7 @@ const OrderDetails = () => {
                   :
                   bookingsDetails?.map((booking: any, index: number) =>
                      <div key={index} className="p-4 border rounded-md">
-                        <p className='text-sm font-medium mb-1'>Upcoming</p>
+                        <p className='text-sm font-medium mb-1'>{booking?.status}</p>
                         <div className="flex items-center justify-between gap-3">
                            <div className="flex items-center gap-4">
                               <div className="border border-theme-blue rounded-lg p-2">

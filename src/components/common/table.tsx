@@ -60,7 +60,7 @@ const Table: React.FC<PropsType> = ({ columns = [], data = [], sort, loading = f
       <table className='w-full'>
          <thead>
             <tr>
-               <th className='w-12 text-left py-2 px-4 border'>
+               <th className=' w-[3%] min-w-8 text-left py-2 px-4 border'>
                   <input type="checkbox" checked={selectAll} onChange={handleSelectAll} className='w-4 h-4' />
                </th>
                {columns.map((column: any) => (
@@ -94,7 +94,7 @@ const Table: React.FC<PropsType> = ({ columns = [], data = [], sort, loading = f
                      :
                      data.map((row, index) => (
                         <tr key={index}>
-                           <td className='border py-2 px-4'>
+                           <td className='border py-2 px-4 w-[3%] min-w-8'>
                               <div className="">
                                  <input type="checkbox" checked={selectedRow.includes(row.id)} onChange={(e) => handleProductCheck(row.id, e)} className='w-4 h-4' />
                               </div>

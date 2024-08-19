@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { axiosInstance, flightInstance } from '@/config/axios';
 import { sessionContext } from '@/authentication/auth';
 import { useRouter } from 'next/navigation';
+import { useLoginModel } from '@/components/theme/auth/zustand';
 
 type FormValues = {
    passengers: {
@@ -24,9 +25,10 @@ type FormValues = {
 const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    const flightId = params.flightId
    //
-   const { open } = React.useContext<any>(sessionContext);
+   const { session } = React.useContext<any>(sessionContext);
    const { push } = useRouter()
-
+   //
+   const { loginModel, toggleLoginModel } = useLoginModel(state => state)
    //
    const [flightDetails, setFlightDetails] = React.useState<any>(null)
    const [loading, setLoading] = React.useState<boolean>(true)
@@ -60,7 +62,7 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    });
    const { register, control, handleSubmit, formState: { errors } } = useForm<FormValues>({
       defaultValues: {
-         passengers: [{ firstName: "", lastName: '', gender: '', mobileNumber: '', email: '' }]
+         passengers: [{ firstName: "", lastName: '', gender: 'male', mobileNumber: '', email: '' }]
       },
       mode: "onChange",
       resolver: zodResolver(schemaValidation)
@@ -74,7 +76,7 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    async function getFlightDetails(id: string) {
       try {
          const res = await flightInstance.get(`/flight-details/${id}`)
-         console.log(res)
+         // console.log(res)
          if (res.data.success) {
             setFlightDetails(res.data.flight)
             calculatePrice(res.data.flight)
@@ -91,14 +93,15 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    const onSubmit = async (data: FormValues) => {
       try {
          console.log('=====', data);
-         if (open?.login && open?.user?.id) {
-            const res = await axiosInstance.post(`/bookings/create-booking`, { ...data, flightDetails, flightPrice, user: open?.user })
+         if (session?.login && session?.user?.id) {
+            const res = await axiosInstance.post(`/bookings/create-booking`, { ...data, flightDetails, flightPrice })
             console.log('===========update==============>', res)
             if (res.data.success) {
-               push(`/checkout?bid=${res.data.booking.id}`)
+               push(`/checkout?bid=${res.data?.booking?.id}`)
             }
          } else {
-
+            console.log('not login')
+            toggleLoginModel()
          }
       } catch (error) {
          console.log(error)
@@ -313,8 +316,8 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
                                        <div className="w-full md:w-4/12 p-2">
                                           <label htmlFor="" className='text-sm opacity-75 mb-2'>Gender</label>
                                           <select    {...register(`passengers.${index}.gender` as const)} className='w-full h-9 text-base border border-slate-300 focus:outline-none focus:border-r-slate-500 rounded px-2'>
-                                             <option value="Male">Male</option>
-                                             <option value="">Female</option>
+                                             <option value="male">Male</option>
+                                             <option value="female">Female</option>
                                           </select>
                                        </div>
                                        <div className="w-full md:w-6/12 p-2">

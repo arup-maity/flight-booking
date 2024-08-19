@@ -7,9 +7,21 @@ import { AiOutlineLogout, AiOutlineUser } from 'react-icons/ai';
 import Link from 'next/link';
 import { sessionContext } from '@/authentication/auth';
 import Image from 'next/image';
+import Cookies from "js-cookie"
+import { useRouter } from 'next/navigation';
+
+type ContextType = {
+   session: { [key: string]: any };
+   updateSession: (value: { [key: string]: any }) => void;
+}
 
 const Header = () => {
-   const { session } = React.useContext<any>(sessionContext);
+   const router = useRouter()
+   const { session } = React.useContext<ContextType>(sessionContext);
+   function handleLogout() {
+      Cookies.remove('token')
+      router.push('/admin/login');
+   }
    return (
       <div className='h-[60px] bg-white border-b'>
          <div className="h-full flex items-center justify-between">
@@ -43,12 +55,12 @@ const Header = () => {
                      </DropDown.Header>
                      <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-11 border-0 shadow-[0_1px_10px_0_#00000033] space-y-2 p-2'>
                         <li>
-                           <Link href='/account' className='flex items-center gap-2'>
+                           <Link href='/admin/profile' className='flex items-center gap-2'>
                               <AiOutlineUser size={20} />
                               <span className='text-base font-medium'>My Profile</span>
                            </Link>
                         </li>
-                        <li className='flex items-center gap-2'><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
+                        <li className='flex items-center gap-2' onClick={handleLogout}><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
                      </DropDown.Menu>
                   </DropDown>
                </div>

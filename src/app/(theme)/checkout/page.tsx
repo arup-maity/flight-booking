@@ -1,20 +1,16 @@
 "use client";
 import React, { useLayoutEffect, useState } from "react";
-import { Elements, EmbeddedCheckoutProvider, EmbeddedCheckout, CustomCheckoutProvider } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import PaymentForm from "@/components/stripe/PaymentForm";
 import { axiosInstance } from "@/config/axios";
 import Image from "next/image";
 import { IoIosAirplane, IoIosWifi } from "react-icons/io";
-import { IoStopwatch, IoFastFood, IoLocationSharp } from "react-icons/io5";
+import { IoStopwatch, IoFastFood } from "react-icons/io5";
 import { MdOutlineAirlineSeatReclineExtra } from "react-icons/md";
 import dayjs from "dayjs";
 import { convertMinutesToHoursMinutes } from "@/utils";
 import { useSearchParams } from "next/navigation";
-import CheckoutForm from "@/components/stripe/CustomForm";
+import Payment from "@/components/stripe/Payment";
 
 const Checkout = () => {
-   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK as string);
    const query = useSearchParams()
    const bookingId = query.get('bid') || ''
    const [bookingDetails, setBookings] = useState<any>({})
@@ -34,7 +30,7 @@ const Checkout = () => {
 
    async function getBookingdetails(bookingId: string | number) {
       try {
-         const res = await axiosInstance.get(`/bookings/read-booking/${bookingId}`);
+         const res = await axiosInstance.get(`/bookings/booking-checkout/${bookingId}`);
          console.log('====>', res)
          if (res.data.success) {
             setBookings(res.data.booking)
@@ -179,18 +175,12 @@ const Checkout = () => {
                   <div className="text-base font-medium font-montserrat mb-4">
                      Cradit / Debit / ATM Card
                   </div>
-                  {/* <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: bookingDetails?.payments?.clientSecret }}> */}
-                  {/* <PaymentForm /> */}
-                  {/* <EmbeddedCheckout /> */}
-                  {/* </EmbeddedCheckoutProvider> */}
+                  <Payment clientSecret={bookingDetails?.PaymentsProcess?.clientSecret} userDetails={bookingDetails.user} />
                </div>
-               <div className="">
-                  <CustomCheckoutProvider
-                     stripe={stripePromise}
-                     options={{ clientSecret: bookingDetails?.payments?.clientSecret }}
-                  >
-                     <CheckoutForm />
-                  </CustomCheckoutProvider>
+               <div className="mt-4">
+                  <p>Card Number : 4000003560000008</p>
+                  <p>Expiry : 12/30</p>
+                  <p>CVC: 158</p>
                </div>
             </div>
             <div className="w-full lg:w-4/12 p-2">
@@ -220,9 +210,10 @@ const Checkout = () => {
                         <p className='text-base'>&#8377; {flightPrice?.total}</p>
                      </div>
                   </div>
-               </div></div>
+               </div>
+            </div>
          </div>
-      </div >
+      </div>
    );
 };
 
