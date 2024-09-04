@@ -22,10 +22,15 @@ type FormValues = {
       email: string;
    }[];
 };
+type ContextType = {
+   login: boolean
+   user: { [key: string]: any };
+   updateSession: (value: { [key: string]: any }) => void;
+}
 const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    const flightId = params.flightId
    //
-   const { session } = React.useContext<any>(sessionContext);
+   const {login, user } = React.useContext<ContextType>(sessionContext);
    const { push } = useRouter()
    //
    const { loginModel, toggleLoginModel } = useLoginModel(state => state)
@@ -93,7 +98,7 @@ const ReviewDetails = ({ params }: { params: { flightId: string } }) => {
    const onSubmit = async (data: FormValues) => {
       try {
          console.log('=====', data);
-         if (session?.login && session?.user?.id) {
+         if (login && user?.id) {
             const res = await axiosInstance.post(`/bookings/create-booking`, { ...data, flightDetails, flightPrice })
             console.log('===========update==============>', res)
             if (res.data.success) {

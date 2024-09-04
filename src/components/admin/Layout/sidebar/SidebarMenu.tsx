@@ -26,7 +26,7 @@ interface PropsType {
    menuCollapsed?: boolean;
    menuHover?: boolean;
 }
-const Sidebar: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
+const SidebarMenu: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
    const [groupOpen, setGroupOpen] = useState([]);
    const [groupActive, setGroupActive] = useState([]);
    const [currentActiveGroup, setCurrentActiveGroup] = useState([]);
@@ -36,7 +36,7 @@ const Sidebar: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
    // const filteredMenu = filterSidebarMenu([`${auth?.role}`], SidebarMenu);
 
    return (
-      <div className="sidebar-menu-content w-full h-[calc(100%-70px)] border-r p-1">
+      <div className="sidebar-menu-content w-full h-[calc(100%-70px)] p-1">
          <PerfectScrollbar component="ul" className="" >
             <MenuItems
                items={AdminMenu}
@@ -56,7 +56,7 @@ const Sidebar: React.FC<PropsType> = ({ menuCollapsed, menuHover }) => {
    );
 };
 
-export default Sidebar;
+export default SidebarMenu;
 
 const MenuItems = (props: any) => {
    const { items, ...rest } = props;

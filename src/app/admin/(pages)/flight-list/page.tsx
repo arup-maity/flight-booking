@@ -4,20 +4,21 @@ import Pagination from '@/components/common/Pagination'
 import Table from '@/components/common/table'
 import { adminInstance } from '@/config/axios'
 import dayjs from 'dayjs'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { toast } from 'sonner'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Ability } from '@/authentication/AccessControl'
 import { useDebounceValue } from 'usehooks-ts'
-import { AuthSession } from '@/authentication/AuthSession'
 import { MdClose } from 'react-icons/md'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
+import { sessionContext } from '@/authentication/auth'
 
 const FlightsList = () => {
    // auth
-   const auth = AuthSession()
+   const { user } = useContext(sessionContext)
+
    //
    const [formOpen, setFormOpen] = useState(false)
    const [selectedFlight, setSelectedFlight] = useState({})
@@ -149,11 +150,11 @@ const FlightsList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        Ability('delete', 'flight', auth) &&
+                        Ability('delete', 'flight', user) &&
                         deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Flights</button>
                      }
                      {
-                        Ability('create', 'flight', auth) &&
+                        Ability('create', 'flight', user) &&
                         <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedFlight({}) }}>Add new Flight</button>
                      }
                   </div>

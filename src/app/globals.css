@@ -59,9 +59,7 @@ body {
    /* padding-inline-start: var(--sidebar-width); */
 }
 
-.webx-admin-panel .webx-admin-header {
-   inline-size: 100%;
-}
+
 
 .webx-admin-panel .layout-page-content {
    inline-size: 100%;
@@ -95,10 +93,10 @@ body {
    will-change: padding-inline-start;
 } */
 
-.webx-admin-panel .webx-admin-header {
+/* .webx-admin-panel .webx-admin-header {
    position: sticky;
    inline-size: 100%;
-}
+} */
 
 .webx-admin-panel .webx-footer {
    inline-size: 100%;

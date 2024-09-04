@@ -12,13 +12,12 @@ import Pagination from '@/components/common/Pagination'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { useDebounceValue } from 'usehooks-ts'
 import { Ability } from '@/authentication/AccessControl'
-import { AuthSession } from '@/authentication/AuthSession'
 import { MdClose } from 'react-icons/md'
 
 
 const AirplanesList = () => {
    // auth
-   const auth = AuthSession()
+   const auth = {}
    //
    const [formOpen, setFormOpen] = useState(false)
    const [airplanesList, setAirplanesList] = useState([])

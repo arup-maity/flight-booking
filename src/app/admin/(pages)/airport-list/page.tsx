@@ -8,7 +8,6 @@ import { adminInstance } from '@/config/axios'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { IoEyeOutline } from 'react-icons/io5'
 import { IoIosSearch } from "react-icons/io";
-import { AuthSession } from '@/authentication/AuthSession'
 import { Ability } from '@/authentication/AccessControl'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { toast } from 'sonner'
@@ -17,7 +16,7 @@ import Table from '@/components/common/table'
 import { MdClose } from 'react-icons/md'
 
 const AirportList = () => {
-   const auth = AuthSession()
+   const auth = {}
    const [formOpen, setFormOpen] = useState(false)
    const [selectedAirport, setSelectedAirport] = useState({})
    const [airportList, setAirportList] = useState([])

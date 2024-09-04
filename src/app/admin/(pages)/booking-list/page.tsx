@@ -1,6 +1,5 @@
 'use client'
-import React, { useLayoutEffect, useState } from 'react'
-import { AuthSession } from '@/authentication/AuthSession'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import Pagination from '@/components/common/Pagination'
 import Table from '@/components/common/table'
@@ -10,10 +9,11 @@ import { MdClose } from 'react-icons/md'
 import { useDebounceValue } from 'usehooks-ts'
 import { Ability } from '@/authentication/AccessControl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import { sessionContext } from '@/authentication/auth'
 
 const BookingList = () => {
    // auth
-   const auth = AuthSession()
+   const { user } = useContext(sessionContext)
    //
    const [bookingList, setBookingList] = useState([])
    // pagination
@@ -106,7 +106,7 @@ const BookingList = () => {
 
    return (
       <div className=''>
-         <BreadCrumbs title='City List' data={[{ title: 'City List' }]} />
+         <BreadCrumbs title='Booking List' data={[{ title: 'Booking List' }]} />
          <div className="bg-white rounded p-4">
             <div className="mb-5">
                <div className="flex flex-wrap md:flex-nowrap items-center justify-between -m-2">
@@ -131,7 +131,7 @@ const BookingList = () => {
                   </div>
                </div>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
                <ul className='flex flex-wrap items-center divide-x-2 divide-solid divide-slate-300 gap-2 *:ps-2 -mx-2'>
                   <li role='button' className={`text - sm ${status === 'all' ? 'text-black' : 'text-blue-500'}`} onClick={() => setStatus('all')}>All (1)</li>
                   <li role='button' className={`text - sm ${status === 'administrator' ? 'text-black' : 'text-blue-500'} `} onClick={() => setStatus('administrator')}>Administrator (1)</li>
@@ -140,7 +140,7 @@ const BookingList = () => {
                   <li role='button' className={`text - sm ${status === 'technicalSupport' ? 'text-black' : 'text-blue-500'} `} onClick={() => setStatus('technicalSupport')}>Technical Support (1)</li>
                   <li role='button' className={`text - sm ${status === 'salesAgent' ? 'text-black' : 'text-blue-500'} `} onClick={() => setStatus('salesAgent')}>Sales Agent (1)</li>
                </ul>
-            </div>
+            </div> */}
             <PerfectScrollbar className='pb-3'>
                <Table columns={columns} data={bookingList} sort={(sort: any) => setSort(sort)} loading={loading} deleteRows={(data) => setDeleteRows(data)} />
             </PerfectScrollbar>

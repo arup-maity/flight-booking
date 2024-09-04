@@ -10,7 +10,6 @@ import { IoIosSearch } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import EditUser from '@/components/admin/user/EditUser'
 import { Ability } from '@/authentication/AccessControl'
-import { AuthSession } from '@/authentication/AuthSession'
 import Pagination from '@/components/common/Pagination'
 import Image from 'next/image'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
@@ -18,7 +17,7 @@ import { MdClose } from "react-icons/md";
 import { toast } from 'sonner';
 
 const UserList = () => {
-   const auth = AuthSession()
+   const auth = {}
    //
    const [openCreateForm, setOpenCreateForm] = useState(false)
    const [openUpdateForm, setOpenUpdateForm] = useState(false)

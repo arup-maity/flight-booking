@@ -13,12 +13,18 @@ import { DropDown } from '@/ui-components';
 import Cookies from "js-cookie"
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
+type ContextType = {
+   login: boolean
+   user: { [key: string]: any };
+   updateSession: (value: { [key: string]: any }) => void;
+}
+
 const Header = () => {
    const currentURL = usePathname();
    const router = useRouter()
    const { toggleLoginModel } = useLoginModel(state => state)
    const [openMobileMenu, setOpenMobileMenu] = useState(false)
-   const { session, toggle } = React.useContext<any>(sessionContext);
+   const session = React.useContext<ContextType>(sessionContext);
    const [current, setCurrent] = useState('/')
 
    useEffect(() => {
@@ -47,7 +53,7 @@ const Header = () => {
 
    function handleLogout() {
       Cookies.remove('token')
-      toggle({ login: false, user: {} })
+      // toggle({ login: false, user: {} })
       router.push('/')
    }
 
@@ -55,7 +61,7 @@ const Header = () => {
       <>
          <div className='w-full bg-white shadow-[0_0_10px_5px_#f1f1f1] py-4'>
             <div className="theme-container">
-               <div className="flex justify-between items-center">
+               <div className="h-10 flex justify-between items-center">
                   <div className="flex flex-nowrap items-center">
                      <div className="flex items-center gap-2">
                         <button className="block lg:hidden" onClick={() => setOpenMobileMenu(prev => !prev)}>
@@ -93,7 +99,7 @@ const Header = () => {
                                     </div>
                                  </div>
                               </DropDown.Header>
-                              <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-9 border-0 shadow-[0_1px_10px_0_#00000033] space-y-2 p-2'>
+                              <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-12 border-0 shadow-[0_1px_10px_0_#00000033] space-y-2 p-2'>
                                  <li>
                                     <Link href='/account' className='flex items-center gap-2'><AiOutlineUser size={20} /><span className='text-base font-medium'>My Profile</span></Link>
                                  </li>

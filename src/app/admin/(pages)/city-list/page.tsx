@@ -7,7 +7,6 @@ import { adminInstance } from '@/config/axios'
 import ManageCity from '@/components/admin/city/ManageCity'
 import CityDetails from '@/components/admin/city/CityDetails'
 import Pagination from '@/components/common/Pagination'
-import { AuthSession } from '@/authentication/AuthSession'
 import { Ability } from '@/authentication/AccessControl'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import Table from '@/components/common/table'
@@ -19,7 +18,7 @@ import { MdOutlineModeEditOutline, MdClose } from "react-icons/md";
 
 const CityList = () => {
    // auth
-   const auth = AuthSession()
+   const auth = {}
    // sate
    const [formOpen, setFormOpen] = useState(false)
    const [showDetails, setShowDetails] = useState(false)

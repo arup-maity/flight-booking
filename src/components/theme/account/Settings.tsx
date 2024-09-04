@@ -9,6 +9,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import { handleApiError } from '@/utils'
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import dayjs from 'dayjs'
 
 interface profileType {
    fullName: string;
@@ -27,11 +28,11 @@ const Settings = ({ profileDetails, setUpdateProfile }: { profileDetails: any; s
    const [newPasswordShow, setNewPasswordShow] = useState(false)
    const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
    // react hook form
-   const defaultValues: Partial<profileType> = { fullName: '', dob: new Date(), gender: '', mobileNumber: '', address: '', country: '', state: '' }
+   const defaultValues: Partial<profileType> = { fullName: '', dob: new Date(), gender: 'male', mobileNumber: '', address: '', country: '', state: '' }
    const passwordDefaultValues = { oldPassword: '', newPassword: '', confirmNewPassword: '', }
    const schemaValidation = z.object({
       fullName: z.string().min(1, 'The name must be at least 2 characters long'),
-      dob: z.string().min(1, 'The date of birth must be valid'),
+      dob: z.string().optional(),
       gender: z.string().min(1, 'The gender must be selected'),
       mobileNumber: z.string().min(10, 'The mobile number must be at least 10 characters long').regex(/^\d+$/, 'The mobile number must be numeric'),
       address: z.string().min(1, 'The address must be at least 2 characters long'),
@@ -119,11 +120,11 @@ const Settings = ({ profileDetails, setUpdateProfile }: { profileDetails: any; s
                      <Controller
                         control={control}
                         name="dob"
-                        render={({ field: { onChange, onBlur, value, ref } }) => (
+                        render={({ field: { onChange, value } }) => (
                            <Flatpickr
-                              value={value}
+                              value={value ? dayjs(value).format('YYYY-MM-DD') : ''}
                               options={{ dateFormat: "d-M-Y" }}
-                              onChange={([date]) => onChange(date)}
+                              onChange={([date]) => onChange(dayjs(date).format('YYYY-MM-DD'))}
                               className='w-full h-10 text-base border rounded-md focus:outline-none focus:ring-theme-blue focus:border-theme-blue px-3'
                            />
                         )}

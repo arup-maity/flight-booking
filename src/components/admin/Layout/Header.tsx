@@ -9,26 +9,28 @@ import { sessionContext } from '@/authentication/auth';
 import Image from 'next/image';
 import Cookies from "js-cookie"
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/ui-components/theme';
 
 type ContextType = {
-   session: { [key: string]: any };
+   login: boolean
+   user: { [key: string]: any };
    updateSession: (value: { [key: string]: any }) => void;
 }
 
-const Header = () => {
+const Header = ({ sidebarCollapse, setSidebarCollapse }: { sidebarCollapse: boolean, setSidebarCollapse: () => void }) => {
    const router = useRouter()
-   const { session } = React.useContext<ContextType>(sessionContext);
+   const { user } = React.useContext<ContextType>(sessionContext);
+   const { theme, setTheme } = useTheme()
    function handleLogout() {
       Cookies.remove('token')
       router.push('/admin/login');
    }
    return (
-      <div className='h-[60px] bg-white border-b'>
+      <div className='h-[60px] bg-white shadow-[0_0_10px_#bebebe] rounded px-5'>
          <div className="h-full flex items-center justify-between">
             <div className="flex items-center space-x-5">
-               <button type='button'>
+               <button type='button' onClick={setSidebarCollapse}>
                   <span className='menu-open-icon'><IoIosMenu size={30} /></span>
-                  <span className='menu-close-icon'><IoCloseOutline size={30} /></span>
                </button>
                <form>
                   <div className="flex items-center border border-gray-300 rounded p-[1px]">
@@ -39,6 +41,13 @@ const Header = () => {
                <div>
                </div>
             </div>
+            {/* <div className="">
+               <select value={theme} onChange={e => setTheme(e.target.value)}>
+                  <option value="system">System</option>
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+               </select>
+            </div> */}
             <div className="flex items-center space-x-5">
                <div className="relative">
                   <DropDown>
@@ -47,13 +56,13 @@ const Header = () => {
                            <div className="flex items-center gap-2">
                               <Image src='/images/user-placeholder.jpg' width={32} height={32} alt='' className='w-8  h-8' />
                               <ul>
-                                 <li className='text-sm font-montserrat font-medium'>{session?.user?.name}</li>
-                                 <li className='text-sm capitalize leading-none opacity-80'>{session?.user?.role}</li>
+                                 <li className='text-sm font-montserrat font-medium'>{user?.name}</li>
+                                 <li className='text-sm capitalize leading-none opacity-80'>{user?.role}</li>
                               </ul>
                            </div>
                         </div>
                      </DropDown.Header>
-                     <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-11 border-0 shadow-[0_1px_10px_0_#00000033] space-y-2 p-2'>
+                     <DropDown.Menu id='header-user' className='w-[200px] bg-white right-0 left-auto top-[52px] border border-slate-200 space-y-2 p-2'>
                         <li>
                            <Link href='/admin/profile' className='flex items-center gap-2'>
                               <AiOutlineUser size={20} />

@@ -1,12 +1,12 @@
 'use client'
-import { AuthSession } from '@/authentication/AuthSession'
 import React from 'react'
 
 const Admin = () => {
-   const auth = AuthSession()
-   console.log('Auth session', auth)
+   // console.log('Auth session', auth)
    return (
-      <div>Admin</div>
+      <div>
+         <div className="text-black dark:text-white dark:bg-black">Admin Dashboard</div>
+      </div>
    )
 }
 

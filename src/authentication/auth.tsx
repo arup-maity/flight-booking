@@ -1,39 +1,56 @@
 'use client'
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie"
+import { useRouter } from "next/navigation";
 
 type ContextType = {
-   session: { [key: string]: any };
+   login: boolean
+   user: { [key: string]: any };
    updateSession: (value: { [key: string]: any }) => void;
 }
 
-export const sessionContext = React.createContext<ContextType>({ session: {}, updateSession: () => { } });
+export const sessionContext = React.createContext<ContextType>({ login: false, user: {}, updateSession: () => { } });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+   const router = useRouter()
    const [session, setSession] = useState<{ [key: string]: any }>({ login: false, user: {} });
-   const contextValue: any = useMemo(() => ({ session, updateSession }), [session]);
+   // const contextValue: any = useMemo(() => ({ session, updateSession }), [session]);
 
    useLayoutEffect(() => {
       authByToken()
-   }, [])
+   }, [router])
 
    function authByToken() {
-      const token = Cookies.get('token') || ''
-      if (token) {
-         const decodedToken: any = jwtDecode(token) || {}
-         return setSession({
-            login: true,
-            user: decodedToken
-         })
+      // const token = Cookies.get('token') || ''
+      const userDetails = localStorage.getItem('userDetails') || ''
+      if (userDetails) {
+         const userDetailsObj = JSON.parse(userDetails)
          // const currentTime = Date.now() / 1000;
-         // // Check if the token has expired
-         // if (decodedToken?.exp > currentTime) {
-         //    return setSession({
+         // if (userDetailsObj?.exp > currentTime) {
+         //    setSession({
          //       login: true,
-         //       user: decodedToken
+         //       user: userDetailsObj
          //    })
          // }
+         setSession({
+            login: true,
+            user: userDetailsObj
+         })
+      } else {
+         const token = Cookies.get('token') || ''
+         if (token) {
+            const decodedToken: { [key: string]: any } = jwtDecode(token) || {}
+            const currentTime = Date.now() / 1000;
+            // Check if the token has expired
+            if (decodedToken?.exp > currentTime) {
+               localStorage.setItem('userDetails', JSON.stringify(decodedToken))
+               setSession({
+                  login: true,
+                  user: decodedToken
+               })
+            }
+         }
       }
    }
 
@@ -42,7 +59,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    }
 
    return (
-      <sessionContext.Provider value={contextValue}>
+      <sessionContext.Provider value={{ login: session.login, user: session.user, updateSession }}>
          {children}
       </sessionContext.Provider>
    )

@@ -23,6 +23,7 @@ export async function middleware(request: NextRequest) {
          auth.role = json?.payload?.accessPurpose
       }
    }
+   console.log(auth)
 
    if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
       return

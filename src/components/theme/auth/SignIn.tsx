@@ -25,8 +25,9 @@ interface IFormInput {
 
 const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
    const { rememberPassword, setRememberPassword } = usePasswordStore(state => state)
-   const { toggle } = React.useContext<any>(sessionContext);
+   const { updateSession } = React.useContext<any>(sessionContext);
    const [showPassword, setShowPassword] = useState(false)
+   const [loading, setLoading] = useState(false)
    const schemaValidation = z.object({
       email: z.string().email(),
       password: z
@@ -39,10 +40,11 @@ const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
    const { register, handleSubmit, setValue, formState: { errors } } = useForm<IFormInput>({ defaultValues, mode: 'onChange', resolver: zodResolver(schemaValidation) })
    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
       try {
+         setLoading(true)
          const res = await authInstance.post('/user/login', data)
          if (res.data.success && res.data.login) {
             data?.rememberMe ? setRememberPassword(data) : ''
-            toggle(res.data)
+            updateSession(res.data)
             toggleModel()
          }
          if (!res.data.success && !res.data.login) {
@@ -50,6 +52,8 @@ const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
          }
       } catch (error) {
          toast.error(handleApiError(error))
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -105,7 +109,9 @@ const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
                </div>
             </div>
             <div className="">
-               <button type="submit" className='w-full h-10 bg-[#8DD3BB] text-theme-black text-base font-medium rounded'>Login</button>
+               <button type="submit" disabled={loading} className='w-full h-10 bg-[#8DD3BB] text-theme-black text-base font-medium rounded'>
+                  {loading ? 'Loading...' : 'Login'}
+               </button>
             </div>
          </form>
          <div className="text-center text-sm mt-2">

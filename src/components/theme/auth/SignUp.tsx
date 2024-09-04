@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
@@ -16,6 +16,7 @@ interface PropsType {
    setOpenForm: (value: string) => void;
 }
 type Inputs = {
+   fullName: string
    email: string
    password: string
    confirmPassword: string
@@ -24,8 +25,10 @@ type Inputs = {
 const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
    const router = useRouter()
    const { toggleLoginModel } = useLoginModel(state => state)
+   const [loading, setLoading] = useState(false)
    const schemaValidation = z
       .object({
+         fullName: z.string().min(5, 'required'),
          email: z.string().email(),
          password: z
             .string()
@@ -51,14 +54,17 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
    })
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
       try {
+         setLoading(true)
          const res = await authInstance.post('/user/register', data)
          if (res.data.success) {
-            router.push('/account')
+            router.push('/')
             toggleLoginModel()
             toast.success('Account created successfully')
          }
       } catch (error) {
          toast.error(handleApiError(error))
+      } finally {
+         setLoading(false)
       }
    }
    return (
@@ -67,7 +73,18 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
             <div className="text-2xl font-medium mb-1">Sign Up</div>
             <p className='text-sm'>Login to access your Golobe account</p>
          </div>
-         <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
+         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            <fieldset>
+               <div className="relative">
+                  <input type="text" id="fullName"  {...register("fullName")} className="block px-2 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" />
+                  <label htmlFor="fullName" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">fullName</label>
+               </div>
+               {
+                  errors.email && (
+                     <div className="text-xs text-red-500 dark:text-red-400">{errors.email.message}</div>
+                  )
+               }
+            </fieldset>
             <fieldset>
                <div className="relative">
                   <input type="text" id="email"  {...register("email")} className="block px-2 pb-2.5 pt-2 w-full text-sm text-gray-900 bg-transparent rounded border border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" />
@@ -115,7 +132,9 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
                )
             }
             <div className="">
-               <button type="submit" className='w-full h-10 bg-[#8DD3BB] text-base font-medium rounded'>Create Account</button>
+               <button type="submit" disabled={loading} className='w-full h-10 bg-[#8DD3BB] text-base font-medium rounded'>
+                  {loading ? 'Loading...' : 'Create Account'}
+               </button>
             </div>
          </form>
          <div className="text-center text-sm mt-2">
