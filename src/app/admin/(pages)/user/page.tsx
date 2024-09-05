@@ -1,5 +1,5 @@
 'use client'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { adminInstance } from '@/config/axios'
@@ -15,9 +15,10 @@ import Image from 'next/image'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { MdClose } from "react-icons/md";
 import { toast } from 'sonner';
+import { sessionContext } from '@/authentication/auth'
 
 const UserList = () => {
-   const auth = {}
+   const { login, user } = useContext(sessionContext)
    //
    const [openCreateForm, setOpenCreateForm] = useState(false)
    const [openUpdateForm, setOpenUpdateForm] = useState(false)
@@ -152,11 +153,11 @@ const UserList = () => {
             <div className='flex items-center justify-center gap-5'>
                <button onClick={() => { }} className=''><IoEyeOutline size={20} /></button>
                {
-                  Ability('update', 'user', auth) &&
+                  Ability('update', 'user', user) &&
                   <button onClick={() => { setSelectedUser(record); setOpenUpdateForm(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
                }
                {
-                  Ability('delete', 'user', auth) &&
+                  Ability('delete', 'user', user) &&
                   <button className='' onClick={() => deleteUser(record?.id)}><RiDeleteBinLine size={17} /></button>
                }
             </div>
@@ -184,7 +185,7 @@ const UserList = () => {
                         deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
                      }
                      {
-                        Ability('create', 'user', auth) &&
+                        Ability('create', 'user', user) &&
                         <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setOpenCreateForm(prev => !prev); setSelectedUser({}) }}>Add new user</button>
                      }
                   </div>

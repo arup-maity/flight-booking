@@ -19,7 +19,7 @@ const BookingList = () => {
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
-   const [itemsPerPage, setItemsPerPage] = useState(5)
+   const [itemsPerPage, setItemsPerPage] = useState(25)
    // filter
    const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')

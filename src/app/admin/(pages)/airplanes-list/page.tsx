@@ -2,7 +2,7 @@
 import ManageAirplane from '@/components/admin/airplane/ManageAirplane'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { adminInstance } from '@/config/axios'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { IoIosSearch } from "react-icons/io";
 import { toast } from 'sonner'
@@ -13,11 +13,12 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { useDebounceValue } from 'usehooks-ts'
 import { Ability } from '@/authentication/AccessControl'
 import { MdClose } from 'react-icons/md'
+import { sessionContext } from '@/authentication/auth'
 
 
 const AirplanesList = () => {
    // auth
-   const auth = {}
+   const { login, user } = useContext(sessionContext)
    //
    const [formOpen, setFormOpen] = useState(false)
    const [airplanesList, setAirplanesList] = useState([])
@@ -25,7 +26,7 @@ const AirplanesList = () => {
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
-   const [itemsPerPage, setItemsPerPage] = useState(5)
+   const [itemsPerPage, setItemsPerPage] = useState(25)
    // filter
    const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')
@@ -149,11 +150,11 @@ const AirplanesList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        Ability('delete', 'airplane', auth) &&
+                        Ability('delete', 'airplane', user) &&
                         deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Airplane</button>
                      }
                      {
-                        Ability('create', 'city', auth) &&
+                        Ability('create', 'city', user) &&
                         <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedAirplane({}) }}>Add new Airplane</button>
                      }
                   </div>

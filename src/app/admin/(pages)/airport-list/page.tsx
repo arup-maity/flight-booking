@@ -1,5 +1,5 @@
 'use client'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import ManageAirport from '@/components/admin/airport/ManageAirport'
@@ -14,16 +14,17 @@ import { toast } from 'sonner'
 import { handleApiError } from '@/utils'
 import Table from '@/components/common/table'
 import { MdClose } from 'react-icons/md'
+import { sessionContext } from '@/authentication/auth'
 
 const AirportList = () => {
-   const auth = {}
+   const { login, user } = useContext(sessionContext)
    const [formOpen, setFormOpen] = useState(false)
    const [selectedAirport, setSelectedAirport] = useState({})
    const [airportList, setAirportList] = useState([])
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
-   const [itemsPerPage, setItemsPerPage] = useState(5)
+   const [itemsPerPage, setItemsPerPage] = useState(25)
    // filter
    const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')
@@ -118,13 +119,13 @@ const AirportList = () => {
          render: (record: any) => (
             <div className='flex items-center justify-between gap-4'>
                {
-                  Ability('airport', 'update', auth) &&
+                  Ability('airport', 'update', user) &&
                   <button onClick={() => { setSelectedAirport(record); setFormOpen(prev => !prev) }} className='text-sm border rounded py-0.5 px-2' >Edit</button>
                }
                <div className="flex items-center gap-4">
                   <button onClick={() => console.log('record', record)} className=''><IoEyeOutline size={20} /></button>
                   {
-                     Ability('airport', 'delete', auth) &&
+                     Ability('airport', 'delete', user) &&
                      <button className='' onClick={() => deleteAirport(record.id)}><RiDeleteBinLine size={17} /></button>
                   }
                </div>
@@ -150,11 +151,11 @@ const AirportList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        Ability('delete', 'airport', auth) &&
+                        Ability('delete', 'airport', user) &&
                         deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
                      }
                      {
-                        Ability('create', 'airport', auth) &&
+                        Ability('create', 'airport', user) &&
                         <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedAirport({}) }}>Add new Airport</button>
                      }
                   </div>

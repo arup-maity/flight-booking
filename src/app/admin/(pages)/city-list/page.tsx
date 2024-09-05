@@ -1,5 +1,5 @@
 'use client'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useContext, useLayoutEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import { toast } from 'sonner'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -15,10 +15,11 @@ import { IoIosSearch } from "react-icons/io";
 import { IoEyeOutline } from 'react-icons/io5'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { MdOutlineModeEditOutline, MdClose } from "react-icons/md";
+import { sessionContext } from '@/authentication/auth'
 
 const CityList = () => {
    // auth
-   const auth = {}
+   const { login, user } = useContext(sessionContext)
    // sate
    const [formOpen, setFormOpen] = useState(false)
    const [showDetails, setShowDetails] = useState(false)
@@ -27,7 +28,7 @@ const CityList = () => {
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
-   const [itemsPerPage, setItemsPerPage] = useState(5)
+   const [itemsPerPage, setItemsPerPage] = useState(25)
    // filter
    const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')
@@ -134,13 +135,13 @@ const CityList = () => {
                   <IoEyeOutline size={20} />
                </button>
                {
-                  Ability('update', 'city', auth) &&
+                  Ability('update', 'city', user) &&
                   <button onClick={() => { setSelectedCity(record); setFormOpen(prev => !prev) }} >
                      <MdOutlineModeEditOutline size={20} />
                   </button>
                }
                {
-                  Ability('detele', 'city', auth) &&
+                  Ability('detele', 'city', user) &&
                   <button className='' onClick={() => deleteCity(record?.id)}>
                      <RiDeleteBinLine size={17} />
                   </button>
@@ -167,11 +168,11 @@ const CityList = () => {
                   </div>
                   <div className="w-full md:w-auto flex justify-end gap-2 p-2">
                      {
-                        Ability('delete', 'city', auth) &&
+                        Ability('delete', 'city', user) &&
                         deleteRows?.length > 0 && <button className=' text-base text-white font-montserrat font-medium whitespace-nowrap bg-red-500 border border-red-500 rounded py-1 px-4' onClick={() => { multipleDelete(deleteRows) }}>Delete Users</button>
                      }
                      {
-                        Ability('create', 'city', auth) &&
+                        Ability('create', 'city', user) &&
                         <button className=' text-base whitespace-nowrap border border-slate-400 rounded py-1 px-4' onClick={() => { setFormOpen(prev => !prev); setSelectedCity({}) }}>Add new City</button>
                      }
                   </div>
