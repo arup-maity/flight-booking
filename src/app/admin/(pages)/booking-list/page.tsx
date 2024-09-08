@@ -5,11 +5,14 @@ import Pagination from '@/components/common/Pagination'
 import Table from '@/components/common/table'
 import { adminInstance } from '@/config/axios'
 import { IoIosSearch } from 'react-icons/io'
-import { MdClose } from 'react-icons/md'
+import { MdClose, MdOutlineModeEditOutline } from 'react-icons/md'
 import { useDebounceValue } from 'usehooks-ts'
 import { Ability } from '@/authentication/AccessControl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { sessionContext } from '@/authentication/auth'
+import { IoEyeOutline } from 'react-icons/io5'
+import { RiDeleteBinLine } from 'react-icons/ri'
+import Link from 'next/link'
 
 const BookingList = () => {
    // auth
@@ -101,6 +104,21 @@ const BookingList = () => {
          dataIndex: 'status',
          sortable: true,
          className: 'w-[20%] min-w-[250px]'
+      },
+      {
+         title: 'Options',
+         className: 'min-w-[150px] w-[200px]',
+         dataIndex: '',
+         render: (record: { [key: string]: any }) => (
+            <div className='flex items-center justify-center gap-4'>
+               {
+                  Ability('read', 'booking', user) &&
+                  <Link href={`/admin/booking-list/details/${record.id}`} >
+                     details
+                  </Link>
+               }
+            </div>
+         ),
       },
    ];
 

@@ -14,7 +14,7 @@ const SearchForm = () => {
    const { replace } = useRouter()
    const pathname = usePathname();
    // trip type
-   const [tripType, setTripType] = useState('O')
+   const [tripType, setTripType] = useState<string>(searchParams.get('tripType') || 'O')
    // from
    const [fromDetails, setFromDetails] = useState<any>({})
    const [fromIataCode, setFromIataCode] = useState<string>(searchParams.get('from') || '')

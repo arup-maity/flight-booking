@@ -23,6 +23,7 @@ const Header = ({ sidebarCollapse, setSidebarCollapse }: { sidebarCollapse: bool
    const { theme, setTheme } = useTheme()
    function handleLogout() {
       Cookies.remove('token')
+      localStorage.removeItem('userDetails')
       router.push('/admin/login');
    }
    return (
@@ -69,7 +70,7 @@ const Header = ({ sidebarCollapse, setSidebarCollapse }: { sidebarCollapse: bool
                               <span className='text-base font-medium'>My Profile</span>
                            </Link>
                         </li>
-                        <li className='flex items-center gap-2' onClick={handleLogout}><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
+                        <li role='button' className='flex items-center gap-2' onClick={handleLogout}><AiOutlineLogout size={20} /><span className='text-base font-medium'>Log out</span></li>
                      </DropDown.Menu>
                   </DropDown>
                </div>

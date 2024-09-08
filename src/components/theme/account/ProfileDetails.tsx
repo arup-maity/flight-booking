@@ -2,8 +2,7 @@
 import dayjs from 'dayjs'
 import React from 'react'
 
-const ProfileDetails = ({ profileDetails }: { profileDetails: any }) => {
-
+const ProfileDetails = ({ profileDetails, handleTab }: { profileDetails: { [key: string]: any }, handleTab: (id: string) => void }) => {
    return (
       <div className="space-y-5">
          <div className="">
@@ -16,15 +15,27 @@ const ProfileDetails = ({ profileDetails }: { profileDetails: any }) => {
          </div>
          <div className="">
             <label htmlFor="" className='block text-sm text-gray-500'>Phone Number</label>
-            <p className='text-lg font-medium font-montserrat'>{profileDetails?.mobileNumber}</p>
+            {
+               profileDetails?.mobileNumber ?
+                  <p className='text-lg font-medium font-montserrat'>{profileDetails?.mobileNumber}</p> :
+                  <p className='text-sm text-theme-blue' onClick={() => handleTab('settings')}>Add Phone Number</p>
+            }
          </div>
          <div className="">
             <label htmlFor="" className='block text-sm text-gray-500'>Address</label>
-            <p className='text-lg font-medium font-montserrat'>{profileDetails?.address?.address + ', ' + profileDetails?.address?.state + ', ' + profileDetails?.address?.country}</p>
+            {
+               profileDetails?.address ?
+                  <p className='text-lg font-medium font-montserrat'>{profileDetails?.address?.address + ', ' + profileDetails?.address?.state + ', ' + profileDetails?.address?.country}</p> :
+                  <p className='text-sm text-theme-blue' onClick={() => handleTab('settings')}>Address</p>
+            }
          </div>
          <div className="">
             <label htmlFor="" className='block text-sm text-gray-500'>Date of Birth</label>
-            <p className='text-lg font-medium font-montserrat'>{profileDetails?.dob && dayjs(profileDetails.dob).format('DD/MM/YYYY')}</p>
+            {
+               profileDetails?.dob ?
+                  <p className='text-lg font-medium font-montserrat'>{dayjs(profileDetails.dob).format('DD/MM/YYYY')}</p> :
+                  <p className='text-sm text-theme-blue' onClick={() => handleTab('settings')}>Add DOB</p>
+            }
          </div>
       </div>
    )

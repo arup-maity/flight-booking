@@ -9,6 +9,7 @@ import { convertMinutesToHoursMinutes } from '@/utils';
 import { useIntersectionObserver } from 'usehooks-ts'
 import SearchForm from '@/components/theme/search-flight/SearchForm';
 import { PiSunHorizonLight, PiSunLight, PiCloudSunLight, PiCloudMoonLight } from "react-icons/pi";
+import LoadingView from '@/components/common/LoadingView';
 const FlightSearch = () => {
    const searchParams = useSearchParams();
    const { push } = useRouter()
@@ -18,6 +19,7 @@ const FlightSearch = () => {
    const [selectedFlight, setSelectedFlight] = useState<any>({})
    //
    const [notFound, setNotFound] = useState(true)
+   const [loading, setLoading] = useState(true)
    useEffect(() => {
       hasAllRequiredParams()
       getFlights({
@@ -26,7 +28,8 @@ const FlightSearch = () => {
          class: searchParams.get('class'),
          count: searchParams.get('count'),
          departure: searchParams.get('depart'),
-         return: searchParams.get('return') || ''
+         return: searchParams.get('return') || '',
+         type: searchParams.get('tripType') || 'O'
       })
    }, [searchParams])
 
@@ -39,6 +42,8 @@ const FlightSearch = () => {
          }
       } catch (error) {
          console.log('Error', error)
+      } finally {
+         setLoading(false)
       }
    }
    function timeDifferent(departDateTime: string, returnDateTime: string) {
@@ -81,6 +86,13 @@ const FlightSearch = () => {
 
    if (!notFound) {
       return <></>
+   }
+   if (loading) {
+      return (
+         <div className="w-full min-h-[70vh] flex items-center justify-center">
+            <LoadingView />
+         </div>
+      )
    }
    return (
       <div className='theme-container w-full bg-[#FAFBFC] !py-10'>

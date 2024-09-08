@@ -3,24 +3,27 @@ import React, { useLayoutEffect, useState } from 'react'
 import { axiosInstance } from '@/config/axios'
 import dayjs from 'dayjs'
 import { convertMinutesToHoursMinutes } from '@/utils'
+import LoadingView from '@/components/common/LoadingView'
 
-const BookingStatus = () => {
-   const id = 14
-   const [bookingDetails, setBookingDetails] = useState<any>({})
+const BookingStatus = ({ params }: { params: { id: string | number } }) => {
+   const id = params.id || ''
+   const [bookingDetails, setBookingDetails] = useState<{ [key: string]: any }>({})
+   const [loading, setLoading] = useState(true)
 
    useLayoutEffect(() => {
       getBookingDetails(id)
-   }, [])
+   }, [id])
 
    async function getBookingDetails(id: number | string) {
       try {
-         const res = await axiosInstance.get(`/bookings/success-booking/${id}`)
-         console.log('Bookings', res)
+         const res = await axiosInstance.get(`/bookings/details/${id}`)
          if (res.data.success) {
             setBookingDetails(res.data.booking)
          }
       } catch (error) {
          console.log(error)
+      } finally {
+         setLoading(false)
       }
    }
    function timeDifferent(departDateTime: string, arrivalDateTime: string) {
@@ -29,6 +32,25 @@ const BookingStatus = () => {
       return `${time.hours}h ${time.minutes}m`
    }
 
+   async function handleCancelledBookings() {
+      try {
+         const res = await axiosInstance.get(`/bookings/cancel-booking/${id}`)
+         console.log(res)
+         // if (res.data.success) {
+         //    setBookingDetails(res.data.booking)
+         // }
+      } catch (error) {
+         console.log(error)
+      }
+   }
+
+   if (loading) {
+      return (
+         <div className="w-full h-[80vh] flex items-center justify-center">
+            <LoadingView />
+         </div>
+      )
+   }
    return (
       <div className='w-full theme-container !py-5'>
          <ul className='flex flex-wrap gap-1 *:text-sm mb-8'>
@@ -47,9 +69,14 @@ const BookingStatus = () => {
                <p><span className='text-base font-medium'>Booking Date: </span>{dayjs(bookingDetails?.bookingDate).format('DD-MMM-YYYY HH:MM')}</p>
                {/* <p className="text-sm text-[#112211] text-opacity-70 font-medium">Gümüssuyu Mah. Inönü Cad. No:8, Istanbul 34437</p> */}
             </div>
-            <div>
+            <div className='space-y-2'>
                {/* <div className="text-xl text-[#112211] text-right font-bold mb-2">$204</div> */}
-               <button type="button" className='bg-[#8DD3BB] text-base font-montserrat rounded py-2 px-4'>Download</button>
+               <div className="">
+                  <button type="button" className='bg-[#8DD3BB] text-base font-montserrat rounded py-2 px-4'>Download</button>
+               </div>
+               <div className="">
+                  <button type="button" className='bg-[#f08e7d] text-base font-montserrat rounded py-2 px-4' onClick={handleCancelledBookings}>Cancelled</button>
+               </div>
             </div>
          </div>
          <div className="flex items-center justify-between gap-10">

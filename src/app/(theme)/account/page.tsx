@@ -5,7 +5,7 @@ import ProfileDetails from '@/components/theme/account/ProfileDetails';
 import OrderDetails from '@/components/theme/account/OrderDetails';
 import Settings from '@/components/theme/account/Settings';
 import { axiosInstance } from '@/config/axios';
-import { IoCameraOutline } from "react-icons/io5";
+import { IoCameraOutline, IoCloudUploadOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -49,7 +49,6 @@ const Account = () => {
    }
 
    if (loading) {
-      // return <div className="flex justify-center items-center h-screen">Loading...</div>
       return (
          <div className="flex justify-center items-center h-screen">
             <Image src='/images/loading-svg.svg' width={500} height={500} alt="" />
@@ -60,15 +59,15 @@ const Account = () => {
       <div className='w-full theme-container mb-10'>
          <div className="py-5">
             <div style={{ backgroundImage: 'url("/images/img-36.jpg")', }} className='relative w-full aspect-[1440/300] bg-cover bg-center'>
-               {/* <div className="absolute right-0 bottom-0 p-6">
-                  <button type="button" className='flex items-center gap-1 whitespace-nowrap bg-theme-blue text-sm text-[#112211] font-medium font-montserrat rounded py-2 px-4'><IoCloudUploadOutline /> <span>Upload new cover</span></button>
-               </div> */}
+               <div className="absolute right-0 bottom-0 p-4">
+                  <button type="button" className='inline-flex items-center gap-1 whitespace-nowrap bg-theme-blue bg-opacity-30 text-sm text-[#112211] font-medium font-montserrat rounded py-2 px-4'><IoCloudUploadOutline /> <span>Upload new cover</span></button>
+               </div>
             </div>
             <div className="relative -mt-20 z-10">
                <div className="text-center">
                   <div className="relative w-36 h-36 mx-auto rounded-full">
                      <Image src={'/images/user-1.png'} width={160} height={160} alt='' className='w-36 h-36' />
-                     <div className="absolute -right-3 top-[60%] w-7 h-7 bg-gray-100 rounded-full p-1">
+                     <div className="absolute right-1 top-[60%] w-7 h-7 bg-gray-200 rounded-full p-1">
                         <button className='text-[#666]'><IoCameraOutline /></button>
                      </div>
                   </div>
@@ -92,7 +91,7 @@ const Account = () => {
             </div>
             <div className="w-full lg:w-9/12 p-4">
                {
-                  currentTab === 'profile-details' ? <ProfileDetails profileDetails={profileDetails} /> : currentTab === 'order-details' ? <OrderDetails /> : <Settings profileDetails={profileDetails} setUpdateProfile={() => setUpdateProfile(prev => !prev)} />
+                  currentTab === 'profile-details' ? <ProfileDetails profileDetails={profileDetails} handleTab={handleTab} /> : currentTab === 'order-details' ? <OrderDetails /> : <Settings profileDetails={profileDetails} setUpdateProfile={() => setUpdateProfile(prev => !prev)} />
                }
             </div>
          </div>

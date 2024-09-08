@@ -26,30 +26,32 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const userDetails = localStorage.getItem('userDetails') || ''
       if (userDetails) {
          const userDetailsObj = JSON.parse(userDetails)
-         // const currentTime = Date.now() / 1000;
-         // if (userDetailsObj?.exp > currentTime) {
-         //    setSession({
-         //       login: true,
-         //       user: userDetailsObj
-         //    })
-         // }
-         setSession({
-            login: true,
-            user: userDetailsObj
-         })
+         const currentTime = Date.now() / 1000;
+         if (userDetailsObj?.exp > currentTime) {
+            setSession({
+               login: true,
+               user: userDetailsObj
+            })
+         } else {
+            decodeToken()
+         }
       } else {
-         const token = Cookies.get('token') || ''
-         if (token) {
-            const decodedToken: { [key: string]: any } = jwtDecode(token) || {}
-            const currentTime = Date.now() / 1000;
-            // Check if the token has expired
-            if (decodedToken?.exp > currentTime) {
-               localStorage.setItem('userDetails', JSON.stringify(decodedToken))
-               setSession({
-                  login: true,
-                  user: decodedToken
-               })
-            }
+         decodeToken()
+      }
+   }
+
+   function decodeToken() {
+      const token = Cookies.get('token') || ''
+      if (token) {
+         const decodedToken: { [key: string]: any } = jwtDecode(token) || {}
+         const currentTime = Date.now() / 1000;
+         // Check if the token has expired
+         if (decodedToken?.exp > currentTime) {
+            localStorage.setItem('userDetails', JSON.stringify(decodedToken))
+            setSession({
+               login: true,
+               user: decodedToken
+            })
          }
       }
    }
