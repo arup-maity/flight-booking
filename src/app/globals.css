@@ -38,6 +38,10 @@ body {
    padding: 0 calc(12px + 148 * (100vw - 320px) / 1600);
 }
 
+.webx-content-wapper {
+   min-height: calc(100vh + 1px) !important;
+}
+
 /* mobile menu */
 .mobile-menu {
    block-size: 100%;

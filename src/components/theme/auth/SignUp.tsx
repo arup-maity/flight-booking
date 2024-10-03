@@ -141,7 +141,7 @@ const SignUp: React.FC<PropsType> = ({ setOpenForm }) => {
                )
             }
             <div className="">
-               <button type="submit" disabled={loading} className='w-full h-10 flex justify-center bg-[#8DD3BB] text-base font-medium rounded'>
+               <button type="submit" disabled={loading} className='w-full h-10 flex justify-center items-center bg-[#8DD3BB] text-base font-medium rounded'>
                   {
                      loading ?
                         <div className="flex items-center gap-4">

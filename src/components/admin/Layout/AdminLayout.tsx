@@ -9,10 +9,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
    const [sidebarCollapse, setSidebarCollapse] = useState(false)
 
    return (
-      <div className={`webx-admin-panel ${sidebarCollapse ? 'sidebar-collapse' : ''} relative w-full h-full bg-gray-100 dark:bg-[#101011] dark:bg-dark-skin`}>
+      <div className={`webx-admin-panel ${sidebarCollapse ? 'sidebar-collapse' : ''} relative w-full h-full bg-[#F8F8FA] dark:bg-[#101011] dark:bg-dark-skin`}>
          <Sidebar sidebarCollapse={sidebarCollapse} setSidebarCollapse={() => setSidebarCollapse(prev => !prev)} />
          <div className={`webx-content-wapper relative flex flex-col transition-all duration-400 ease-in-out ps-0 ${sidebarCollapse ? 'ps-0' : 'lg:ps-[250px]'}`}>
-            <div className="admin-header sticky top-0 z-[40]">
+            <div className="sticky top-0 z-[40]">
                <Header sidebarCollapse={sidebarCollapse} setSidebarCollapse={() => setSidebarCollapse(prev => !prev)} />
             </div>
             <div className="layout-page-content flex-grow">{children}</div>

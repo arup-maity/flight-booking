@@ -109,7 +109,7 @@ const SignIn: React.FC<PropsType> = ({ setOpenForm, toggleModel }) => {
                </div>
             </div>
             <div className="">
-               <button type="submit" disabled={loading} className='w-full h-10 bg-[#8DD3BB] text-theme-black text-base font-medium rounded flex justify-center'>
+               <button type="submit" disabled={loading} className='w-full h-10 bg-[#8DD3BB] text-theme-black text-base font-medium rounded flex justify-center items-center'>
                   {
                      loading ?
                         <div className="flex items-center gap-4">

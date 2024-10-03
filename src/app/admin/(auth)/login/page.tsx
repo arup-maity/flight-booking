@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { handleApiError } from '@/utils'
 import { sessionContext } from '@/authentication/auth'
+import { Spinner } from '@/ui-components'
 
 interface ValueType {
    email: string;
@@ -83,8 +84,11 @@ const Login = () => {
                      {errors?.password && <p className='text-sm text-red-500 mt-1'>{errors?.password?.message}</p>}
                   </fieldset>
                   <button type="submit" disabled={loading} className='w-full bg-[#8DD3BB] text-base font-medium rounded py-2 px-4 '>
-                     Login
+                     {
+                        loading ? <Spinner className='w-5 h-5 text-white' /> : 'Login'
+                     }
                   </button>
+
                </form>
                <div className="relative w-full py-4">
                   <span className='absolute flex justify-center text-sm text-white w-full'>Or login with</span>

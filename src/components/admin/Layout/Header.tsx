@@ -27,7 +27,7 @@ const Header = ({ sidebarCollapse, setSidebarCollapse }: { sidebarCollapse: bool
       router.push('/admin/login');
    }
    return (
-      <div className='h-[60px] bg-white shadow-[0_0_10px_#bebebe] rounded px-5'>
+      <div className='h-[60px] bg-white px-5'>
          <div className="h-full flex items-center justify-between">
             <div className="flex items-center space-x-5">
                <button type='button' onClick={setSidebarCollapse}>

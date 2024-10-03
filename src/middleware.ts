@@ -8,45 +8,49 @@ export async function middleware(request: NextRequest) {
 
    var auth: Auth = { login: false, role: 'user' };
    if (token) {
-      const options = {
-         headers: {
-            'Authorization': `Bearer ${token}`
-         }
-      };
-      const url = process.env.NEXT_PUBLIC_API_URL + `/api/auth/check-auth`
+      try {
+         const options = {
+            headers: {
+               'Authorization': `Bearer ${token}`
+            }
+         };
+         const url = process.env.NEXT_PUBLIC_API_URL + `/api/auth/check-auth`
 
-      const response = await fetch(url, options)
-      const json = await response.json()
-      // console.log('auth middleware => ', json)
-      if (response.status === 200) {
-         auth.login = json?.login
-         auth.role = json?.payload?.accessPurpose
+         const response = await fetch(url, options)
+         const json = await response.json()
+         // console.log('auth middleware => ', json)
+         if (response.status === 200) {
+            auth.login = json?.login
+            auth.role = json?.payload?.accessPurpose
+         }
+      } catch (error) {
+
       }
    }
    console.log(auth)
 
-   if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
-      return
-   }
+   // if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
+   //    return
+   // }
 
-   if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
-      return
-   }
+   // if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
+   //    return
+   // }
 
-   if (auth.login && auth.role === "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
-      return Response.redirect(new URL('/admin', request.url));
-   }
+   // if (auth.login && auth.role === "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
+   //    return Response.redirect(new URL('/admin', request.url));
+   // }
 
-   if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin')) {
-      return Response.redirect(new URL('/admin/login', request.url));
-   }
-   if (!auth.login && request.nextUrl.pathname.startsWith('/account')) {
-      return Response.redirect(new URL('/', request.url));
-   }
+   // if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin')) {
+   //    return Response.redirect(new URL('/admin/login', request.url));
+   // }
+   // if (!auth.login && request.nextUrl.pathname.startsWith('/account')) {
+   //    return Response.redirect(new URL('/', request.url));
+   // }
 
-   if (!auth.login && request.nextUrl.pathname.startsWith('/admin')) {
-      return Response.redirect(new URL('/admin/login', request.url));
-   }
+   // if (!auth.login && request.nextUrl.pathname.startsWith('/admin')) {
+   //    return Response.redirect(new URL('/admin/login', request.url));
+   // }
 }
 
 export const config = {

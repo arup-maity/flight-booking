@@ -14,7 +14,7 @@ const Account = () => {
    const pathname = usePathname()
    const searchParams = useSearchParams()
    const currentTab = searchParams.get('tab') || 'profile-details'
-   const [profileDetails, setProfileDetails] = useState<any>({})
+   const [profileDetails, setProfileDetails] = useState<{ [key: string]: any }>({})
    const [updateProfile, setUpdateProfile] = useState(false)
    const [loading, setLoading] = useState(true)
 

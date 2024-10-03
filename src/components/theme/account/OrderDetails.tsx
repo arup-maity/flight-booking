@@ -47,19 +47,19 @@ const OrderDetails = () => {
       <div className="">
          <div className="text-3xl text-[#000] font-semibold mb-3">Tickets/Bookings</div>
          <ul className='flex flex-wrap items-center gap-2 mb-4'>
-            <li className={`${currentStatus === 'all' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+            <li role='button' className={`${currentStatus === 'all' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
                onClick={() => handleOrderStatus('all')}>
                All
             </li>
-            <li className={`${currentStatus === 'complete' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+            <li role='button' className={`${currentStatus === 'complete' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
                onClick={() => handleOrderStatus('complete')}>
                Complete
             </li>
-            <li className={`${currentStatus === 'cancelled' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+            <li role='button' className={`${currentStatus === 'cancelled' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
                onClick={() => handleOrderStatus('cancelled')}>
                Cancelled
             </li>
-            <li className={`${currentStatus === 'failed' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
+            <li role='button' className={`${currentStatus === 'failed' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
                onClick={() => handleOrderStatus('failed')}>
                Failed
             </li>
