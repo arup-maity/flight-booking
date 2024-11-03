@@ -28,7 +28,7 @@ const CityList = () => {
    // pagination
    const [totalItems, setTotalItems] = useState(0)
    const [currentPage, setCurrentPage] = useState(1)
-   const [itemsPerPage, setItemsPerPage] = useState(25)
+   const [itemsPerPage, setItemsPerPage] = useState(10)
    // filter
    const [clearSearch, setClearSearch] = useState(false)
    const [searchValue, setSearchValue] = useState('')
@@ -185,6 +185,7 @@ const CityList = () => {
                {
                   totalItems !== 0 && <div className="flex items-center gap-4">
                      <select onChange={(e: any) => setItemsPerPage(e.target.value)} className='h-7 text-base border border-slate-400 focus:outline-none rounded px-1'>
+                        <option value={25}>10</option>
                         <option value={25}>25</option>
                         <option value={50}>50</option>
                         <option value={100}>100</option>

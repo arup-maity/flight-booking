@@ -27,30 +27,29 @@ export async function middleware(request: NextRequest) {
 
       }
    }
-   console.log(auth)
 
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
-   //    return
-   // }
+   if (!auth.login && request.nextUrl.pathname.startsWith('/admin/login')) {
+      return
+   }
 
-   // if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
-   //    return
-   // }
+   if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
+      return
+   }
 
-   // if (auth.login && auth.role === "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
-   //    return Response.redirect(new URL('/admin', request.url));
-   // }
+   if (auth.login && auth.role === "admin" && request.nextUrl.pathname.startsWith('/admin/login')) {
+      return Response.redirect(new URL('/admin', request.url));
+   }
 
-   // if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin')) {
-   //    return Response.redirect(new URL('/admin/login', request.url));
-   // }
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/account')) {
-   //    return Response.redirect(new URL('/', request.url));
-   // }
+   if (auth.login && auth.role !== "admin" && request.nextUrl.pathname.startsWith('/admin')) {
+      return Response.redirect(new URL('/admin/login', request.url));
+   }
+   if (!auth.login && request.nextUrl.pathname.startsWith('/account')) {
+      return Response.redirect(new URL('/', request.url));
+   }
 
-   // if (!auth.login && request.nextUrl.pathname.startsWith('/admin')) {
-   //    return Response.redirect(new URL('/admin/login', request.url));
-   // }
+   if (!auth.login && request.nextUrl.pathname.startsWith('/admin')) {
+      return Response.redirect(new URL('/admin/login', request.url));
+   }
 }
 
 export const config = {
