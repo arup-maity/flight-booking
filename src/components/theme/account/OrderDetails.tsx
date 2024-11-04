@@ -4,24 +4,14 @@ import { axiosInstance } from '@/config/axios';
 import dayjs from 'dayjs';
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation';
+import React, { useLayoutEffect, useState } from 'react'
 import { AiOutlineRight } from "react-icons/ai";
 const OrderDetails = () => {
-   const router = useRouter()
-   const pathname = usePathname()
    const searchParams = useSearchParams()
    const currentStatus = searchParams.get('status') || 'all'
    const [bookingsDetails, setBookingsDetails] = useState<any>([])
    const [loading, setLoading] = useState(true)
-   const createQueryString = useCallback(
-      (name: string, value: string) => {
-         const params = new URLSearchParams(searchParams.toString())
-         params.set(name, value)
-         return params.toString()
-      },
-      [searchParams]
-   )
 
    useLayoutEffect(() => {
       getOrderDetails(currentStatus)
@@ -40,28 +30,53 @@ const OrderDetails = () => {
          setLoading(false)
       }
    }
-   function handleOrderStatus(id: string) {
-      router.push(pathname + '?' + createQueryString('status', id))
-   }
    return (
       <div className="">
          <div className="text-3xl text-[#000] font-semibold mb-3">Tickets/Bookings</div>
          <ul className='flex flex-wrap items-center gap-2 mb-4'>
-            <li role='button' className={`${currentStatus === 'all' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
-               onClick={() => handleOrderStatus('all')}>
-               All
+            <li>
+               <Link
+                  href={{
+                     pathname: '/account',
+                     query: { tab: 'order-details', status: 'all' },
+                  }}
+                  className={`${currentStatus === 'all' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1.5 px-4`}
+               >
+                  All
+               </Link>
             </li>
-            <li role='button' className={`${currentStatus === 'complete' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
-               onClick={() => handleOrderStatus('complete')}>
-               Complete
+            <li>
+               <Link
+                  href={{
+                     pathname: '/account',
+                     query: { tab: 'order-details', status: 'complete' },
+                  }}
+                  className={`${currentStatus === 'complete' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1.5 px-4`}
+               >
+                  Complete
+               </Link>
             </li>
-            <li role='button' className={`${currentStatus === 'cancelled' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
-               onClick={() => handleOrderStatus('cancelled')}>
-               Cancelled
+            <li>
+               <Link
+                  href={{
+                     pathname: '/account',
+                     query: { tab: 'order-details', status: 'cancelled' },
+                  }}
+                  className={`${currentStatus === 'cancelled' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1.5 px-4`}
+               >
+                  Cancelled
+               </Link>
             </li>
-            <li role='button' className={`${currentStatus === 'failed' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1 px-4`}
-               onClick={() => handleOrderStatus('failed')}>
-               Failed
+            <li>
+               <Link
+                  href={{
+                     pathname: '/account',
+                     query: { tab: 'order-details', status: 'failed' },
+                  }}
+                  className={`${currentStatus === 'failed' ? 'bg-theme-blue' : 'bg-gray-200'} text-sm rounded-sm py-1.5 px-4`}
+               >
+                  Failed
+               </Link>
             </li>
          </ul>
          <div className="space-y-4">

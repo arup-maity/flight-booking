@@ -8,6 +8,7 @@ import { axiosInstance } from '@/config/axios';
 import { IoCameraOutline, IoCloudUploadOutline } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 const Account = () => {
    const router = useRouter()
@@ -83,9 +84,39 @@ const Account = () => {
             <div className="w-full lg:w-3/12 p-4">
                <div className="">
                   <ul className='flex lg:block max-lg:gap-4 max-lg:justify-center *:text-base lg:space-y-1'>
-                     <li className={`${currentTab === 'profile-details' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} rounded py-1.5 px-4`} onClick={() => handleTab('profile-details')}>Account Details</li>
-                     <li className={`${currentTab === 'order-details' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} rounded py-1.5 px-4`} onClick={() => handleTab('order-details')}>Order Details</li>
-                     <li className={`${currentTab === 'settings' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} rounded py-1.5 px-4`} onClick={() => handleTab('settings')}>Settings</li>
+                     <li>
+                        <Link
+                           href={{
+                              pathname: '/account',
+                              query: { tab: 'profile-details' },
+                           }}
+                           className={`${currentTab === 'profile-details' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} inline-flex w-full rounded py-1.5 px-4`}
+                        >
+                           Account Details
+                        </Link>
+                     </li>
+                     <li>
+                        <Link
+                           href={{
+                              pathname: '/account',
+                              query: { tab: 'order-details' },
+                           }}
+                           className={`${currentTab === 'order-details' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} inline-flex w-full rounded py-1.5 px-4`}
+                        >
+                           Order Details
+                        </Link>
+                     </li>
+                     <li>
+                        <Link
+                           href={{
+                              pathname: '/account',
+                              query: { tab: 'settings' },
+                           }}
+                           className={`${currentTab === 'settings' ? 'bg-theme-blue font-medium' : 'bg-gray-100'} inline-flex w-full rounded py-1.5 px-4`}
+                        >
+                           Settings
+                        </Link>
+                     </li>
                   </ul>
                </div>
             </div>

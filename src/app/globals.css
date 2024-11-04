@@ -21,7 +21,6 @@ body {
    position: relative;
    font-size: 16px;
    background-color: white;
-   color: rgb(var(--foreground-rgb));
 }
 
 .no {
@@ -215,4 +214,42 @@ body {
    to {
       transform: translate3d(230px, 0, 0);
    }
+}
+
+@layer base {
+   :root {
+      --radius: 0.5rem;
+   }
+}
+
+
+/* scrollber */
+.custom-scrollbar {
+   overflow: hidden;
+   overflow-y: scroll;
+}
+
+/* Style the scrollbar track */
+.custom-scrollbar::-webkit-scrollbar {
+   width: 10px;
+   height: 12px;
+}
+
+/* Style the scrollbar itself */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+   background-color: #888;
+   border-radius: 10px;
+   border: 3px solid transparent;
+   background-clip: content-box;
+}
+
+/* Hover effect on scrollbar */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+   background-color: #555;
+}
+
+/* Style the scrollbar track */
+.custom-scrollbar::-webkit-scrollbar-track {
+   background-color: #f1f1f1;
+   border-radius: 10px;
 }

@@ -180,8 +180,8 @@ const FlightsList = () => {
                   <Pagination totalItems={totalItems} perPage={itemsPerPage} currentPage={currentPage} onChange={(e) => setCurrentPage(e)} />
                </div>
             </div>
-            <ManageFlight isOpen={formOpen} toggle={() => setFormOpen(prev => !prev)} selectedFlight={selectedFlight} />
          </div>
+         <ManageFlight isOpen={formOpen} toggle={() => setFormOpen(prev => !prev)} selectedFlight={selectedFlight} />
       </>
    )
 }

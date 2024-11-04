@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from "react"
-import { Calendar, Model } from '@/ui-components'
+import { Calendar } from '@/ui-components'
 import dayjs from "dayjs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface PropsType {
    isOpen: boolean;
@@ -15,7 +16,6 @@ const DatePicker: React.FC<PropsType> = ({ isOpen, toggle, onChange, tripType })
    const [error, setError] = useState('')
 
    function handleDate(e: any) {
-      console.log('====>', e[0])
       setDepartureDate(e[0])
       setReturnDate(e[1])
    }
@@ -39,40 +39,38 @@ const DatePicker: React.FC<PropsType> = ({ isOpen, toggle, onChange, tripType })
    }
 
    return (
-      <div>
-         <Model isOpen={isOpen} toggle={toggle} className="h-screen flex items-center">
-            <Model.Body className="min-h-64">
-               <Model.Header toggle={toggle}>
-                  <div className="text-lg font-medium mb-2">Select Date</div>
-               </Model.Header>
-               <div className="flex items-center gap-4">
-                  <div className="text-base font-medium">
-                     {
-                        departureDate !== '' && departureDate !== undefined &&
-                        dayjs(departureDate).format('DD MMM YYYY')
-                     }
-                  </div>
+      <Dialog open={isOpen} onOpenChange={toggle}>
+         <DialogContent className="lg:max-w-[1000px]">
+            <DialogHeader>
+               <DialogTitle>Select Date</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center gap-4">
+               <div className="text-base font-medium">
                   {
-                     tripType === 'R' &&
-                     <>
-                        <div className="text-base font-medium"> - </div>
-                        <div className="text-base font-medium">
-                           {
-                              returnDate !== '' && returnDate !== undefined &&
-                              dayjs(returnDate).format('DD MMM YYYY')
-                           }
-                        </div>
-                     </>
+                     departureDate !== '' && departureDate !== undefined &&
+                     dayjs(departureDate).format('DD MMM YYYY')
                   }
                </div>
-               <Calendar onChange={handleDate} mode={tripType === 'O' ? 'single' : 'range'} />
-               <div className="flex flex-wrap justify-between gap-4 mt-4">
-                  <div className="text-base text-red-500">{error}</div>
-                  <button className="text-base border border-green-500 rounded py-1 px-4" onClick={handleApply}>Apply</button>
-               </div>
-            </Model.Body>
-         </Model>
-      </div>
+               {
+                  tripType === 'R' &&
+                  <>
+                     <div className="text-base font-medium"> - </div>
+                     <div className="text-base font-medium">
+                        {
+                           returnDate !== '' && returnDate !== undefined &&
+                           dayjs(returnDate).format('DD MMM YYYY')
+                        }
+                     </div>
+                  </>
+               }
+            </div>
+            <Calendar onChange={handleDate} mode={tripType === 'O' ? 'single' : 'range'} />
+            <div className="flex flex-wrap justify-between gap-4 mt-4">
+               <div className="text-base text-red-500">{error}</div>
+               <button className="text-base border border-green-500 rounded py-1 px-4" onClick={handleApply}>Apply</button>
+            </div>
+         </DialogContent>
+      </Dialog>
    )
 }
 

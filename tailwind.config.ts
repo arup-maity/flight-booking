@@ -10,20 +10,23 @@ const config: Config = {
       "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
    ],
    theme: {
-      extend: {
-         colors: {
-            'theme-blue': '#8DD3BB',
-            'theme-black': '#112211',
-         },
-         fontFamily: {
-            montserrat: ["var(--font-montserrat)"]
-         }
-      },
+   	extend: {
+   		colors: {
+   			'theme-blue': '#8DD3BB',
+   			'theme-black': '#112211'
+   		},
+   		fontFamily: {
+   			montserrat: ["var(--font-montserrat)"]
+   		},
+   		borderRadius: {
+   			lg: 'var(--radius)',
+   			md: 'calc(var(--radius) - 2px)',
+   			sm: 'calc(var(--radius) - 4px)'
+   		}
+   	}
    },
    plugins: [
-      // plugin(function ({ addVariant, e }) {
-      //    addVariant("onyx", ".onyx &");
-      //  })
-   ],
+       require("tailwindcss-animate")
+],
 };
 export default config;
