@@ -3,80 +3,78 @@
 @tailwind utilities;
 
 :root {
-   --foreground-rgb: 0, 0, 0;
-   --background-start-rgb: 214, 219, 220;
-   --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-   :root {
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-   }
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 body {
-   width: 100%;
-   position: relative;
-   font-size: 16px;
-   background-color: white;
+  width: 100%;
+  position: relative;
+  font-size: 16px;
+  background-color: white;
 }
 
 .no {
-   color: #f2f4f7;
+  color: #f2f4f7;
 }
 
 @layer utilities {
-   .text-balance {
-      text-wrap: balance;
-   }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 .theme-container {
-   padding: 0 calc(12px + 148 * (100vw - 320px) / 1600);
+  padding: 0 calc(12px + 148 * (100vw - 320px) / 1600);
 }
 
 .webx-content-wapper {
-   min-height: calc(100vh + 1px) !important;
+  min-height: calc(100vh + 1px) !important;
 }
 
 /* mobile menu */
 .mobile-menu {
-   block-size: 100%;
-   inline-size: 320px;
+  block-size: 100%;
+  inline-size: 320px;
 }
 
 /* costom */
 .webx-admin-panel {
-   --sidebar-width: 250px;
+  --sidebar-width: 250px;
 }
 
 .webx-admin-panel .webx-admin-sidebar {
-   block-size: 100%;
-   inline-size: var(--sidebar-width);
+  block-size: 100%;
+  inline-size: var(--sidebar-width);
 }
 
 .webx-admin-panel .webx-content-wapper {
-   min-block-size: 100vh;
-   /* padding-inline-start: var(--sidebar-width); */
+  min-block-size: 100vh;
+  /* padding-inline-start: var(--sidebar-width); */
 }
 
-
-
 .webx-admin-panel .layout-page-content {
-   inline-size: 100%;
-   padding-inline: 1rem;
-   padding-block: 1rem;
+  inline-size: 100%;
+  padding-inline: 1rem;
+  padding-block: 1rem;
 }
 
 .webx-admin-panel .webx-admin-footer {
-   inline-size: 100%;
-   padding-inline: 1rem;
+  inline-size: 100%;
+  padding-inline: 1rem;
 }
 
 .webx-admin-panel.overlay-menu {
-   --sidebar-width: 0px;
+  --sidebar-width: 0px;
 }
 
 /* .webx-admin-panel .webx-admin-sidebar {
@@ -102,154 +100,155 @@ body {
 } */
 
 .webx-admin-panel .webx-footer {
-   inline-size: 100%;
-   block-size: 45px;
-   padding-inline: 1rem;
+  inline-size: 100%;
+  block-size: 45px;
+  padding-inline: 1rem;
 }
 
 /* success svg animation */
 .success-animation {
-   margin: 150px auto;
+  margin: 150px auto;
 }
 
 .checkmark {
-   width: 100px;
-   height: 100px;
-   border-radius: 50%;
-   display: block;
-   stroke-width: 2;
-   stroke: #4bb71b;
-   stroke-miterlimit: 10;
-   box-shadow: inset 0px 0px 0px #4bb71b;
-   animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-   position: relative;
-   top: 5px;
-   right: 5px;
-   margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: #4bb71b;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px #4bb71b;
+  animation: fill 0.4s ease-in-out 0.4s forwards,
+    scale 0.3s ease-in-out 0.9s both;
+  position: relative;
+  top: 5px;
+  right: 5px;
+  margin: 0 auto;
 }
 
 .checkmark__circle {
-   stroke-dasharray: 166;
-   stroke-dashoffset: 166;
-   stroke-width: 2;
-   stroke-miterlimit: 10;
-   stroke: #4bb71b;
-   fill: #fff;
-   animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #4bb71b;
+  fill: #fff;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
 .checkmark__check {
-   transform-origin: 50% 50%;
-   stroke-dasharray: 48;
-   stroke-dashoffset: 48;
-   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
 }
 
 @keyframes stroke {
-   100% {
-      stroke-dashoffset: 0;
-   }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes scale {
+  0%,
+  100% {
+    transform: none;
+  }
 
-   0%,
-   100% {
-      transform: none;
-   }
-
-   50% {
-      transform: scale3d(1.1, 1.1, 1);
-   }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
 }
 
 @keyframes fill {
-   100% {
-      box-shadow: inset 0px 0px 0px 30px #4bb71b;
-   }
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #4bb71b;
+  }
 }
-
 
 /* loading animation */
 .loader-wrap .ellipse:nth-child(1) {
-   animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both alternate-reverse;
-   animation-delay: 0.1666666667s;
+  animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both
+    alternate-reverse;
+  animation-delay: 0.1666666667s;
 }
 
 @keyframes gooey {
-   to {
-      transform: translate3d(230px, 0, 0);
-   }
+  to {
+    transform: translate3d(230px, 0, 0);
+  }
 }
 
 .loader-wrap .ellipse:nth-child(1) {
-   animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both alternate-reverse;
-   animation-delay: 0.3333333333s;
+  animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both
+    alternate-reverse;
+  animation-delay: 0.3333333333s;
 }
 
 @keyframes gooey {
-   to {
-      transform: translate3d(230px, 0, 0);
-   }
+  to {
+    transform: translate3d(230px, 0, 0);
+  }
 }
 
 .loader-wrap .ellipse:nth-child(1) {
-   animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both alternate-reverse;
-   animation-delay: 0.5s;
+  animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both
+    alternate-reverse;
+  animation-delay: 0.5s;
 }
 
 @keyframes gooey {
-   to {
-      transform: translate3d(230px, 0, 0);
-   }
+  to {
+    transform: translate3d(230px, 0, 0);
+  }
 }
 
 .loader-wrap .ellipse:nth-child(1) {
-   animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both alternate-reverse;
-   animation-delay: 0.6666666667s;
+  animation: gooey 1s cubic-bezier(0.59, 0.8, 0.29, 0.1) infinite both
+    alternate-reverse;
+  animation-delay: 0.6666666667s;
 }
 
 @keyframes gooey {
-   to {
-      transform: translate3d(230px, 0, 0);
-   }
+  to {
+    transform: translate3d(230px, 0, 0);
+  }
 }
 
 @layer base {
-   :root {
-      --radius: 0.5rem;
-   }
+  :root {
+    --radius: 0.5rem;
+  }
 }
-
 
 /* scrollber */
 .custom-scrollbar {
-   overflow: hidden;
-   overflow-y: scroll;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 /* Style the scrollbar track */
 .custom-scrollbar::-webkit-scrollbar {
-   width: 10px;
-   height: 12px;
+  width: 10px;
+  height: 12px;
 }
 
 /* Style the scrollbar itself */
 .custom-scrollbar::-webkit-scrollbar-thumb {
-   background-color: #888;
-   border-radius: 10px;
-   border: 3px solid transparent;
-   background-clip: content-box;
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
 
 /* Hover effect on scrollbar */
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-   background-color: #555;
+  background-color: #555;
 }
 
 /* Style the scrollbar track */
 .custom-scrollbar::-webkit-scrollbar-track {
-   background-color: #f1f1f1;
-   border-radius: 10px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
 }

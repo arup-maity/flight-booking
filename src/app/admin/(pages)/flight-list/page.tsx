@@ -87,6 +87,11 @@ const FlightsList = () => {
          console.log('Error', error)
       }
    }
+   function handleClosePopup() {
+      getFlightsList({ page: currentPage, limit: itemsPerPage, search: debouncedValue, ...sort })
+      setSelectedFlight({})
+      setFormOpen(prev => !prev)
+   }
 
    const columns = [
       {
@@ -181,7 +186,7 @@ const FlightsList = () => {
                </div>
             </div>
          </div>
-         <ManageFlight isOpen={formOpen} toggle={() => setFormOpen(prev => !prev)} selectedFlight={selectedFlight} />
+         <ManageFlight isOpen={formOpen} toggle={handleClosePopup} selectedFlight={selectedFlight} />
       </>
    )
 }
