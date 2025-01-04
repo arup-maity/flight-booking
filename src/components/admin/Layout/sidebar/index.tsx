@@ -6,7 +6,7 @@ import SidebarMenu from './SidebarMenu'
 
 const Sidebar = ({ sidebarCollapse, setSidebarCollapse }: { sidebarCollapse: boolean, setSidebarCollapse: () => void }) => {
    return (
-      <div className={`webx-admin-sidebar fixed bg-white dark:bg-[#1A1A1B] start-0 transition-all duration-400 ease-in-out z-50 ${sidebarCollapse ? 'lg:-translate-x-full' : 'max-lg:-translate-x-full'}`}>
+      <div className={`webx-admin-sidebar fixed bg-[#1A1A1B] start-0 transition-all duration-400 ease-in-out z-50 ${sidebarCollapse ? 'lg:-translate-x-full' : 'max-lg:-translate-x-full'}`}>
          <div className="h-full">
             <div className="w-full h-[60px] flex flex-nowrap items-center gap-1 overflow-hidden px-2 mb-0.5">
                <Link href="/webx-admin" className="inline-flex w-11 items-center flex-shrink-0">

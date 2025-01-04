@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { adminInstance } from '@/config/axios';
+import { adminInstance, axiosInstance } from '@/config/axios';
 import { convertMinutesToHoursMinutes } from '@/utils';
 import { useIntersectionObserver } from 'usehooks-ts'
 import SearchForm from '@/components/theme/search-flight/SearchForm';
@@ -35,7 +35,7 @@ const FlightSearch = () => {
 
    async function getFlights(params: object) {
       try {
-         const { data } = await adminInstance.get(`/flight/search-flights`, { params })
+         const { data } = await axiosInstance.get(`/flight/search-flights`, { params })
          console.log('Flight======>', data)
          if (data.success) {
             setFlightList(data.flights)
@@ -99,7 +99,7 @@ const FlightSearch = () => {
          <SearchForm />
          <div className="w-full relative mb-4">
             <div className="flex flex-wrap -m-2">
-               <div className="absolute hidden lg:block lg:relative w-full lg:w-3/12 bg-white p-2">
+               {/* <div className="absolute hidden lg:block lg:relative w-full lg:w-3/12 bg-white p-2">
                   <div className="border space-y-5 p-4">
                      <div className="">
                         <h5 className='text-lg font-medium mb-2'>Popular Filters</h5>
@@ -182,8 +182,8 @@ const FlightSearch = () => {
                         </ul>
                      </div>
                   </div>
-               </div>
-               <div className="w-full lg:w-9/12 p-2">
+               </div> */}
+               <div className="w-full p-2">
                   <div className="">
 
                      {

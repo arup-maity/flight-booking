@@ -14,12 +14,15 @@ import { useDebounceValue } from 'usehooks-ts'
 import { MdClose } from 'react-icons/md'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { sessionContext } from '@/authentication/auth'
+import Modal from '@/ui-components/pre-model'
+import Offcanvas from '@/ui-components/offcanvas'
 
 const FlightsList = () => {
    // auth
    const { user } = useContext(sessionContext)
 
    //
+   const [openPreModel, closePreModel] = useState(false)
    const [formOpen, setFormOpen] = useState(false)
    const [selectedFlight, setSelectedFlight] = useState({})
    const [flightsList, setFlightsList] = useState([])
@@ -142,6 +145,7 @@ const FlightsList = () => {
       <>
          <BreadCrumbs title='Flight List' data={[{ title: 'Flight List' }]} />
          <div className='bg-white rounded p-4'>
+            <button onClick={() => closePreModel(prev => !prev)}>Pre Model</button>
             <div className="mb-5">
                <div className="flex flex-wrap md:flex-nowrap items-center justify-between -m-2">
                   <div className="w-full md:w-full p-2">
@@ -186,7 +190,9 @@ const FlightsList = () => {
                </div>
             </div>
          </div>
-         <ManageFlight isOpen={formOpen} toggle={handleClosePopup} selectedFlight={selectedFlight} />
+         {
+            formOpen && <ManageFlight isOpen={formOpen} toggle={handleClosePopup} selectedFlight={selectedFlight} />
+         }
       </>
    )
 }

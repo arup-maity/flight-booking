@@ -17,7 +17,6 @@
 }
 
 body {
-  width: 100%;
   position: relative;
   font-size: 16px;
   background-color: white;
@@ -225,7 +224,7 @@ body {
 /* scrollber */
 .custom-scrollbar {
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 /* Style the scrollbar track */

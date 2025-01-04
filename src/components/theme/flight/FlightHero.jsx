@@ -83,8 +83,8 @@ const FlightHero = () => {
          <div className='w-full'>
             <div style={{ backgroundImage: `url('/images/img-12.jpg')` }} className="w-full aspect-[1440/800] md:aspect-[1440/535] flex items-center  bg-cover bg-center">
                <div className="theme-container">
-                  <div className="w-[300px] md:w-[500px]">
-                     <div className="text-white text-xl md:text-4xl lg:text-[45px] font-bold font-montserrat mb-4">Make your travel whishlist, we’ll do the rest</div>
+                  <div className="w-[300px] md:w-[500px] lg:w-[700px]">
+                     <div className="text-white text-xl md:text-4xl lg:text-[45px] font-bold font-montserrat lg:leading-snug mb-4">Make your travel whishlist, we’ll do the rest</div>
                      <div className="text-white text-base md:text-xl font-medium font-montserrat">Special offers to suit your plan</div>
                   </div>
                </div>
@@ -113,7 +113,7 @@ const FlightHero = () => {
                         <div className="relative border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">From</div>
                            <ul>
-                              <li className='text-base md:text-2xl font-bold'>{fromDetails?.city?.cityName}</li>
+                              <li role='button' className='text-base md:text-2xl font-bold'>{fromDetails?.city?.cityName}</li>
                               <li className='text-sm line-clamp-1'>{fromDetails?.iataCode}, {fromDetails?.airportName}</li>
                            </ul>
                         </div>
@@ -122,7 +122,7 @@ const FlightHero = () => {
                         <div className="relative border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">To</div>
                            <ul>
-                              <li className='text-base md:text-2xl font-bold'>{toDetails?.city?.cityName}</li>
+                              <li role='button' className='text-base md:text-2xl font-bold'>{toDetails?.city?.cityName}</li>
                               <li className='text-sm line-clamp-1'>{toDetails?.iataCode}, {toDetails?.airportName}</li>
                            </ul>
                         </div>
@@ -169,7 +169,7 @@ const FlightHero = () => {
                         <div className="relative border rounded p-2">
                            <div className="text-sm absolute -top-[10px] bg-white px-2">Passenger - Class</div>
                            <ul>
-                              <li className='text-sm'><span className='text-base md:text-2xl font-bold'>{classPassenger?.count}</span> Traveller</li>
+                              <li role='button' className='text-sm'><span className='text-base md:text-2xl font-bold'>{classPassenger?.count}</span> Traveller</li>
                               <li className='text-sm'>{classPassenger?.class === 'E' ? 'Economy/Premium Economy' : classPassenger.class === 'P' ? 'Premium Economy' : 'Business'}</li>
                            </ul>
                         </div>

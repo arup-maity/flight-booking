@@ -3,22 +3,20 @@ import React, { useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import { axiosInstance } from '@/config/axios'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useQuery } from '@tanstack/react-query'
 
 const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
    const [filterAirports, setFilterAirports] = useState([])
-   const [airportSuggestList, setAirportSuggestList] = useState([])
    const [debouncedValue, setValue] = useDebounceValue('', 1000)
 
    useEffect(() => {
-      if (debouncedValue) {
-         handleSearch(debouncedValue)
-      }
+      handleSearch(debouncedValue)
    }, [debouncedValue])
 
    async function handleSearch(value) {
       try {
+         if (!value) return
          const res = await axiosInstance.get(`/airport/search-airport`, { params: { search: value } })
-         console.log('Search', res)
          if (res.data.success) {
             setFilterAirports(res.data.airport)
          }
@@ -32,22 +30,14 @@ const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
       toggle()
    }
 
-   const onOpen = async () => {
-      try {
-         const res = await axiosInstance.get(`airport/suggested-departure-airports`)
-         console.log(res)
-         if (res.data.success) {
-            setAirportSuggestList(res.data.airports)
-         }
-
-      } catch (error) {
-         console.log(error)
-      }
-   }
+   const { data, isLoading } = useQuery({
+      queryKey: ['formAirports'],
+      queryFn: () => axiosInstance.get(`airport/suggested-departure-airports`).then((response) => response.data)
+   })
 
    return (
       <Dialog open={isOpen} onOpenChange={toggle}>
-         <DialogContent onOpenAutoFocus={onOpen} className="lg:max-w-[1000px]">
+         <DialogContent className="w-11/12 lg:max-w-[1000px]">
             <DialogHeader>
                <DialogTitle>From</DialogTitle>
             </DialogHeader>
@@ -71,23 +61,25 @@ const FromFlight = ({ isOpen, toggle, setFromDetails }) => {
                         })}
                      </div>
                      :
-                     <div className="h-full custom-scrollbar">
-                        {
-                           airportSuggestList?.map((item, index) => {
-                              return (
-                                 <div key={index} className="p-2 hover:bg-gray-100" onClick={() => handleFrom(item?.departureAirport)}>
-                                    <div className="flex flex-nowrap justify-between">
-                                       <div className="text-base font-medium">
-                                          <span>{item?.departureAirport?.city?.cityName}</span>
+                     !isLoading && data?.airports.length === 0 ?
+                        <div className="text-center text-sm text-gray-600 p-4">No airports found</div> :
+                        <div className="h-full custom-scrollbar">
+                           {
+                              data?.airports?.map((item, index) => {
+                                 return (
+                                    <div key={index} className="p-2 hover:bg-gray-100" onClick={() => handleFrom(item?.departureAirport)}>
+                                       <div className="flex flex-nowrap justify-between">
+                                          <div className="text-base font-medium">
+                                             <span>{item?.departureAirport?.city?.cityName}</span>
+                                          </div>
+                                          <div className="text-base font-medium">{item?.departureAirport?.iataCode}</div>
                                        </div>
-                                       <div className="text-base font-medium">{item?.departureAirport?.iataCode}</div>
+                                       <div className="text-sm">{item?.departureAirport?.airportName}</div>
                                     </div>
-                                    <div className="text-sm">{item?.departureAirport?.airportName}</div>
-                                 </div>
-                              )
-                           })
-                        }
-                     </div>
+                                 )
+                              })
+                           }
+                        </div>
                }
             </div>
          </DialogContent>

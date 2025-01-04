@@ -11,11 +11,10 @@ const Footer = () => {
          <div className="flex flex-wrap -m-2">
             <div className="w-full lg:w-3/12 flex max-lg:justify-center p-2">
                <div className="mb-5">
-                  <Image src='/images/logo01.png' width={120} height={40} alt='footer logo' className='w-auto h-12' />
+                  <Image src='/images/logo02.png' width={120} height={40} alt='footer logo' className='w-auto h-8' />
                   <ul className='flex flex-nowrap items-center gap-4 mt-5'>
                      <li><FaFacebook size={20} /></li>
                      <li><FaXTwitter size={20} /></li>
-                     <li><FaYoutube size={20} /></li>
                      <li><FaInstagram size={20} /></li>
                   </ul>
                </div>
@@ -43,15 +42,15 @@ const Footer = () => {
                         <li className='text-base text-[#112211] font-bold font-montserrat mb-4'>Contact Us</li>
                         <li className='text-sm text-[#112211] font-medium font-montserrat opacity-70 flex flex-nowrap gap-3'>
                            <span className='mt-1'><FaLocationDot size={18} /></span>
-                           <span>Mansoura, Suez Canal Street, Green Plaza Tower, Entrance 2, third floor</span>
+                           <span>1179, Sector 67, Mohali, Punjab, 160062</span>
                         </li>
                         <li className='text-sm text-[#112211] font-medium font-montserrat opacity-70 flex flex-nowrap items-center gap-3'>
                            <IoMdCall size={20} />
-                           <span>00201553968753</span>
+                           <span>+91 790 807 8976</span>
                         </li>
                         <li className='text-sm text-[#112211] font-medium font-montserrat opacity-70 flex flex-nowrap items-center gap-3'>
                            <IoMdMail size={20} />
-                           <span>info@example.info</span>
+                           <span>me@arupmaity.in</span>
                         </li>
                      </ul>
                   </div>
@@ -60,7 +59,7 @@ const Footer = () => {
          </div>
          <div className="w-full h-0.5 bg-gray-700 bg-opacity-25 mt-5"></div>
          <div className="flex flex-wrap items-center justify-between gap-2 py-4">
-            <p className='text-xs font-medium opacity-75'>&copy; {currentYear} Cloud Wings. Design by Cloud Wings</p>
+            <p className='text-xs font-medium opacity-75'>&copy; {currentYear} Cloud Wings. Design by Arup Maity</p>
             <ul className='flex flex-wrap gap-4 items-center *:text-xs *:font-medium *:opacity-85'>
                <li>Terms of services</li>
                <li>Privacy Policies</li>

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts'
 import { axiosInstance } from '@/config/axios'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useQuery } from '@tanstack/react-query'
 
 const ToFlight = ({ isOpen, toggle, setToDetails }) => {
    const [filterAirports, setFilterAirports] = useState([])
-   const [airportSuggestList, setAirportSuggestList] = useState([])
    const [debouncedValue, setValue] = useDebounceValue('', 500)
 
    useEffect(() => {
@@ -29,22 +29,16 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
       setToDetails(item)
       toggle()
    }
-   const onOpen = async () => {
-      try {
-         const res = await axiosInstance.get(`/airport/suggested-arrival-airports`)
-         console.log(res)
-         if (res.data.success) {
-            setAirportSuggestList(res.data.airports)
-         }
 
-      } catch (error) {
-         console.log(error)
-      }
-   }
+   const { data, isLoading } = useQuery({
+      queryKey: ['toAirports'],
+      queryFn: () => axiosInstance.get(`airport/suggested-arrival-airports`).then((response) => response.data)
+   })
+
    return (
       <div>
          <Dialog open={isOpen} onOpenChange={toggle}>
-            <DialogContent onOpenAutoFocus={onOpen} className="lg:max-w-[1000px]">
+            <DialogContent className="lg:max-w-[1000px]">
                <DialogHeader>
                   <DialogTitle>To</DialogTitle>
                </DialogHeader>
@@ -68,21 +62,23 @@ const ToFlight = ({ isOpen, toggle, setToDetails }) => {
                            })}
                         </div>
                         :
-                        <div className="h-full custom-scrollbar">
-                           {airportSuggestList.map((item, index) => {
-                              return (
-                                 <div key={index} className="p-2 hover:bg-gray-100" onClick={() => handleTo(item?.arrivalAirport)}>
-                                    <div className="flex flex-nowrap justify-between">
-                                       <div className="text-base font-medium">
-                                          <span>{item?.arrivalAirport?.city?.cityName}</span>
+                        !isLoading && data?.airports.length === 0 ?
+                           <div className="text-center text-sm text-gray-600 p-4">No airports found</div> :
+                           <div className="h-full custom-scrollbar">
+                              {data?.airports?.map((item, index) => {
+                                 return (
+                                    <div key={index} className="p-2 hover:bg-gray-100" onClick={() => handleTo(item?.arrivalAirport)}>
+                                       <div className="flex flex-nowrap justify-between">
+                                          <div className="text-base font-medium">
+                                             <span>{item?.arrivalAirport?.city?.cityName}</span>
+                                          </div>
+                                          <div className="text-base font-medium">{item?.arrivalAirport?.iataCode}</div>
                                        </div>
-                                       <div className="text-base font-medium">{item?.arrivalAirport?.iataCode}</div>
+                                       <div className="text-sm">{item?.arrivalAirport?.airportName}</div>
                                     </div>
-                                    <div className="text-sm">{item?.arrivalAirport?.airportName}</div>
-                                 </div>
-                              )
-                           })}
-                        </div>
+                                 )
+                              })}
+                           </div>
                   }
                </div>
             </DialogContent>

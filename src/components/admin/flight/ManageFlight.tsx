@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
@@ -11,8 +11,13 @@ import "flatpickr/dist/themes/material_green.css";
 import dayjs from "dayjs";
 import { handleApiError } from '@/utils'
 
-// import { Offcanvas, OffcanvasContent, OffcanvasHeader, OffcanvasTitle } from "@/components/ui/offcanvas";
-import { Offcanvas } from '@/ui-components'
+import {
+   Sheet,
+   SheetContent,
+   SheetHeader,
+   SheetTitle,
+} from "@/components/ui/sheet"
+import Offcanvas from '@/ui-components/offcanvas'
 
 interface PropsType {
    isOpen: boolean;
@@ -73,10 +78,10 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
          //       toast.success('Flight updated successfully')
          //    }
          // } else {
-         //    const res = await adminInstance.post(`/flight/create-flight`, data);
-         //    if (res.data?.success) {
-         //       toast.success('Flight created successfully')
-         //    }
+            const res = await adminInstance.post(`/flight/create-flight`, data);
+            if (res.data?.success) {
+               toast.success('Flight created successfully')
+            }
          // }
          // toggle()
       } catch (error) {
@@ -86,8 +91,15 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
       }
    }
 
+   useLayoutEffect(() => {
+      getAirplanes()
+      getAirports()
+
+   }, [isOpen])
+
    async function getAirports() {
       const res = await adminInstance.get('/airport/all-airports')
+      console.log('airports', res)
       const airportsOption = res.data.airports?.map((airport: any) => ({
          label: airport.airportName,
          value: airport.id,
@@ -128,43 +140,46 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
    const onOpen = () => {
       getAirplanes()
       getAirports()
-      console.log('selectedFlight', selectedFlight)
-      if (Object.keys(selectedFlight).length > 0) {
-         for (const key in defaultValues) {
-            switch (key) {
-               case 'departureTime':
-                  setValue("departureTime", new Date(selectedFlight['departureTime']))
-                  break;
-               case 'arrivalTime':
-                  setValue("arrivalTime", new Date(selectedFlight['arrivalTime']))
-                  break;
-               default:
-                  setValue(key as keyof ValueType, selectedFlight[key])
-                  break;
-            }
-         }
-      } else {
-         reset()
-      }
+      // console.log('selectedFlight', selectedFlight)
+      // if (Object.keys(selectedFlight).length > 0) {
+      //    for (const key in defaultValues) {
+      //       switch (key) {
+      //          case 'departureTime':
+      //             setValue("departureTime", new Date(selectedFlight['departureTime']))
+      //             break;
+      //          case 'arrivalTime':
+      //             setValue("arrivalTime", new Date(selectedFlight['arrivalTime']))
+      //             break;
+      //          default:
+      //             setValue(key as keyof ValueType, selectedFlight[key])
+      //             break;
+      //       }
+      //    }
+      // } else {
+      //    reset()
+      // }
    }
    const onclose = () => {
       reset()
    }
    // if (!isOpen) return null;
    return (
-      <>
-         {/* <Offcanvas open={isOpen} onOpenChange={toggle}>
-            <OffcanvasContent onOpenAutoFocus={onOpen} onCloseAutoFocus={onclose} className="flex flex-col w-[500px] min-w-[400px] rounded-l-xl">
-               <OffcanvasHeader className='p-4'>
-                  <OffcanvasTitle>
-                     {Object.keys(selectedFlight).length > 0 ? 'Edit Flight' : 'Add Flight'}
-                  </OffcanvasTitle>
-               </OffcanvasHeader>
-               <form onSubmit={handleSubmit(onSubmit)} className="flex-grow flex flex-col">
-                  <div className="relative flex-grow space-y-4 custom-scrollbar px-4">
+      <Offcanvas>
+         <Offcanvas.Content isOpen={true} toggle={() => { }} direction='end' className='w-5/12 rounded-l-2xl flex flex-col p-0'>
+            <Offcanvas.Header>
+               <div className="">
+                  {
+                     Object.keys(selectedFlight).length > 0 ? 'Edit Flight' : 'Add Flight'
+                  }
+               </div>
+            </Offcanvas.Header>
+
+            <form onSubmit={handleSubmit(onSubmit)} className='flex-grow flex flex-col p-1'>
+               <div className="flex-grow custom-scrollbar px-4">
+                  <div className="space-y-4">
                      <fieldset>
                         <label className='text-sm text-gray-500'>Flight Number</label>
-                        <input {...register("flightNumber")} className='w-full h-10 border border-slate-300 rounded p-2' />
+                        <input {...register("flightNumber")} className='w-full h-10 border border-slate-300 rounded p-2' autoComplete='off' />
                         {errors.flightNumber && <p className='text-xs text-red-500 mt-1'>{errors.flightNumber.message}</p>}
                      </fieldset>
                      <fieldset>
@@ -207,7 +222,7 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
                                  data-enable-time
                                  value={value}
                                  className='w-full h-10 border border-slate-300 rounded p-2'
-                                 onChange={(value: any) => { onChange(value[0]); console.log(value) }}
+                                 onChange={(value: any) => onChange(value[0])}
                               />
                            )}
                         />
@@ -248,140 +263,23 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
                         <label className='text-sm text-gray-500'>Price</label>
                         <input {...register("price", {
                            valueAsNumber: true
-                        })} className='w-full h-10 border border-slate-300 rounded p-2' />
+                        })} className='w-full h-10 border border-slate-300 rounded p-2' autoComplete='off' />
                         {errors.price && <p className='text-xs text-red-500 mt-1'>{errors.price.message}</p>}
                      </fieldset>
                      <fieldset>
                         <label className='text-sm text-gray-500'>Boarding Gate</label>
-                        <input {...register("boardingGate")} className='w-full h-10 border border-slate-300 rounded p-2' />
+                        <input {...register("boardingGate")} className='w-full h-10 border border-slate-300 rounded p-2' autoComplete='off' />
                         {errors.boardingGate && <p className='text-xs text-red-500 mt-1'>{errors.boardingGate.message}</p>}
                      </fieldset>
                   </div>
-                  <div className='w-full flex items-center gap-2 p-4'>
-                     <button type="submit" disabled={submitLoading} className=' text-base border border-slate-500 rounded py-1 px-8'>
-                        {
-                           Object.keys(selectedFlight).length > 0 ? 'Update' : 'Add'
-                        }
-                     </button>
-                     <button type="button" className=' text-base bg-gray-200 border border-gray-200 rounded py-1 px-8'>Cancel</button>
-                  </div>
-               </form>
-            </OffcanvasContent>
-         </Offcanvas > */}
-         <Offcanvas isOpen={isOpen} onOpen={handleOpen} direction='left' toggle={toggle}>
-            <Offcanvas.Header toggle={toggle}>
-               <h5 className='text-lg text-gray-600 font-medium mb-2'>
-                  {
-                     Object.keys(selectedFlight).length > 0 ? 'Edit Flight' : 'Add Flight'
-                  }
-               </h5>
-            </Offcanvas.Header>
-            <Offcanvas.Body className="flex flex-col p-2">
-               <form onSubmit={handleSubmit(onSubmit)} className='flex-grow '>
-                  <div className='h-full flex flex-col'>
-                     <div className="flex-grow ">
-                        <div className="space-y-4 overflow-hidden h-full">
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Flight Number</label>
-                              <input {...register("flightNumber")} className='w-full h-10 border border-slate-300 rounded p-2' />
-                              {errors.flightNumber && <p className='text-xs text-red-500 mt-1'>{errors.flightNumber.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Departure Airport</label>
-                              <Controller
-                                 name='departureAirportId'
-                                 control={control}
-                                 render={({ field: { onChange, value } }) => (
-                                    <Select
-                                       options={airportList}
-                                       value={airportList?.filter((obj: any) => value === obj.value)}
-                                       onChange={(e: any) => onChange(e.value)}
-                                    />
-                                 )}
-                              />
-                              {errors.departureAirportId && <p className='text-xs text-red-500 mt-1'>{errors.departureAirportId.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Arrival Airport</label>
-                              <Controller
-                                 name='arrivalAirportId'
-                                 control={control}
-                                 render={({ field: { onChange, value } }) => (
-                                    <Select
-                                       options={airportList}
-                                       value={airportList?.filter((obj: any) => value === obj.value)}
-                                       onChange={(e: any) => onChange(e.value)}
-                                    />
-                                 )}
-                              />
-                              {errors.arrivalAirportId && <p className='text-xs text-red-500 mt-1'>{errors.arrivalAirportId.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Departure</label>
-                              <Controller
-                                 name='departureTime'
-                                 control={control}
-                                 render={({ field: { onChange, value } }) => (
-                                    <Flatpickr
-                                       data-enable-time
-                                       value={value}
-                                       className='w-full h-10 border border-slate-300 rounded p-2'
-                                       onChange={(value: any) => onChange(value[0])}
-                                    />
-                                 )}
-                              />
-                              {errors.departureTime && <p className='text-xs text-red-500 mt-1'>{errors.departureTime.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Arrival</label>
-                              <Controller
-                                 name='arrivalTime'
-                                 control={control}
-                                 render={({ field: { onChange, value } }) => (
-                                    <Flatpickr
-                                       data-enable-time
-                                       value={value}
-                                       className='w-full h-10 border border-slate-300 rounded p-2'
-                                       onChange={(value: any) => onChange(value[0])}
-                                    />
-                                 )}
-                              />
-                              {errors.arrivalTime && <p className='text-xs text-red-500 mt-1'>{errors.arrivalTime.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>airplaneId</label>
-                              <Controller
-                                 name='airplaneId'
-                                 control={control}
-                                 render={({ field: { onChange, value } }) => (
-                                    <Select
-                                       options={airplaneList}
-                                       value={airplaneList?.filter((obj: any) => value === obj.value)}
-                                       onChange={(e: any) => onChange(e.value)}
-                                    />
-                                 )}
-                              />
-                              {errors.airplaneId && <p className='text-xs text-red-500 mt-1'>{errors.airplaneId.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Price</label>
-                              <input {...register("price", {
-                                 valueAsNumber: true
-                              })} className='w-full h-10 border border-slate-300 rounded p-2' />
-                              {errors.price && <p className='text-xs text-red-500 mt-1'>{errors.price.message}</p>}
-                           </fieldset>
-                           <fieldset>
-                              <label className='text-sm text-gray-500'>Boarding Gate</label>
-                              <input {...register("boardingGate")} className='w-full h-10 border border-slate-300 rounded p-2' />
-                              {errors.boardingGate && <p className='text-xs text-red-500 mt-1'>{errors.boardingGate.message}</p>}
-                           </fieldset>
-                        </div>
-                     </div>
-                  </div>
-               </form>
-            </Offcanvas.Body>
-         </Offcanvas>
-      </>
+               </div>
+               <div className='flex gap-2 p-4'>
+                  <button type='submit' className='px-8 py-1 text-base bg-blue-500 text-white rounded'>Save</button>
+                  <button type='button' className='px-8 py-1 bg-gray-200 text-gray-500 rounded'>Cancel</button>
+               </div>
+            </form>
+         </Offcanvas.Content>
+      </Offcanvas>
    )
 }
 
