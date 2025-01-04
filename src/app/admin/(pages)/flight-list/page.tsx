@@ -14,8 +14,6 @@ import { useDebounceValue } from 'usehooks-ts'
 import { MdClose } from 'react-icons/md'
 import BreadCrumbs from '@/components/common/BreadCrumbs'
 import { sessionContext } from '@/authentication/auth'
-import Modal from '@/ui-components/pre-model'
-import Offcanvas from '@/ui-components/offcanvas'
 
 const FlightsList = () => {
    // auth

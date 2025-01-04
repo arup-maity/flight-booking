@@ -10,14 +10,8 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import dayjs from "dayjs";
 import { handleApiError } from '@/utils'
+import { Offcanvas } from '@/ui-components'
 
-import {
-   Sheet,
-   SheetContent,
-   SheetHeader,
-   SheetTitle,
-} from "@/components/ui/sheet"
-import Offcanvas from '@/ui-components/offcanvas'
 
 interface PropsType {
    isOpen: boolean;
@@ -78,10 +72,10 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
          //       toast.success('Flight updated successfully')
          //    }
          // } else {
-            const res = await adminInstance.post(`/flight/create-flight`, data);
-            if (res.data?.success) {
-               toast.success('Flight created successfully')
-            }
+         const res = await adminInstance.post(`/flight/create-flight`, data);
+         if (res.data?.success) {
+            toast.success('Flight created successfully')
+         }
          // }
          // toggle()
       } catch (error) {
@@ -162,18 +156,18 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
    const onclose = () => {
       reset()
    }
-   // if (!isOpen) return null;
+   if (!isOpen) return null;
    return (
-      <Offcanvas>
-         <Offcanvas.Content isOpen={true} toggle={() => { }} direction='end' className='w-5/12 rounded-l-2xl flex flex-col p-0'>
-            <Offcanvas.Header>
-               <div className="">
-                  {
-                     Object.keys(selectedFlight).length > 0 ? 'Edit Flight' : 'Add Flight'
-                  }
-               </div>
-            </Offcanvas.Header>
 
+      <Offcanvas isOpen={isOpen} onOpen={handleOpen} direction='left' toggle={toggle}>
+         <Offcanvas.Header toggle={toggle}>
+            <h5 className='text-lg text-gray-600 font-medium mb-2'>
+               {
+                  Object.keys(selectedFlight).length > 0 ? 'Edit Flight' : 'Add Flight'
+               }
+            </h5>
+         </Offcanvas.Header>
+         <Offcanvas.Body>
             <form onSubmit={handleSubmit(onSubmit)} className='flex-grow flex flex-col p-1'>
                <div className="flex-grow custom-scrollbar px-4">
                   <div className="space-y-4">
@@ -278,7 +272,7 @@ const ManageFlight: React.FC<PropsType> = ({ isOpen, toggle, selectedFlight }) =
                   <button type='button' className='px-8 py-1 bg-gray-200 text-gray-500 rounded'>Cancel</button>
                </div>
             </form>
-         </Offcanvas.Content>
+         </Offcanvas.Body>
       </Offcanvas>
    )
 }
